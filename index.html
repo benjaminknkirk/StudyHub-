@@ -112,6 +112,7 @@
   .filerow .fname { flex:1 1 240px; font-weight:500; overflow-wrap:break-word; }
   .filerow .fmeta { color:var(--muted); font-size:13.5px; white-space:nowrap; }
   .filerow a { font-weight:600; font-size:14.5px; white-space:nowrap; }
+  .filerow a.fdrive { font-weight:500; font-size:13.5px; color:var(--muted); }
   #nbcanvas { display:block; width:100%; height:auto; touch-action:none; cursor:crosshair; }
 
   .wrap { max-width:840px; margin:0 auto; padding:26px 20px 64px; }
@@ -680,16 +681,20 @@ function filesHtml(c){
   var files = (window.COURSE_FILES || {})[c.id];
   if (!files || !files.length) return "";
   var html = "<h2>File library</h2>"
-    + "<p class=\"small muted\">Every file I hold for this course, " + files.length + " in total. The files themselves live in your Google Drive and in my workspace; Find in Drive opens the file in your Drive, and anything it cannot find, ask me for and I will send it.</p>";
+    + "<p class=\"small muted\">Every file I hold for this course, " + files.length + " in total. PDFs open right here in the site. Everything else lives in your Google Drive and in my workspace; Find in Drive opens it there, and anything it cannot find, ask me for and I will send it.</p>";
   FILE_GROUPS.forEach(function(g){
     var rows = files.filter(function(f){ return f.g === g; });
     if (!rows.length) return;
     html += "<div class=\"card\"><h3>" + esc(g) + "</h3>";
     rows.forEach(function(f){
       var d = new Date(f.d + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
+      var drive = "https://drive.google.com/drive/search?q=" + encodeURIComponent(f.n);
+      var links = f.u
+        ? "<a target=\"_blank\" rel=\"noopener\" href=\"" + f.u.split("/").map(encodeURIComponent).join("/") + "\">Open here</a> <a class=\"fdrive\" target=\"_blank\" rel=\"noopener\" href=\"" + drive + "\">Drive</a>"
+        : "<a target=\"_blank\" rel=\"noopener\" href=\"" + drive + "\">Find in Drive</a>";
       html += "<div class=\"filerow\"><span class=\"fname\">" + esc(f.n) + "</span>"
         + "<span class=\"fmeta\">" + esc(f.k) + " · " + fmtSize(f.s) + " · " + d + "</span>"
-        + "<a target=\"_blank\" rel=\"noopener\" href=\"https://drive.google.com/drive/search?q=" + encodeURIComponent(f.n) + "\">Find in Drive</a></div>";
+        + links + "</div>";
     });
     html += "</div>";
   });

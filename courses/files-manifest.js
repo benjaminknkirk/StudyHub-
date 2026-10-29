@@ -1,5 +1,5 @@
 // File library manifest: every course file Ghost holds, generated from
-// ~/workspace/school. Regenerate, never hand edit. Links resolve via Drive search.
+// ~/workspace/school. Regenerate, never hand edit. PDFs carry a u path into the site.
 window.COURSE_FILES = {
  "mgmtmsa-400": [
   {
@@ -21,49 +21,56 @@ window.COURSE_FILES = {
    "g": "Assignments and exams",
    "s": 111489,
    "d": "2026-10-06",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/HW1.pdf"
   },
   {
    "n": "HW1_solution.pdf",
    "g": "Assignments and exams",
    "s": 196771,
    "d": "2026-10-27",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/HW1_solution.pdf"
   },
   {
    "n": "HW2.pdf",
    "g": "Assignments and exams",
    "s": 107556,
    "d": "2026-10-27",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/HW2.pdf"
   },
   {
    "n": "Midterm-A-2025.pdf",
    "g": "Assignments and exams",
    "s": 170460,
    "d": "2026-10-27",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/Midterm-A-2025.pdf"
   },
   {
    "n": "Midterm-A-solution-2025.pdf",
    "g": "Assignments and exams",
    "s": 181858,
    "d": "2026-10-06",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/Midterm-A-solution-2025.pdf"
   },
   {
    "n": "Quiz_4.pdf",
    "g": "Assignments and exams",
    "s": 82570,
    "d": "2026-10-27",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/Quiz_4.pdf"
   },
   {
    "n": "Regression_Quiz.pdf",
    "g": "Assignments and exams",
    "s": 12330,
    "d": "2026-10-27",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/Regression_Quiz.pdf"
   },
   {
    "n": "Sample_Assignment_Solution.Rmd",
@@ -77,28 +84,32 @@ window.COURSE_FILES = {
    "g": "Lectures and handouts",
    "s": 1401925,
    "d": "2026-10-06",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/1_course_overview_and_intro_to_R Handout.pdf"
   },
   {
    "n": "2_review_of_statistics handout.pdf",
    "g": "Lectures and handouts",
    "s": 2238722,
    "d": "2026-10-06",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/2_review_of_statistics handout.pdf"
   },
   {
    "n": "3_intro_predictive_models handout.pdf",
    "g": "Lectures and handouts",
    "s": 508938,
    "d": "2026-10-27",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/3_intro_predictive_models handout.pdf"
   },
   {
    "n": "4_estimation_testing_prediction_handout.pdf",
    "g": "Lectures and handouts",
    "s": 374799,
    "d": "2026-10-17",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/4_estimation_testing_prediction_handout.pdf"
   },
   {
    "n": "Ch 1 Code Snippets.py",
@@ -161,21 +172,24 @@ window.COURSE_FILES = {
    "g": "Lectures and handouts",
    "s": 153776,
    "d": "2026-10-06",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/PreReq.pdf"
   },
   {
    "n": "R_Python_Installation.pdf",
    "g": "Lectures and handouts",
    "s": 411921,
    "d": "2026-10-06",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/R_Python_Installation.pdf"
   },
   {
    "n": "RMarkdown_tutorial.pdf",
    "g": "Lectures and handouts",
    "s": 387215,
    "d": "2026-10-06",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/RMarkdown_tutorial.pdf"
   },
   {
    "n": "400-ch2-notes-sheet-simple-2026-10-24.md",
@@ -196,7 +210,8 @@ window.COURSE_FILES = {
    "g": "Study materials",
    "s": 39871,
    "d": "2026-10-27",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/400-cheat-sheet-printable-v11.pdf"
   },
   {
    "n": "400-course-skeleton.md",
@@ -273,7 +288,8 @@ window.COURSE_FILES = {
    "g": "Syllabus",
    "s": 84400,
    "d": "2026-10-01",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-400/400-syllabus.pdf"
   }
  ],
  "mgmtmsa-402": [
@@ -282,35 +298,40 @@ window.COURSE_FILES = {
    "g": "Discussions and problem sets",
    "s": 148118,
    "d": "2026-10-26",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/26F-MGMTMSA402-PS1.pdf"
   },
   {
    "n": "MSBA 402 Discussion 1.pdf",
    "g": "Discussions and problem sets",
    "s": 321206,
    "d": "2026-10-05",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/MSBA 402 Discussion 1.pdf"
   },
   {
    "n": "MSBA 402 Discussion 2.pdf",
    "g": "Discussions and problem sets",
    "s": 435126,
    "d": "2026-10-26",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/MSBA 402 Discussion 2.pdf"
   },
   {
    "n": "MSBA 402 Discussion Week 4.pdf",
    "g": "Discussions and problem sets",
    "s": 80429,
    "d": "2026-10-25",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/MSBA 402 Discussion Week 4.pdf"
   },
   {
    "n": "MSBA 402 Practices Discussion 1.pdf",
    "g": "Discussions and problem sets",
    "s": 141207,
    "d": "2026-10-05",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/MSBA 402 Practices Discussion 1.pdf"
   },
   {
    "n": "MSBA_402_Discussion_Week_4_Practice.ipynb",
@@ -324,28 +345,32 @@ window.COURSE_FILES = {
    "g": "Lectures and handouts",
    "s": 38068637,
    "d": "2026-10-26",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/26F-MGMTMSA402-LEC1.pdf"
   },
   {
    "n": "26F-MGMTMSA402-LEC2.pdf",
    "g": "Lectures and handouts",
    "s": 2933619,
    "d": "2026-10-05",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/26F-MGMTMSA402-LEC2.pdf"
   },
   {
    "n": "26F-MGMTMSA402-LEC3.pdf",
    "g": "Lectures and handouts",
    "s": 5040092,
    "d": "2026-10-26",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/26F-MGMTMSA402-LEC3.pdf"
   },
   {
    "n": "26F-MGMTMSA402-LEC4.pdf",
    "g": "Lectures and handouts",
    "s": 5197924,
    "d": "2026-10-26",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/26F-MGMTMSA402-LEC4.pdf"
   },
   {
    "n": "MSBA 402 Discussion 1.mp4",
@@ -415,7 +440,8 @@ window.COURSE_FILES = {
    "g": "Syllabus",
    "s": 157602,
    "d": "2026-10-01",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-402/402-syllabus.pdf"
   }
  ],
  "mgmtmsa-401": [
@@ -431,7 +457,8 @@ window.COURSE_FILES = {
    "g": "Syllabus",
    "s": 146259,
    "d": "2026-10-21",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmtmsa-401/401-syllabus.pdf"
   }
  ],
  "mgmt-440": [
@@ -440,28 +467,32 @@ window.COURSE_FILES = {
    "g": "Lectures and handouts",
    "s": 4035980,
    "d": "2026-10-28",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmt-440/UCLA_L2_Oct_8_2025.pdf"
   },
   {
    "n": "UCLA_L3_Oct_15_2025.pdf",
    "g": "Lectures and handouts",
    "s": 3671247,
    "d": "2026-10-28",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmt-440/UCLA_L3_Oct_15_2025.pdf"
   },
   {
    "n": "UCLA_L4_Oct_22_2025.pdf",
    "g": "Lectures and handouts",
    "s": 4304804,
    "d": "2026-10-28",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmt-440/UCLA_L4_Oct_22_2025.pdf"
   },
   {
    "n": "UCLA_L5_Oct_29_2025.pdf",
    "g": "Lectures and handouts",
    "s": 1306602,
    "d": "2026-10-28",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmt-440/UCLA_L5_Oct_29_2025.pdf"
   },
   {
    "n": "440-class1-prep-brief-2026-10-27.md",
@@ -496,7 +527,8 @@ window.COURSE_FILES = {
    "g": "Syllabus",
    "s": 64750,
    "d": "2026-10-20",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/mgmt-440/MGMT440_Syllabus_Fall2026.pdf"
   }
  ],
  "python-workshop": [
@@ -596,7 +628,8 @@ window.COURSE_FILES = {
    "g": "Syllabus",
    "s": 241980,
    "d": "2026-10-01",
-   "k": "PDF"
+   "k": "PDF",
+   "u": "files/python-workshop/python-workshop-syllabus.pdf"
   }
  ]
 };
