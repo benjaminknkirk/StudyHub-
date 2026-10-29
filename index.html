@@ -79,7 +79,7 @@
   .seg { position:relative; display:flex; gap:2px; flex:1 1 auto; min-width:0;
          background:var(--surface-muted); border:1px solid var(--line); border-radius:999px;
          padding:3px; overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
-         -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y;
+         -webkit-overflow-scrolling:touch; touch-action:pan-y;
          user-select:none; -webkit-user-select:none; }
   .seg a { -webkit-user-drag:none; }
   .seg::-webkit-scrollbar { display:none; }
@@ -93,7 +93,8 @@
   .seg a.active { color:var(--accent-ink); }
   @media (max-width:640px){
     .seg { flex-basis:100%; order:3; }
-    .seg a { padding:9px 10px; font-size:13.5px; }
+    .seg a { padding:9px 6px; font-size:0; }
+    .seg a::after { content:attr(data-short); font-size:13.5px; }
   }
 
   .wrap { max-width:840px; margin:0 auto; padding:26px 20px 64px; }
@@ -1407,7 +1408,7 @@ loadState();
 loadCourses(function(){
   collectCourses();
   var nav = $("navcourses");
-  if (nav) nav.innerHTML = "<span class=\"seg-thumb\" id=\"segthumb\"></span>" + COURSES.map(function(c){ return "<a href=\"#/course/" + c.id + "\" data-cid=\"" + c.id + "\" draggable=\"false\">" + esc(c.name.split(":")[0]) + "</a>"; }).join("");
+  if (nav) nav.innerHTML = "<span class=\"seg-thumb\" id=\"segthumb\"></span>" + COURSES.map(function(c){ var short = c.id === "python-workshop" ? "Python" : c.name.split(":")[0].replace("MGMTMSA ", "").replace("MGMT ", ""); return "<a href=\"#/course/" + c.id + "\" data-cid=\"" + c.id + "\" data-short=\"" + esc(short) + "\" draggable=\"false\">" + esc(c.name.split(":")[0]) + "</a>"; }).join("");
   route();
   updateBell();
   var seg = $("navcourses");
@@ -1417,11 +1418,11 @@ loadCourses(function(){
       if (swiped){ e.preventDefault(); e.stopPropagation(); swiped = false; }
     }, true);
     seg.addEventListener("pointerdown", function(e){ sx = e.clientX; swiped = false; });
-    seg.addEventListener("pointercancel", function(){ sx = null; });
+    seg.addEventListener("pointercancel", function(){ sx = null; swiped = false; });
     seg.addEventListener("pointermove", function(e){
-      if (sx === null) return;
+      if (sx === null || swiped) return;
       var dx = e.clientX - sx;
-      if (Math.abs(dx) >= 40){ segStep(dx < 0 ? 1 : -1); swiped = true; sx = e.clientX; }
+      if (Math.abs(dx) >= 40){ segStep(dx < 0 ? 1 : -1); swiped = true; }
     });
     seg.addEventListener("pointerup", function(e){
       if (sx === null) return;
