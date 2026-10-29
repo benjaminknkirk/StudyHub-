@@ -135,6 +135,9 @@
           transition:box-shadow .2s ease, border-color .2s ease; animation:fadeUp .28s ease both; }
   .card:hover { box-shadow:var(--shadow-md); border-color:var(--line-strong); }
   .card h3 { margin-top:0; }
+  .course-banner { display:block; width:100%; height:auto; margin:4px 0 18px;
+                   border:1px solid var(--line); border-radius:16px; background:var(--surface);
+                   box-shadow:var(--shadow-sm); }
   .setup { background:var(--accent-soft); border-color:var(--line-strong); border-left:4px solid var(--accent); }
   .bar { height:10px; background:var(--surface-muted); border-radius:999px; overflow:hidden; margin:10px 0 5px;
          box-shadow:inset 0 1px 2px rgba(27,35,48,.08); }
@@ -1038,7 +1041,9 @@ function renderCourse(cid){
   var c = courseById(cid), app = $("app");
   if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
   var total = allTopics(c).length, learned = learnedCount(c);
-  var html = "<p><a href=\"#/\">&larr; All courses</a></p><h1>" + esc(c.name) + "</h1>";
+  var html = "<p><a href=\"#/\">&larr; All courses</a></p>";
+  if (c.banner) html += "<img class=\"course-banner\" src=\"" + esc(c.banner) + "\" alt=\"" + esc(c.bannerAlt || c.name) + "\" width=\"1200\" height=\"320\">";
+  html += "<h1>" + esc(c.name) + "</h1>";
   html += "<div class=\"card\"><h3>Course rules</h3>"
     + "<p class=\"small\"><strong>" + esc(c.professor) + "</strong>" + (c.term ? " · " + esc(c.term) : "") + "</p>"
     + "<p class=\"small\">" + esc(c.examInfo) + "</p>"

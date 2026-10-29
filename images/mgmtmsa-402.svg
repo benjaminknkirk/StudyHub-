@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img">
+  <title>Two tables linked by a join</title>
+  <style>
+    .paper { fill: #faf7f1; }
+    .card { fill: #fffdf8; stroke: #1b2330; stroke-width: 2; }
+    .head { fill: #e2efeb; }
+    .row { fill: #1b2330; }
+    .key { stroke: #8a6d1a; stroke-width: 3; fill: none; stroke-linecap: round; }
+    .join { fill: none; stroke: #17635a; stroke-width: 3; stroke-linecap: round; }
+    .gem { fill: #17635a; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #10151c; }
+      .card { fill: #171e28; stroke: #ece9e1; }
+      .head { fill: #16302a; }
+      .row { fill: #ece9e1; }
+      .key { stroke: #d9bc6a; }
+      .join { stroke: #5fc2ae; }
+      .gem { fill: #5fc2ae; }
+    }
+  </style>
+  <rect class="paper" width="1200" height="320"/>
+  <g>
+    <rect class="card" x="120" y="48" width="400" height="224" rx="16"/>
+    <rect class="head" x="140" y="66" width="360" height="26" rx="8"/>
+    <rect class="row" x="156" y="120" width="250" height="10" rx="5"/>
+    <rect class="row" x="156" y="156" width="180" height="10" rx="5"/>
+    <path class="key" d="M156 174 H336"/>
+    <rect class="row" x="156" y="196" width="300" height="10" rx="5"/>
+    <rect class="row" x="156" y="232" width="140" height="10" rx="5"/>
+  </g>
+  <g>
+    <rect class="card" x="680" y="48" width="400" height="224" rx="16"/>
+    <rect class="head" x="700" y="66" width="360" height="26" rx="8"/>
+    <rect class="row" x="716" y="120" width="200" height="10" rx="5"/>
+    <path class="key" d="M716 138 H916"/>
+    <rect class="row" x="716" y="156" width="280" height="10" rx="5"/>
+    <rect class="row" x="716" y="196" width="160" height="10" rx="5"/>
+    <rect class="row" x="716" y="232" width="240" height="10" rx="5"/>
+  </g>
+  <path class="join" d="M336 170 C 470 170, 520 134, 716 134"/>
+  <rect class="gem" x="512" y="140" width="14" height="14" transform="rotate(45 519 147)"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img">
+  <title>A normal curve with the mean marked</title>
+  <style>
+    .paper { fill: #faf7f1; }
+    .axis { stroke: #cfc4ab; stroke-width: 2; fill: none; }
+    .band { fill: #e2efeb; }
+    .curve { fill: none; stroke: #17635a; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+    .mean { stroke: #8a6d1a; stroke-width: 2; }
+    .mark { fill: #8a6d1a; }
+    .tick { stroke: #17635a; stroke-width: 2; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #10151c; }
+      .axis { stroke: #3d4a5c; }
+      .band { fill: #16302a; }
+      .curve { stroke: #5fc2ae; }
+      .mean { stroke: #d9bc6a; }
+      .mark { fill: #d9bc6a; }
+      .tick { stroke: #5fc2ae; }
+    }
+  </style>
+  <rect class="paper" width="1200" height="320"/>
+  <path class="band" d="M442 130.6 L448 126.9 L454 123.4 L460 119.9 L466 116.5 L472 113.3 L478 110.2 L484 107.3 L490 104.5 L496 101.9 L502 99.5 L508 97.3 L514 95.3 L520 93.6 L526 92.1 L532 90.8 L538 89.7 L544 88.9 L550 88.4 L556 88.1 L562 88 L568 88.2 L574 88.7 L580 89.4 L586 90.4 L592 91.6 L598 93.1 L604 94.7 L610 96.6 L616 98.8 L622 101.1 L628 103.6 L634 106.3 L640 109.2 L646 112.2 L652 115.4 L658 118.7 L664 122.2 L670 125.7 L676 129.4 L676 248 L442 248 Z"/>
+  <path class="axis" d="M150 248 H1050"/>
+  <path class="tick" d="M442 240 V256 M676 240 V256"/>
+  <path class="mean" d="M560 88 V248"/>
+  <path class="curve" d="M160 243.4 L190 240.4 L220 235.7 L250 229.1 L280 220 L310 208.1 L340 193.4 L370 176.3 L400 157.4 L430 138.1 L460 119.9 L490 104.5 L520 93.6 L550 88.4 L560 88 L590 91 L620 99.5 L650 114 L680 132 L710 151 L740 170 L770 187 L800 203 L830 216 L860 226 L890 234 L920 239 L950 242.5 L980 244.8"/>
+  <rect class="mark" x="552" y="78" width="16" height="16" transform="rotate(45 560 86)"/>
+</svg>

@@ -8,6 +8,8 @@ window.COURSE_DATA = window.COURSE_DATA || {};
 window.COURSE_DATA["mgmtmsa-402"] = {
   id: "mgmtmsa-402",
   name: "MGMTMSA 402: SQL and Databases",
+  banner: "images/mgmtmsa-402.svg",
+  bannerAlt: "Two tables linked by a join between their keys",
   professor: "Prof. Ryan Rosario",
   term: "Fall 2026",
   examInfo: "Final: Mon Dec 7, 2026. Quizzes and the final are closed book, handwritten on paper, no notes or computer (Lecture 1 deck). The course runs on PostgreSQL and follows the ANSI SQL standard.",

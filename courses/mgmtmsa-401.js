@@ -11,6 +11,8 @@ window.COURSE_DATA = window.COURSE_DATA || {};
 window.COURSE_DATA["mgmtmsa-401"] = {
   id: "mgmtmsa-401",
   name: "MGMTMSA 401: Machine Learning for Decision Making",
+  banner: "images/mgmtmsa-401.svg",
+  bannerAlt: "Two groups of points separated by a decision curve",
   professor: "Prof. Velibor Misic",
   term: "Fall 2026",
   examInfo: "Final: Wed Dec 9, 2026, 1:00 to 4:00pm PT, both sections together (room TBA). In person, closed book and closed notes; a simple non-graphing calculator is allowed; AI is not permitted on the final. Homework 1 is due Wed Nov 18, 2026 and Homework 2 is due Wed Dec 2, 2026, both 11:59pm PT via BruinLearn.",

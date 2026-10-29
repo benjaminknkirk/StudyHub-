@@ -9,6 +9,8 @@ window.COURSE_DATA = window.COURSE_DATA || {};
 window.COURSE_DATA["python-workshop"] = {
   "id": "python-workshop",
   "name": "Python Workshop: Python Fundamentals",
+  "banner": "images/python-workshop.svg",
+  "bannerAlt": "Indented lines, the shape of a Python program",
   "professor": "Prof. Paul Deitel",
   "term": "Fall 2026",
   "examInfo": "No final exam and no GPA grade. Deitel awards a certificate grade (Completed, High Pass, or Pass with Distinction) based on the chapter quizzes (Chapters 2 to 10, one 9 or 10 question multiple choice quiz per chapter, open book, work on your own) and the required weekly lab notebooks. Labs are due Mondays at 12:00pm PT; chapter quizzes are due Tuesdays at 11:59pm PT. Lectures are Thursdays 8:00 to 11:00am PT on Zoom.",

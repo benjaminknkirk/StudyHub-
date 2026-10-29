@@ -31,6 +31,8 @@ This format implements Section 12 of `~/workspace/school/learning-plan-site-spec
 |---|---|---|---|
 | `id` | string | yes | Must equal the file/registry id, e.g. `"mgmtmsa-402"`. |
 | `name` | string | yes | Display name, e.g. `"MGMTMSA 402: SQL and Databases"`. |
+| `banner` | string | no | Path, from the site root, of a header image for the course page, e.g. `"images/mgmtmsa-402.svg"`. Prefer a small SVG committed in the repo. Omit the field and the page has no banner. |
+| `bannerAlt` | string | with `banner` | One line describing the image, for the alt text. |
 | `professor` | string | yes | Instructor name as it should appear on the rules card. |
 | `term` | string | no | e.g. `"Fall 2026"`. |
 | `termDates` | object | no | `{ start, end }`, both `YYYY-MM-DD`. `start` is the first class. `end` is the final date, or the last day of the term when the course has no final. The time-to-final pill uses this. Only dates already established for the course; never invent one to fill the field. |

@@ -8,6 +8,8 @@ window.COURSE_DATA = window.COURSE_DATA || {};
 window.COURSE_DATA["mgmtmsa-400"] = {
   id: "mgmtmsa-400",
   name: "MGMTMSA 400: Statistical Foundations",
+  banner: "images/mgmtmsa-400.svg",
+  bannerAlt: "A normal curve with the mean marked and a band around the center",
   professor: "Prof. Yihao Yuan",
   term: "Fall 2026",
   examInfo: "Mid-quarter exam: Tue Oct 27, 2026 (taken). Final: Tue Dec 8, 2026, 1:00 to 2:30pm PT, Crown Auditorium. Both exams: 27 to 30 multiple choice questions, 90 minutes, closed book, with a calculator and one double sided 8.5x11 notes page built by hand.",

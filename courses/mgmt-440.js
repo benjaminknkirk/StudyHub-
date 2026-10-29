@@ -13,6 +13,8 @@ window.COURSE_DATA = window.COURSE_DATA || {};
 window.COURSE_DATA["mgmt-440"] = {
   "id": "mgmt-440",
   "name": "MGMT 440: Product Management",
+  "banner": "images/mgmt-440.svg",
+  "bannerAlt": "A path of three steps rising toward a marked destination",
   "professor": "Prof. Surbhi Kaul",
   "term": "Fall 2026",
   "examInfo": "No final exam. The quizzes are the exam equivalents: Quiz #1 due Sun Nov 1, 2026 and Quiz #2 due Sun Nov 22, 2026, both 11:59pm PT via the course site. Other graded work: Product Critique due Nov 8, Success Metrics and KPIs Exercise due Nov 15, Final Presentation and Written Response on Thu Dec 3, 2026. Classes meet Thursdays 1:00 to 3:50pm PT in Entrepreneurs Hall C301 (Oct 29, Nov 5, Nov 12, Nov 19, Dec 3).",

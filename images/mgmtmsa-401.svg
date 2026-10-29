@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img">
+  <title>Two groups of points separated by a decision curve</title>
+  <style>
+    .paper { fill: #faf7f1; }
+    .bound { fill: none; stroke: #8a6d1a; stroke-width: 3; stroke-linecap: round; }
+    .a { fill: #17635a; }
+    .b { fill: #1b2330; }
+    .ring { fill: none; stroke: #17635a; stroke-width: 2; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #10151c; }
+      .bound { stroke: #d9bc6a; }
+      .a { fill: #5fc2ae; }
+      .b { fill: #ece9e1; }
+      .ring { stroke: #5fc2ae; }
+    }
+  </style>
+  <rect class="paper" width="1200" height="320"/>
+  <path class="bound" d="M90 78 C 380 96, 620 150, 1110 248"/>
+  <g class="a">
+    <circle cx="210" cy="200" r="9"/>
+    <circle cx="268" cy="236" r="7"/>
+    <circle cx="250" cy="168" r="8"/>
+    <circle cx="330" cy="214" r="10"/>
+    <circle cx="176" cy="246" r="6"/>
+    <circle cx="390" cy="252" r="8"/>
+    <circle cx="312" cy="176" r="7"/>
+    <circle cx="228" cy="268" r="5"/>
+    <circle cx="420" cy="220" r="6"/>
+  </g>
+  <g class="b">
+    <circle cx="700" cy="78" r="8"/>
+    <circle cx="768" cy="58" r="7"/>
+    <circle cx="846" cy="96" r="10"/>
+    <circle cx="910" cy="68" r="8"/>
+    <circle cx="812" cy="124" r="7"/>
+    <circle cx="960" cy="108" r="9"/>
+    <circle cx="736" cy="138" r="6"/>
+    <circle cx="888" cy="142" r="8"/>
+    <circle cx="1020" cy="150" r="6"/>
+  </g>
+  <circle class="ring" cx="812" cy="124" r="16"/>
+</svg>

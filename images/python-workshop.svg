@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img">
+  <title>Indented lines, the shape of a Python program</title>
+  <style>
+    .paper { fill: #faf7f1; }
+    .card { fill: #fffdf8; stroke: #cfc4ab; stroke-width: 2; }
+    .bar { fill: #1b2330; }
+    .prompt { fill: none; stroke: #17635a; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .caret { fill: #8a6d1a; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #10151c; }
+      .card { fill: #171e28; stroke: #3d4a5c; }
+      .bar { fill: #ece9e1; }
+      .prompt { stroke: #5fc2ae; }
+      .caret { fill: #d9bc6a; }
+    }
+  </style>
+  <rect class="paper" width="1200" height="320"/>
+  <rect class="card" x="250" y="46" width="700" height="228" rx="18"/>
+  <path class="prompt" d="M292 92 l16 12 l-16 12"/>
+  <rect class="bar" x="340" y="92" width="430" height="14" rx="7"/>
+  <rect class="bar" x="390" y="132" width="360" height="14" rx="7"/>
+  <rect class="bar" x="440" y="172" width="250" height="14" rx="7"/>
+  <rect class="bar" x="390" y="212" width="180" height="14" rx="7"/>
+  <rect class="caret" x="582" y="208" width="3" height="22" rx="1"/>
+</svg>

@@ -1,13 +1,18 @@
 /* StudyHub service worker. Network first, so a reload picks up course edits,
    with a cache fallback so the site still opens offline. Installing to the
    home screen (see the manifest) is what keeps iOS from evicting the saved state. */
-var CACHE = "studyhub-v1";
+var CACHE = "studyhub-v2";
 var CORE = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
+  "./images/mgmtmsa-400.svg",
+  "./images/mgmtmsa-401.svg",
+  "./images/mgmtmsa-402.svg",
+  "./images/mgmt-440.svg",
+  "./images/python-workshop.svg",
   "./courses/registry.js",
   "./courses/mgmtmsa-400.js",
   "./courses/mgmtmsa-401.js",

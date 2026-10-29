@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img">
+  <title>A path of three steps rising toward a destination</title>
+  <style>
+    .paper { fill: #faf7f1; }
+    .grid { stroke: #e3dbc9; stroke-width: 1.5; fill: none; }
+    .path { fill: none; stroke: #8a6d1a; stroke-width: 3.5; stroke-linecap: round; }
+    .stop { fill: #fffdf8; stroke: #1b2330; stroke-width: 2.5; }
+    .gem { fill: #17635a; }
+    @media (prefers-color-scheme: dark) {
+      .paper { fill: #10151c; }
+      .grid { stroke: #2a3442; }
+      .path { stroke: #d9bc6a; }
+      .stop { fill: #171e28; stroke: #ece9e1; }
+      .gem { fill: #5fc2ae; }
+    }
+  </style>
+  <rect class="paper" width="1200" height="320"/>
+  <path class="grid" d="M80 80 H1120 M80 160 H1120 M80 240 H1120"/>
+  <path class="path" d="M150 236 C 280 232, 340 198, 460 184 C 600 168, 680 140, 820 116 C 940 96, 1000 84, 1068 74"/>
+  <circle class="stop" cx="168" cy="234" r="12"/>
+  <circle class="stop" cx="470" cy="184" r="12"/>
+  <circle class="stop" cx="830" cy="114" r="12"/>
+  <rect class="gem" x="1056" y="62" width="22" height="22" transform="rotate(45 1067 73)"/>
+</svg>
