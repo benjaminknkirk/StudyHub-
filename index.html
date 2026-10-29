@@ -75,6 +75,21 @@
                border-radius:999px; background:var(--bad); color:#fff; font-size:12px; font-weight:700;
                display:flex; align-items:center; justify-content:center; border:2px solid var(--surface); }
 
+  /* course pill slider: swipe or scroll sideways between classes */
+  .course-slider { display:flex; gap:8px; overflow-x:auto; overflow-y:hidden; flex:1 1 300px; min-width:0;
+                   padding:4px 2px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .course-slider::-webkit-scrollbar { display:none; }
+  .course-slider a { flex:none; white-space:nowrap; padding:8px 15px; border-radius:999px;
+                     border:1px solid var(--line); background:var(--surface-muted); color:var(--ink);
+                     font-size:14.5px; font-weight:600; text-decoration:none;
+                     transition:background .15s ease, color .15s ease, border-color .15s ease; }
+  .course-slider a:hover { border-color:var(--line-strong); color:var(--accent-strong); }
+  .course-slider a.active { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  @media (max-width:640px){
+    .course-slider { flex-basis:100%; order:3; }
+    .course-slider a { padding:10px 15px; }
+  }
+
   .wrap { max-width:840px; margin:0 auto; padding:26px 20px 64px; }
 
   /* type */
@@ -263,7 +278,8 @@
 <body>
 <header class="site"><div class="wrap">
   <a class="brand" href="#/">Integrated Learning Plan</a>
-  <nav><a href="#/">Home</a><a href="#/errors">Error Log</a><span id="navcourses"></span></nav>
+  <nav><a href="#/">Home</a><a href="#/errors">Error Log</a></nav>
+  <div class="course-slider" id="navcourses" aria-label="Courses"></div>
   <a class="bell" href="#/notifications" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="bellbadge" class="bellbadge hidden">0</span></a>
 </div></header>
 <main class="wrap" id="app">Loading courses…</main>
@@ -453,7 +469,17 @@ function topicRetrievalDue(cid, tid){
 }
 
 /* ============================== routing ============================== */
+function updateNavActive(){
+  var nav = $("navcourses"); if (!nav || !nav.children) return;
+  var m = location.hash.match(/#\/(?:course|topic|examples|final|retrieval)\/([^\/]+)/);
+  var cid = m ? m[1] : null;
+  for (var i = 0; i < nav.children.length; i++){
+    var a = nav.children[i];
+    if (a.getAttribute && a.getAttribute("data-cid")) a.classList.toggle("active", a.getAttribute("data-cid") === cid);
+  }
+}
 function route(){
+  updateNavActive();
   var h = location.hash.replace(/^#\/?/, "");
   var seg = h.split("/").filter(function(x){ return x !== ""; });
   window.scrollTo(0, 0);
@@ -1355,7 +1381,7 @@ loadState();
 loadCourses(function(){
   collectCourses();
   var nav = $("navcourses");
-  if (nav) nav.innerHTML = COURSES.map(function(c){ return "<a href=\"#/course/" + c.id + "\">" + esc(c.name.split(":")[0]) + "</a>"; }).join("");
+  if (nav) nav.innerHTML = COURSES.map(function(c){ return "<a href=\"#/course/" + c.id + "\" data-cid=\"" + c.id + "\">" + esc(c.name.split(":")[0]) + "</a>"; }).join("");
   route();
   updateBell();
 });
