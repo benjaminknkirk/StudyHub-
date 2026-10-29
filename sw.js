@@ -1,7 +1,10 @@
 /* StudyHub service worker. Network first, so a reload picks up course edits,
    with a cache fallback so the site still opens offline. Installing to the
    home screen (see the manifest) is what keeps iOS from evicting the saved state. */
-var CACHE = "studyhub-v2";
+var CACHE = "studyhub-v3";
+/* Library binaries under files/<course-id>/ are intentionally absent from CORE.
+   They are cached only after the browser requests them (a download or a preview).
+   index.json is small and is cached like the rest of the site, network first. */
 var CORE = [
   "./",
   "./index.html",

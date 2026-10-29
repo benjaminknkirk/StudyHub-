@@ -138,6 +138,32 @@
   .course-banner { display:block; width:100%; height:auto; margin:4px 0 18px;
                    border:1px solid var(--line); border-radius:16px; background:var(--surface);
                    box-shadow:var(--shadow-sm); }
+  .file-tools { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:8px 0; }
+  .file-tools input[type=text] { flex:1 1 180px; margin:0; }
+  .file-chips { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 4px; }
+  .file-chip.cur { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .file-row { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-top:1px solid var(--line); }
+  .file-ico { flex:none; width:36px; height:36px; color:var(--ink); }
+  .file-ico svg { display:block; width:36px; height:36px; }
+  .file-main { flex:1; min-width:0; }
+  .file-name { font-weight:600; word-break:break-word; }
+  .file-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+  .file-group { font-weight:600; margin:16px 0 0; }
+  .file-preview { position:fixed; inset:0; z-index:40; display:none; padding:18px;
+                  background:rgba(27,35,48,.5); }
+  .file-preview.open { display:flex; align-items:flex-start; justify-content:center; overflow:auto; }
+  .file-preview-card { background:var(--surface); color:var(--ink); width:min(960px, 100%);
+                       border-radius:16px; padding:16px 16px 20px; border:1px solid var(--line);
+                       box-shadow:var(--shadow-md); }
+  .file-preview img { display:block; width:100%; height:auto; max-height:70vh; object-fit:contain;
+                      background:var(--surface-muted); border-radius:12px; }
+  .file-preview iframe { display:block; width:100%; height:70vh; border:0; border-radius:12px;
+                         background:var(--surface-muted); }
+  @media (max-width:640px) {
+    .file-actions .btn, .file-actions button, .file-actions a.btn { flex:1 1 auto; text-align:center; }
+    .file-preview { padding:10px; }
+    .file-preview iframe { height:60vh; }
+  }
   .setup { background:var(--accent-soft); border-color:var(--line-strong); border-left:4px solid var(--accent); }
   .bar { height:10px; background:var(--surface-muted); border-radius:999px; overflow:hidden; margin:10px 0 5px;
          box-shadow:inset 0 1px 2px rgba(27,35,48,.08); }
@@ -756,11 +782,13 @@ function segStep(dir){
   if (COURSES[j] && (idx < 0 || j !== idx)) location.hash = "#/course/" + COURSES[j].id;
 }
 function route(){
+  if (typeof closeFilePreview === "function") closeFilePreview();
   updateNavActive();
   var h = location.hash.replace(/^#\/?/, "");
   var seg = h.split("/").filter(function(x){ return x !== ""; });
   window.scrollTo(0, 0);
   if (seg.length === 0) return renderHome();
+  if (seg[0] === "course" && seg[1] && seg[2] === "files") return renderFiles(seg[1]);
   if (seg[0] === "course" && seg[1]) return renderCourse(seg[1]);
   if (seg[0] === "topic" && seg[1] && seg[2]) return renderTopic(seg[1], seg[2], seg[3] ? parseInt(seg[3], 10) : 0);
   if (seg[0] === "examples" && seg[1]) return renderExamples(seg[1]);
@@ -1055,7 +1083,8 @@ function renderCourse(cid){
   html += "<div class=\"bar\"><div style=\"width:" + (total ? Math.round(100 * learned / total) : 0) + "%\"></div></div>"
     + "<p class=\"small muted\">" + learned + " of " + total + " topics learned</p>"
     + pillsHtml(c)
-    + "<p><a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> <a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a></p>";
+    + "<p><a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> <a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a> <a class=\"btn secondary\" href=\"#/course/" + c.id + "/files\">File library</a></p>"
+    + fileLibraryShell(c);
   c.chapters.forEach(function(ch){
     html += "<h2>" + esc(ch.title) + "</h2>";
     ch.topics.forEach(function(t){
@@ -1073,7 +1102,205 @@ function renderCourse(cid){
     });
   });
   app.innerHTML = html;
+  mountFileLibrary(c.id);
 }
+
+/* ============================== FILE LIBRARY ============================== */
+/* One library per course. The list comes from files/<id>/index.json, which
+   scripts/build-file-manifests.js regenerates. The repo is public, so every
+   file listed here is publicly downloadable. */
+var fileLibCid = null;
+var fileLibType = "all";
+var fileLibData = null;
+function fileLibraryShell(c, alone){
+  return "<section class=\"card\" id=\"filelib\">" + (alone ? "" : "<h3>File library</h3>")
+    + "<p class=\"small\">This library is in a public repository. Anyone who can open the site can download these files. Do not put private or unlicensed material here.</p>"
+    + "<div class=\"file-tools\"><input type=\"text\" id=\"file-q\" placeholder=\"Search files\" oninput=\"paintFileList()\" aria-label=\"Search files\">"
+    + (alone ? "" : "<a class=\"btn secondary\" href=\"#/course/" + c.id + "/files\">Library page</a>") + "</div>"
+    + "<div class=\"file-chips\" id=\"file-chips\"></div>"
+    + "<div id=\"file-list\"><p class=\"muted\">Loading the library…</p></div></section>";
+}
+function renderFiles(cid){
+  var c = courseById(cid), app = $("app");
+  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
+  app.innerHTML = "<p><a href=\"#/course/" + c.id + "\">&larr; " + esc(c.name) + "</a></p><h1>File library</h1>"
+    + "<p class=\"muted\">" + esc(c.name) + "</p>"
+    + fileLibraryShell(c, true);
+  mountFileLibrary(c.id);
+}
+function mountFileLibrary(cid){
+  if (fileLibCid !== cid){ fileLibCid = cid; fileLibType = "all"; fileLibData = null; }
+  var q = $("file-q"); if (q) q.value = "";
+  var list = $("file-list");
+  if (list) list.innerHTML = "<p class=\"muted\">Loading the library…</p>";
+  fetch("files/" + cid + "/index.json", { cache: "no-cache" }).then(function(res){
+    if (!res.ok) throw new Error("missing");
+    return res.json();
+  }).then(function(data){
+    if (fileLibCid !== cid) return;
+    fileLibData = data && data.files ? data : { files: [] };
+    paintFileList();
+  }).catch(function(){
+    if (fileLibCid !== cid) return;
+    fileLibData = { files: [], failed: true };
+    paintFileList();
+  });
+}
+function fileKind(ext){
+  ext = String(ext || "").toLowerCase();
+  if (ext === "pdf") return "pdf";
+  if (["png", "jpg", "jpeg", "gif", "webp", "svg"].indexOf(ext) >= 0) return "image";
+  return "file";
+}
+function fileKindLabel(kind){
+  if (kind === "pdf") return "PDF";
+  if (kind === "image") return "Image";
+  return "File";
+}
+function formatBytes(n){
+  n = Number(n) || 0;
+  if (n < 1024) return n + " B";
+  if (n < 1048576) return (n / 1024).toFixed(n < 10240 ? 1 : 0) + " KB";
+  return (n / 1048576).toFixed(1) + " MB";
+}
+function formatFileDate(iso){
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+function fileIcon(kind){
+  var body = kind === "image"
+    ? "<rect x=\"4\" y=\"6\" width=\"16\" height=\"12\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><circle cx=\"9\" cy=\"10\" r=\"1.4\" fill=\"currentColor\"/><path d=\"M4 15 l4-3 3 2 3-4 6 5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/>"
+    : (kind === "pdf"
+      ? "<path d=\"M6 3 h8 l4 4 v14 a1 1 0 0 1 -1 1 H6 a1 1 0 0 1 -1 -1 V4 a1 1 0 0 1 1 -1 z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M14 3 v5 h5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"7\" y=\"17\" font-size=\"6\" font-family=\"Inter, sans-serif\" fill=\"currentColor\">PDF</text>"
+      : "<path d=\"M6 3 h8 l4 4 v14 a1 1 0 0 1 -1 1 H6 a1 1 0 0 1 -1 -1 V4 a1 1 0 0 1 1 -1 z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M14 3 v5 h5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/>");
+  return "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">" + body + "</svg>";
+}
+function setFileType(t){ fileLibType = t; paintFileList(); }
+function paintFileList(){
+  var list = $("file-list"), chips = $("file-chips");
+  if (!list) return;
+  if (!fileLibData){ list.innerHTML = "<p class=\"muted\">Loading the library…</p>"; return; }
+  if (fileLibData.failed){ list.innerHTML = "<p class=\"err\">The library list could not be loaded. It may be unavailable offline until you have opened it once.</p>"; if (chips) chips.innerHTML = ""; return; }
+  var all = fileLibData.files || [];
+  var q = ($("file-q") && $("file-q").value || "").trim().toLowerCase();
+  var kinds = {};
+  all.forEach(function(f){ kinds[fileKind(f.ext)] = true; });
+  var kindOrder = ["pdf", "image", "file"].filter(function(k){ return kinds[k]; });
+  if (chips){
+    var chipHtml = "<button type=\"button\" class=\"plain file-chip" + (fileLibType === "all" ? " cur" : "") + "\" onclick=\"setFileType('all')\">All</button>";
+    kindOrder.forEach(function(k){
+      chipHtml += "<button type=\"button\" class=\"plain file-chip" + (fileLibType === k ? " cur" : "") + "\" onclick=\"setFileType('" + k + "')\">" + fileKindLabel(k) + "</button>";
+    });
+    chips.innerHTML = kindOrder.length ? chipHtml : "";
+  }
+  var shown = all.filter(function(f){
+    if (fileLibType !== "all" && fileKind(f.ext) !== fileLibType) return false;
+    if (!q) return true;
+    return (f.name + " " + (f.folder || "")).toLowerCase().indexOf(q) >= 0;
+  });
+  if (!all.length){ list.innerHTML = "<p class=\"muted\">No files in this library yet.</p>"; return; }
+  if (!shown.length){ list.innerHTML = "<p class=\"muted\">Nothing matches that search.</p>"; return; }
+  var hasFolder = all.some(function(f){ return !!f.folder; });
+  var groups = [];
+  var index = {};
+  shown.forEach(function(f){
+    var key = hasFolder ? (f.folder || "Course folder") : fileKindLabel(fileKind(f.ext));
+    if (!index[key]){ index[key] = []; groups.push(key); }
+    index[key].push(f);
+  });
+  var html = "";
+  groups.forEach(function(key){
+    html += "<p class=\"file-group\">" + esc(key) + "</p>";
+    index[key].forEach(function(f){
+      var kind = fileKind(f.ext);
+      var url = "files/" + fileLibCid + "/" + f.path.split("/").map(encodeURIComponent).join("/");
+      var encUrl = encodeURIComponent(url);
+      var encName = encodeURIComponent(f.name);
+      html += "<div class=\"file-row\"><div class=\"file-ico\">" + fileIcon(kind) + "</div><div class=\"file-main\">"
+        + "<div class=\"file-name\">" + esc(f.name) + "</div>"
+        + "<p class=\"small muted\" style=\"margin:2px 0 0\">" + esc(fileKindLabel(kind)) + " · " + esc(formatBytes(f.size)) + (f.date ? " · " + esc(formatFileDate(f.date)) : "") + "</p>"
+        + "<div class=\"file-actions\">"
+        + "<button type=\"button\" class=\"secondary\" onclick=\"downloadLibraryFile('" + encUrl + "','" + encName + "')\">Download</button>"
+        + (kind === "pdf" || kind === "image" ? "<button type=\"button\" class=\"plain\" onclick=\"openFilePreview('" + encUrl + "','" + encName + "','" + kind + "')\">Preview</button>" : "")
+        + "<a class=\"btn secondary\" href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">Open</a>"
+        + "</div></div></div>";
+    });
+  });
+  list.innerHTML = html;
+}
+function cacheLibraryResponse(url, response){
+  if (!window.caches || !response) return;
+  caches.open(CACHE_FILES).then(function(cache){ cache.put(url, response); }).catch(function(){});
+}
+var CACHE_FILES = "studyhub-files-v1";
+function saveBlobAs(blob, name){
+  var u = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = u;
+  a.download = name;
+  a.target = "_blank";
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(u); }, 4000);
+}
+function downloadLibraryFile(encUrl, encName){
+  var url = decodeURIComponent(encUrl);
+  var name = decodeURIComponent(encName);
+  fetch(url).then(function(res){
+    if (!res.ok) throw new Error("missing");
+    cacheLibraryResponse(url, res.clone());
+    return res.blob();
+  }).then(function(blob){
+    var file = null, canShare = false;
+    try { file = new File([blob], name, { type: blob.type || "application/octet-stream" }); } catch (e) { file = null; }
+    try { canShare = !!(file && navigator.canShare && navigator.canShare({ files: [file] })); } catch (e2) { canShare = false; }
+    if (canShare) {
+      navigator.share({ files: [file], title: name }).catch(function(err){
+        if (err && err.name === "AbortError") return;
+        saveBlobAs(blob, name);
+      });
+    } else saveBlobAs(blob, name);
+  }).catch(function(){
+    var fallback = window.caches && caches.match(url);
+    if (!fallback){ alert("That file could not be downloaded."); return; }
+    fallback.then(function(hit){
+      if (!hit){ alert("That file could not be downloaded. Open it once while online to keep a copy."); return; }
+      return hit.blob().then(function(blob){ saveBlobAs(blob, name); });
+    }).catch(function(){ alert("That file could not be downloaded."); });
+  });
+}
+function openFilePreview(encUrl, encName, kind){
+  var url = decodeURIComponent(encUrl);
+  var name = decodeURIComponent(encName);
+  fetch(url).then(function(res){ if (res.ok) cacheLibraryResponse(url, res.clone()); }).catch(function(){});
+  var box = $("file-preview");
+  if (!box){
+    box = document.createElement("div");
+    box.id = "file-preview";
+    box.className = "file-preview";
+    box.addEventListener("click", function(e){ if (e.target === box) closeFilePreview(); });
+    document.body.appendChild(box);
+  }
+  var view = kind === "image"
+    ? "<img src=\"" + esc(url) + "\" alt=\"" + esc(name) + "\">"
+    : "<iframe src=\"" + esc(url) + "\" title=\"" + esc(name) + "\"></iframe>";
+  box.innerHTML = "<div class=\"file-preview-card\"><p><strong>" + esc(name) + "</strong></p>"
+    + "<p><button type=\"button\" class=\"plain\" onclick=\"closeFilePreview()\">Close</button> "
+    + "<a class=\"btn secondary\" href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">Open</a> "
+    + "<button type=\"button\" class=\"secondary\" onclick=\"downloadLibraryFile('" + encodeURIComponent(url) + "','" + encodeURIComponent(name) + "')\">Download</button></p>"
+    + view + "</div>";
+  box.classList.add("open");
+}
+function closeFilePreview(){
+  var box = $("file-preview");
+  if (!box) return;
+  box.classList.remove("open");
+  box.innerHTML = "";
+}
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeFilePreview(); });
 
 /* ============================== EXAMPLES ============================== */
 function renderExamples(cid){

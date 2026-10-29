@@ -131,3 +131,32 @@ could have produced it cold; a "No" files the principle into the retrieval pool.
   full names where required, no banned constructs).
 - Student-facing fields (matrix cells, template cards, organizing fields) are never
   prefilled by the course file; the file only defines their labels and structure.
+
+## File library
+
+Course files are not embedded in the course `.js` file. They live in `files/<course-id>/`, which may contain subfolders. `files/<course-id>/index.json` is the list the site reads. Do not edit that file by hand.
+
+`index.json` shape:
+
+```json
+{
+  "courseId": "mgmtmsa-402",
+  "files": [
+    {
+      "name": "blank-notes.pdf",
+      "path": "blank-notes.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 591,
+      "date": "2026-10-29T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+`path` is relative to `files/<course-id>/` and uses forward slashes. `folder` is empty for a file in the course folder itself. `size` is bytes. `date` is when that version was first recorded; it stays put until the file size changes.
+
+Regenerate manifests with `node scripts/build-file-manifests.js`. The folder name must match the course id in `courses/registry.js`.
+
+**The repository is public.** Files in `files/` are publicly downloadable from the GitHub Pages site. Do not commit private or unlicensed material.

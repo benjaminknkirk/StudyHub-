@@ -1,0 +1,23 @@
+{
+  "courseId": "mgmtmsa-402",
+  "files": [
+    {
+      "name": "blank-notes.pdf",
+      "path": "blank-notes.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 591,
+      "date": "2026-10-29T02:51:32.947Z"
+    },
+    {
+      "name": "table-sketch.svg",
+      "path": "figures/table-sketch.svg",
+      "folder": "figures",
+      "ext": "svg",
+      "mime": "image/svg+xml",
+      "size": 881,
+      "date": "2026-10-29T02:51:27.131Z"
+    }
+  ]
+}
