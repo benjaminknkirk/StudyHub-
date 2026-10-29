@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integrated Learning Plan</title>
+<style>
+  :root { --ink:#1c2430; --muted:#5b6572; --line:#d8dde3; --accent:#2456a6; --accent-soft:#eaf0fa;
+          --good:#1e7d46; --good-soft:#e6f4ec; --bad:#b3372e; --bad-soft:#fbeae8; --warn:#8a6d1a; --warn-soft:#faf3d9; }
+  * { box-sizing: border-box; }
+  body { margin:0; color:var(--ink); background:#fff; font-family:-apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         font-size:18px; line-height:1.55; }
+  header.site { border-bottom:1px solid var(--line); }
+  header.site .wrap { display:flex; gap:18px; align-items:baseline; flex-wrap:wrap; }
+  header.site a { color:var(--ink); text-decoration:none; }
+  header.site .brand { font-weight:700; font-size:20px; }
+  header.site nav a { color:var(--accent); margin-right:14px; font-size:16px; }
+  .wrap { max-width:780px; margin:0 auto; padding:20px 18px 60px; }
+  header.site .wrap { padding-top:14px; padding-bottom:14px; }
+  h1 { font-size:30px; line-height:1.2; margin:10px 0 6px; }
+  h2 { font-size:23px; margin:26px 0 8px; }
+  h3 { font-size:19px; margin:20px 0 6px; }
+  p { margin:8px 0; }
+  .muted { color:var(--muted); font-size:16px; }
+  .small { font-size:15px; }
+  a { color:var(--accent); }
+  .card { border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:14px 0; background:#fff; }
+  .card h3 { margin-top:0; }
+  .setup { background:var(--accent-soft); border-color:#c3d2ec; }
+  .bar { height:12px; background:#edf0f3; border-radius:6px; overflow:hidden; margin:8px 0 4px; }
+  .bar > div { height:100%; background:var(--accent); }
+  .badge { display:inline-block; font-size:13px; font-weight:600; padding:2px 8px; border-radius:20px; vertical-align:middle; }
+  .badge.prov { background:var(--warn-soft); color:var(--warn); border:1px solid #e3d193; }
+  .badge.learned { background:var(--good-soft); color:var(--good); border:1px solid #a9d6ba; }
+  .badge.due { background:var(--bad-soft); color:var(--bad); border:1px solid #eba79f; }
+  .badge.stage { background:#eef1f5; color:var(--muted); border:1px solid var(--line); }
+  button, .btn { font:inherit; font-size:16px; cursor:pointer; border:1px solid var(--accent); color:#fff; background:var(--accent);
+                 border-radius:8px; padding:8px 16px; text-decoration:none; display:inline-block; }
+  button.secondary, .btn.secondary { background:#fff; color:var(--accent); }
+  button.plain { background:#fff; color:var(--ink); border-color:var(--line); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  button.opt { display:block; width:100%; text-align:left; margin:8px 0; background:#fff; color:var(--ink); border:1px solid var(--line); }
+  button.opt.sel { border-color:var(--accent); background:var(--accent-soft); }
+  button.opt.right { border-color:var(--good); background:var(--good-soft); }
+  button.opt.wrong { border-color:var(--bad); background:var(--bad-soft); }
+  textarea, input[type=text], input[type=number] { font:inherit; width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:8px; margin:4px 0 10px; }
+  textarea { min-height:64px; }
+  input[type=range] { width:100%; }
+  pre { background:#f4f6f8; border:1px solid var(--line); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:15.5px; line-height:1.45; }
+  code { font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.92em; }
+  pre code { font-size:15.5px; }
+  table.md { border-collapse:collapse; margin:10px 0; width:100%; }
+  table.md th, table.md td { border:1px solid var(--line); padding:7px 10px; text-align:left; font-size:16.5px; vertical-align:top; }
+  table.md th { background:#f4f6f8; }
+  .feedback { border-radius:8px; padding:12px 14px; margin:12px 0; }
+  .feedback.ok { background:var(--good-soft); border:1px solid #a9d6ba; }
+  .feedback.no { background:var(--bad-soft); border:1px solid #eba79f; }
+  .rail { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+  .rail button { background:#fff; color:var(--ink); border:1px solid var(--line); font-size:15px; padding:7px 12px; }
+  .rail button.cur { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); font-weight:600; }
+  .rail button.done { border-color:#a9d6ba; }
+  .pager { display:flex; justify-content:space-between; align-items:center; margin:18px 0; }
+  .err { color:var(--bad); font-size:16px; }
+  .okmsg { color:var(--good); font-size:16px; }
+  ul.tight { margin:6px 0; padding-left:22px; }
+  ul.tight li { margin:4px 0; }
+  .queue-item { display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
+  footer.site { border-top:1px solid var(--line); color:var(--muted); font-size:15px; }
+  .hidden { display:none; }
+  label.flabel { font-weight:600; font-size:16px; display:block; margin-top:12px; }
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="#/">Integrated Learning Plan</a>
+  <nav><a href="#/">Home</a><a href="#/errors">Error Log</a><span id="navcourses"></span></nav>
+</div></header>
+<main class="wrap" id="app">Loading courses…</main>
+<footer class="site"><div class="wrap">Built for studying. Progress saves in this browser; export your state from Home to move it between devices.</div></footer>
+
+<script src="courses/registry.js"></script>
+<script>
+"use strict";
+/* ============================== utilities ============================== */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function todayStr(d){ d = d || new Date(); var m = d.getMonth()+1, day = d.getDate(); return d.getFullYear()+"-"+(m<10?"0":"")+m+"-"+(day<10?"0":"")+day; }
+function addDays(str, n){ var d = new Date(str+"T12:00:00"); d.setDate(d.getDate()+n); return todayStr(d); }
+function daysBetween(a, b){ return Math.round((new Date(b+"T12:00:00") - new Date(a+"T12:00:00")) / 86400000); }
+function shuffle(a){ a = a.slice(); for (var i=a.length-1;i>0;i--){ var j = Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function inlineMd(t){
+  return esc(t).replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+}
+function md(t){
+  if (!t) return "";
+  var parts = String(t).split(/```/), out = [];
+  for (var i=0;i<parts.length;i++){
+    if (i % 2 === 1){ out.push("<pre><code>"+esc(parts[i].replace(/^\n+|\n+$/g,""))+"</code></pre>"); continue; }
+    var lines = parts[i].split("\n"), buf = [], mode = null;
+    function flush(){
+      if (!buf.length) return;
+      if (mode === "ul"){ out.push("<ul class=\"tight\">"+buf.map(function(x){ return "<li>"+inlineMd(x)+"</li>"; }).join("")+"</ul>"); }
+      else if (mode === "table"){
+        var rows = buf.filter(function(x){ return !/^\|[\s\-|]+\|$/.test(x); }).map(function(x){ return x.split("|").slice(1,-1).map(function(c){ return c.trim(); }); });
+        var s = "<table class=\"md\">";
+        rows.forEach(function(r, ri){ s += "<tr>"+r.map(function(c){ return ri===0 ? "<th>"+inlineMd(c)+"</th>" : "<td>"+inlineMd(c)+"</td>"; }).join("")+"</tr>"; });
+        out.push(s+"</table>");
+      }
+      else { out.push(buf.map(function(x){ return "<p>"+inlineMd(x)+"</p>"; }).join("")); }
+      buf = []; mode = null;
+    }
+    lines.forEach(function(ln){
+      var s = ln.trim();
+      if (s === ""){ flush(); return; }
+      if (s.indexOf("- ") === 0){ if (mode !== "ul") flush(); mode = "ul"; buf.push(s.slice(2)); return; }
+      if (s.charAt(0) === "|"){ if (mode !== "table") flush(); mode = "table"; buf.push(s); return; }
+      if (mode) flush(); buf.push(s);
+    });
+    flush();
+  }
+  return out.join("\n");
+}
+
+/* ============================== state ============================== */
+var LS_KEY = "ilp-state-v1";
+var state = null;
+function blankState(){ return { v:1, topics:{}, errors:[], exampleFlags:{}, finals:[] }; }
+function loadState(){
+  try { var raw = localStorage.getItem(LS_KEY); state = raw ? JSON.parse(raw) : blankState(); }
+  catch(e){ state = blankState(); }
+  if (!state.topics) state = blankState();
+}
+function saveState(){ try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){} }
+function tkey(cid, tid){ return cid + "/" + tid; }
+function tstate(cid, tid){
+  var k = tkey(cid, tid);
+  if (!state.topics[k]) state.topics[k] = { completed:{}, predict:{}, learn:{ selfExplains:{}, revisits:0 }, organize:{ blocks:{}, redraw:{}, matrix:{} }, cards:{}, sorting:{}, practice:{}, quizServings:[], usedQ:[], retrievals:[], learned:false, nextRetrieval:null };
+  return state.topics[k];
+}
+function stageDone(cid, tid, idx){ return !!tstate(cid, tid).completed[idx]; }
+
+/* ============================== course registry ============================== */
+var COURSES = [];
+function loadCourses(done){
+  window.COURSE_DATA = window.COURSE_DATA || {};
+  var ids = window.COURSE_REGISTRY || [];
+  var pending = ids.length;
+  if (!pending){ done(); return; }
+  ids.forEach(function(id){
+    var s = document.createElement("script");
+    s.src = "courses/" + id + ".js";
+    s.onload = s.onerror = function(){ if (--pending === 0) done(); };
+    document.body.appendChild(s);
+  });
+}
+function collectCourses(){
+  COURSES = (window.COURSE_REGISTRY || []).map(function(id){ return window.COURSE_DATA[id]; }).filter(Boolean);
+}
+function courseById(cid){ return COURSES.filter(function(c){ return c.id === cid; })[0] || null; }
+function topicById(course, tid){
+  var found = null;
+  course.chapters.forEach(function(ch){ ch.topics.forEach(function(t){ if (t.id === tid) found = { chapter: ch, topic: t }; }); });
+  return found;
+}
+function allTopics(course){
+  var out = [];
+  course.chapters.forEach(function(ch){ ch.topics.forEach(function(t){ out.push({ chapter: ch, topic: t }); }); });
+  return out;
+}
+function questionById(course, qid){
+  var found = null;
+  allTopics(course).forEach(function(x){ x.topic.questions.forEach(function(q){ if (q.id === qid) found = { topic: x.topic, q: q }; }); });
+  return found;
+}
+
+/* ============================== error log engine ============================== */
+var RETEST_GAPS = [1, 4, 9, 21]; // about 1d, 3-4d, 8-10d, 21d
+function fileErrorDraft(cid, tid, q, confidence){
+  var entry = {
+    id: "e" + Date.now() + Math.floor(Math.random()*100000),
+    cid: cid, tid: tid, qid: q ? q.id : null,
+    problem: q ? q.prompt : "",
+    principle: q ? q.principle : "practice",
+    difficulty: q ? q.difficulty : 2,
+    confidence: (confidence == null ? null : confidence),
+    wrongStep: "", correctPrinciple: "",
+    status: "draft", created: todayStr(), stageIdx: 0, nextDue: null, clean: 0, served: q ? [q.id] : []
+  };
+  state.errors.push(entry); saveState();
+  return entry;
+}
+function completeErrorEntry(entry, wrongStep, correctPrinciple){
+  entry.wrongStep = wrongStep; entry.correctPrinciple = correctPrinciple;
+  entry.status = "open"; entry.stageIdx = 0; entry.clean = 0;
+  entry.nextDue = addDays(todayStr(), RETEST_GAPS[0]);
+  saveState();
+}
+function sortedDueErrors(){
+  var t = todayStr();
+  var open = state.errors.filter(function(e){ return e.status === "open" && e.nextDue && e.nextDue <= t; });
+  var counts = {};
+  state.errors.forEach(function(e){ if (e.status === "open") counts[e.principle] = (counts[e.principle] || 0) + 1; });
+  return open.sort(function(a, b){
+    var ra = counts[a.principle] >= 2 ? 0 : 1, rb = counts[b.principle] >= 2 ? 0 : 1;
+    if (ra !== rb) return ra - rb;
+    var ha = (a.confidence != null && a.confidence >= 80) ? 0 : 1, hb = (b.confidence != null && b.confidence >= 80) ? 0 : 1;
+    if (ha !== hb) return ha - hb;
+    return a.nextDue < b.nextDue ? -1 : 1;
+  });
+}
+function pickRetestQuestion(entry){
+  var course = courseById(entry.cid); if (!course) return null;
+  var found = topicById(course, entry.tid); if (!found) return null;
+  var pool = found.topic.questions.filter(function(q){ return entry.served.indexOf(q.id) === -1; });
+  if (!pool.length) return null;
+  var same = pool.filter(function(q){ return q.principle === entry.principle; });
+  var near = same.filter(function(q){ return Math.abs(q.difficulty - entry.difficulty) <= 1; });
+  var pickFrom = near.length ? near : (same.length ? same : pool);
+  return pickFrom[Math.floor(Math.random() * pickFrom.length)];
+}
+
+/* ============================== mastery ============================== */
+function recordQuizResult(cid, tid, score, n, qids){
+  var ts = tstate(cid, tid), t = todayStr();
+  ts.quizServings.push({ date: t, score: score, n: n });
+  qids.forEach(function(id){ if (ts.usedQ.indexOf(id) === -1) ts.usedQ.push(id); });
+  if (score >= 0.7){
+    if (ts.retrievals.filter(function(r){ return r.date === t; }).length === 0 && ts.quizServings.length > 1){
+      // a later passing serving on a new day counts as one spaced retrieval
+      ts.retrievals.push({ date: t, score: score, n: n, via: "quiz" });
+    }
+    ts.nextRetrieval = addDays(t, score > 0.9 ? 4 : 2);
+  } else if (score < 0.5){
+    ts.shrunk = true; ts.nextRetrieval = addDays(t, 1);
+  } else {
+    ts.nextRetrieval = addDays(t, 1);
+  }
+  updateLearned(cid, tid); saveState();
+}
+function recordRetrievalResult(cid, tid, score, n, qids){
+  var ts = tstate(cid, tid), t = todayStr();
+  qids.forEach(function(id){ if (ts.usedQ.indexOf(id) === -1) ts.usedQ.push(id); });
+  var alreadyToday = ts.retrievals.some(function(r){ return r.date === t; });
+  if (score >= 0.7 && !alreadyToday) ts.retrievals.push({ date: t, score: score, n: n, via: "retrieval" });
+  var gaps = [3, 8, 21];
+  var idx = Math.min(ts.retrievals.length, gaps.length - 1);
+  ts.nextRetrieval = addDays(t, score >= 0.7 ? gaps[idx] : 1);
+  updateLearned(cid, tid); saveState();
+}
+function updateLearned(cid, tid){
+  var ts = tstate(cid, tid);
+  var days = {};
+  ts.retrievals.forEach(function(r){ if (r.score >= 0.7) days[r.date] = true; });
+  ts.learned = Object.keys(days).length >= 3;
+}
+function learnedCount(course){
+  return allTopics(course).filter(function(x){ return tstate(course.id, x.topic.id).learned; }).length;
+}
+function topicRetrievalDue(cid, tid){
+  var ts = tstate(cid, tid);
+  return !ts.learned && ts.nextRetrieval && ts.nextRetrieval <= todayStr() && ts.quizServings.length > 0;
+}
+
+/* ============================== routing ============================== */
+function route(){
+  var h = location.hash.replace(/^#\/?/, "");
+  var seg = h.split("/").filter(function(x){ return x !== ""; });
+  window.scrollTo(0, 0);
+  if (seg.length === 0) return renderHome();
+  if (seg[0] === "course" && seg[1]) return renderCourse(seg[1]);
+  if (seg[0] === "topic" && seg[1] && seg[2]) return renderTopic(seg[1], seg[2], seg[3] ? parseInt(seg[3], 10) : 0);
+  if (seg[0] === "examples" && seg[1]) return renderExamples(seg[1]);
+  if (seg[0] === "final" && seg[1]) return renderFinal(seg[1]);
+  if (seg[0] === "errors") return renderErrors();
+  if (seg[0] === "retrieval" && seg[1] && seg[2]) return renderRetrieval(seg[1], seg[2]);
+  renderHome();
+}
+window.addEventListener("hashchange", route);
+</script>
+<script>
+"use strict";
+/* ============================== HOME ============================== */
+function computeToday(){
+  var items = [], seenTopics = {};
+  function addTopic(key){ seenTopics[key] = true; }
+  var dueErrors = sortedDueErrors();
+  var errTopics = {};
+  dueErrors.forEach(function(e){ errTopics[tkey(e.cid, e.tid)] = true; addTopic(tkey(e.cid, e.tid)); });
+  if (dueErrors.length) items.push({ kind: "errors", count: dueErrors.length, label: dueErrors.length + " error log retest" + (dueErrors.length > 1 ? "s" : "") + " due", href: "#/errors" });
+  var dueRetr = [];
+  COURSES.forEach(function(c){ allTopics(c).forEach(function(x){
+    if (topicRetrievalDue(c.id, x.topic.id)){ dueRetr.push({ c: c, x: x }); addTopic(tkey(c.id, x.topic.id)); }
+  }); });
+  dueRetr.forEach(function(d){ items.push({ kind: "retrieval", label: "Retrieval due: " + d.x.topic.title + " (" + d.c.name.split(":")[0] + ")", href: "#/retrieval/" + d.c.id + "/" + d.x.topic.id }); });
+  var room = Math.max(0, 7 - Object.keys(seenTopics).length);
+  var next = [];
+  COURSES.forEach(function(c){ allTopics(c).forEach(function(x){
+    if (room <= 0) return;
+    var ts = tstate(c.id, x.topic.id);
+    var started = Object.keys(ts.completed).length > 0;
+    if (!ts.learned && !seenTopics[tkey(c.id, x.topic.id)] && (started || next.length === 0 || started)){
+      if (started || next.filter(function(n){ return !n.started; }).length < 2){ next.push({ c: c, x: x, started: started }); addTopic(tkey(c.id, x.topic.id)); room--; }
+    }
+  }); });
+  next.forEach(function(n){ items.push({ kind: "topic", label: (n.started ? "Continue: " : "New: ") + n.x.topic.title + " (" + n.c.name.split(":")[0] + ")", href: "#/topic/" + n.c.id + "/" + n.x.topic.id + "/0" }); });
+  return { items: items, topicCount: Object.keys(seenTopics).length + next.length > 0 ? Object.keys(seenTopics).length : 0, topicsTouched: Object.keys(seenTopics).length };
+}
+function renderHome(){
+  var app = $("app");
+  var today = computeToday();
+  var drafts = state.errors.filter(function(e){ return e.status === "draft"; });
+  var html = "<h1>Today</h1>";
+  html += "<div class=\"card setup\"><strong>Setup first:</strong> Do Not Disturb on, phone out of sight and out of reach, checks batched at block boundaries.</div>";
+  html += "<div class=\"card\"><h3>Today's queue: " + today.topicsTouched + " topic" + (today.topicsTouched === 1 ? "" : "s") + "</h3>";
+  if (!today.items.length) html += "<p class=\"muted\">Nothing due and nothing queued. Open a course below and start its next topic.</p>";
+  today.items.forEach(function(it){ html += "<div class=\"queue-item\"><span>" + esc(it.label) + "</span><a href=\"" + it.href + "\">Open</a></div>"; });
+  if (today.topicsTouched >= 6) html += "<p class=\"small muted\">Dense day. Close it with quiet rest, no phone and no new input, after the last block.</p>";
+  html += "</div>";
+  if (drafts.length) html += "<div class=\"card\"><strong>" + drafts.length + " error log draft" + (drafts.length > 1 ? "s" : "") + "</strong> waiting for the wrong step and correct principle. <a href=\"#/errors\">Complete them</a> so their retests get scheduled.</div>";
+  html += "<h2>Courses</h2>";
+  COURSES.forEach(function(c){
+    var total = allTopics(c).length, learned = learnedCount(c);
+    html += "<div class=\"card\"><h3>" + esc(c.name) + "</h3>"
+      + "<p class=\"muted small\">" + esc(c.professor) + (c.term ? " · " + esc(c.term) : "") + "</p>"
+      + "<div class=\"bar\"><div style=\"width:" + (total ? Math.round(100 * learned / total) : 0) + "%\"></div></div>"
+      + "<p class=\"small muted\">" + learned + " of " + total + " topics learned (3 successful spaced retrievals on separate days)</p>"
+      + "<p><a class=\"btn\" href=\"#/course/" + c.id + "\">Open course</a> "
+      + "<a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> "
+      + "<a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a></p></div>";
+  });
+  html += "<div class=\"card\"><h3>Your saved state</h3>"
+    + "<p class=\"small muted\">Everything you type and every score saves in this browser. Export a copy to move it to another device; import restores it.</p>"
+    + "<p><button class=\"secondary\" onclick=\"exportState()\">Export state (JSON)</button> "
+    + "<label class=\"btn secondary\" style=\"cursor:pointer\">Import state<input type=\"file\" accept=\".json,application/json\" class=\"hidden\" onchange=\"importState(this)\"></label> "
+    + "<button class=\"plain\" onclick=\"resetState()\">Erase saved state</button></p>"
+    + "<p class=\"small\" id=\"statemsg\"></p></div>";
+  app.innerHTML = html;
+}
+function exportState(){
+  var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "learning-plan-state.json"; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+}
+function importState(input){
+  var f = input.files && input.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try { var parsed = JSON.parse(r.result); if (!parsed || !parsed.topics || !parsed.errors) throw new Error("shape"); state = parsed; saveState(); route(); }
+    catch(e){ var m = $("statemsg"); if (m){ m.className = "small err"; m.textContent = "That file is not a valid exported state."; } }
+  };
+  r.readAsText(f);
+}
+function resetState(){
+  if (confirm("Erase all saved progress, error entries, and written work in this browser?")){ state = blankState(); saveState(); route(); }
+}
+
+/* ============================== COURSE PAGE ============================== */
+function notesUnfinished(cid, tid){
+  var ts = tstate(cid, tid);
+  return ts.learn && ts.learn.doneAt && !ts.completed[2] && (Date.now() - ts.learn.doneAt > 24 * 3600 * 1000);
+}
+function stageSummary(cid, tid){
+  var n = [0,1,2,3,4,5].filter(function(i){ return stageDone(cid, tid, i); }).length;
+  return n + " of 6 stages";
+}
+function renderCourse(cid){
+  var c = courseById(cid), app = $("app");
+  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
+  var total = allTopics(c).length, learned = learnedCount(c);
+  var html = "<p><a href=\"#/\">&larr; All courses</a></p><h1>" + esc(c.name) + "</h1>";
+  html += "<div class=\"card\"><h3>Course rules</h3>"
+    + "<p class=\"small\"><strong>" + esc(c.professor) + "</strong>" + (c.term ? " · " + esc(c.term) : "") + "</p>"
+    + "<p class=\"small\">" + esc(c.examInfo) + "</p>"
+    + "<p class=\"small\">" + esc(c.aiPolicy) + "</p>";
+  if (c.gradeWeights && c.gradeWeights.length){
+    html += "<p class=\"small\">Grade weights: " + c.gradeWeights.map(function(w){ return esc(w.label) + " " + esc(w.weight); }).join(" · ") + "</p>";
+  }
+  html += "<ul class=\"tight\">" + c.rules.map(function(r){ return "<li class=\"small\">" + esc(r) + "</li>"; }).join("") + "</ul></div>";
+  html += "<div class=\"bar\"><div style=\"width:" + (total ? Math.round(100 * learned / total) : 0) + "%\"></div></div>"
+    + "<p class=\"small muted\">" + learned + " of " + total + " topics learned</p>"
+    + "<p><a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> <a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a></p>";
+  c.chapters.forEach(function(ch){
+    html += "<h2>" + esc(ch.title) + "</h2>";
+    ch.topics.forEach(function(t){
+      var ts = tstate(c.id, t.id);
+      html += "<div class=\"card\"><h3>" + esc(t.title) + " "
+        + (t.provisional ? "<span class=\"badge prov\">PROVISIONAL</span> " : "")
+        + (ts.learned ? "<span class=\"badge learned\">LEARNED</span> " : "")
+        + (topicRetrievalDue(c.id, t.id) ? "<span class=\"badge due\">RETRIEVAL DUE</span> " : "")
+        + "<span class=\"badge stage\">" + stageSummary(c.id, t.id) + "</span></h3>";
+      if (t.provisional) html += "<p class=\"small\" style=\"color:var(--warn)\">" + esc(t.provisional) + "</p>";
+      if (notesUnfinished(c.id, t.id)) html += "<p class=\"small err\">Notes unfinished: the lesson was finished over a day ago and the Organize stage is not done.</p>";
+      html += "<ul class=\"tight\">" + t.pieces.map(function(p){ return "<li class=\"small\"><strong>" + esc(p.name) + ".</strong> " + esc(p.fn) + "</li>"; }).join("") + "</ul>";
+      html += "<p><a class=\"btn\" href=\"#/topic/" + c.id + "/" + t.id + "/0\">Open topic</a>"
+        + (topicRetrievalDue(c.id, t.id) ? " <a class=\"btn secondary\" href=\"#/retrieval/" + c.id + "/" + t.id + "\">Do the due retrieval</a>" : "") + "</p></div>";
+    });
+  });
+  app.innerHTML = html;
+}
+
+/* ============================== EXAMPLES ============================== */
+function renderExamples(cid){
+  var c = courseById(cid), app = $("app");
+  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
+  var html = "<p><a href=\"#/course/" + c.id + "\">&larr; " + esc(c.name) + "</a></p><h1>Examples</h1>"
+    + "<p class=\"muted\">Work each scenario before revealing its answer. After revealing, rate honestly whether you could have produced it cold; a No files that principle into your retrieval pool.</p>";
+  allTopics(c).forEach(function(x){
+    (x.topic.examples || []).forEach(function(ex, i){
+      var key = c.id + "/" + x.topic.id + "/" + i;
+      var flag = state.exampleFlags[key];
+      html += "<div class=\"card\"><h3>" + esc(ex.title) + " <span class=\"badge stage\">" + esc(x.topic.title) + "</span></h3>"
+        + md(ex.scenario)
+        + "<div id=\"exbody-" + i + "-" + x.topic.id + "\" class=\"hidden\">" + md(ex.answer)
+        + "<p class=\"small\">Could you have produced this cold? "
+        + "<button class=\"plain\" onclick=\"rateExample('" + key + "','yes')\">Yes</button> "
+        + "<button class=\"plain\" onclick=\"rateExample('" + key + "','no')\">No</button> "
+        + "<span id=\"exflag-" + i + "-" + x.topic.id + "\" class=\"small muted\">" + (flag ? (flag === "no" ? "Filed into your retrieval pool." : "Marked: producible cold.") : "") + "</span></p></div>"
+        + "<p><button class=\"secondary\" onclick=\"toggleExample(this,'exbody-" + i + "-" + x.topic.id + "')\">Show answer</button></p></div>";
+    });
+  });
+  app.innerHTML = html;
+}
+function toggleExample(btn, id){
+  var el = $(id); var open = el.classList.toggle("hidden") === false;
+  btn.textContent = open ? "Hide answer" : "Show answer";
+}
+function rateExample(key, val){
+  state.exampleFlags[key] = val; saveState();
+  var parts = key.split("/"); var span = $("exflag-" + parts[2] + "-" + parts[1]);
+  if (span) span.textContent = val === "no" ? "Filed into your retrieval pool." : "Marked: producible cold.";
+}
+</script>
+<script>
+"use strict";
+/* ============================== TOPIC PAGE ============================== */
+var STAGE_NAMES = ["Predict", "Learn", "Organize", "Encode", "Practice", "Quiz"];
+function renderTopic(cid, tid, stage){
+  var c = courseById(cid), app = $("app");
+  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
+  var found = topicById(c, tid);
+  if (!found){ app.innerHTML = "<p>Topic not found.</p>"; return; }
+  var t = found.topic, ts = tstate(cid, tid);
+  if (stage === 1 && ts.completed[1]){ ts.learn.revisits = (ts.learn.revisits || 0) + 1; saveState(); }
+  var html = "<p><a href=\"#/course/" + c.id + "\">&larr; " + esc(c.name) + "</a></p>"
+    + "<h1>" + esc(t.title) + " "
+    + (t.provisional ? "<span class=\"badge prov\">PROVISIONAL</span> " : "")
+    + (ts.learned ? "<span class=\"badge learned\">LEARNED</span>" : "") + "</h1>";
+  if (t.provisional) html += "<p class=\"small\" style=\"color:var(--warn)\">" + esc(t.provisional) + "</p>";
+  if (notesUnfinished(cid, tid)) html += "<p class=\"small err\">Notes unfinished: finish the Organize stage.</p>";
+  if (ts.shrunk) html += "<p class=\"small err\">This topic scored under half on its last quiz, so it is served smaller, with a worked example first, until a retest improves it.</p>";
+  if (ts.learn.revisits) html += "<p class=\"small muted\">Lesson revisits logged: " + ts.learn.revisits + ". A revisit is not review and never counts as progress.</p>";
+  html += "<div class=\"rail\">" + STAGE_NAMES.map(function(name, i){
+    return "<button class=\"" + (i === stage ? "cur" : "") + (ts.completed[i] ? " done" : "") + "\" onclick=\"location.hash='#/topic/" + cid + "/" + tid + "/" + i + "'\">" + (ts.completed[i] ? "✓ " : "") + (i + 1) + " · " + name + "</button>";
+  }).join("") + "</div>";
+  html += "<div id=\"stagebody\"></div>";
+  app.innerHTML = html;
+  var body = $("stagebody");
+  if (stage === 0) renderPredict(body, c, t);
+  else if (stage === 1) renderLearn(body, c, t);
+  else if (stage === 2) renderOrganize(body, c, t);
+  else if (stage === 3) renderEncode(body, c, t);
+  else if (stage === 4) renderPractice(body, c, t);
+  else renderQuizStart(body, c, t);
+}
+
+/* ---------- Stage 0: Predict ---------- */
+function renderPredict(el, c, t){
+  var ts = tstate(c.id, t.id);
+  var html = "<h2>Stage 1 · Predict</h2>"
+    + "<p class=\"muted\">Attempt each question cold, before any content. A wrong cold attempt is useful data, not a failure. Rate your confidence on each.</p>";
+  t.pieces.forEach(function(p){
+    var saved = ts.predict[p.id] || {};
+    html += "<div class=\"card\"><h3>" + esc(p.name) + "</h3>"
+      + "<p class=\"small muted\">" + esc(p.fn) + "</p>"
+      + "<p><strong>" + esc(p.predict) + "</strong></p>"
+      + "<textarea id=\"pred-a-" + p.id + "\" placeholder=\"Your cold attempt, in your own words\">" + esc(saved.answer || "") + "</textarea>"
+      + "<label class=\"flabel\">Confidence (0 to 100)</label>"
+      + "<input type=\"number\" id=\"pred-c-" + p.id + "\" min=\"0\" max=\"100\" value=\"" + (saved.confidence == null ? "" : saved.confidence) + "\">"
+      + "<label class=\"small\"><input type=\"checkbox\" id=\"pred-s-" + p.id + "\" " + (saved.skipped ? "checked" : "") + "> Skip this piece (recorded as skipped)</label></div>";
+  });
+  html += "<p><button onclick=\"savePredict('" + c.id + "','" + t.id + "')\">Save cold attempts</button> <span id=\"predmsg\" class=\"small\"></span></p>";
+  el.innerHTML = html;
+}
+function savePredict(cid, tid){
+  var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid), missing = [];
+  t.pieces.forEach(function(p){
+    var a = $("pred-a-" + p.id).value.trim(), conf = $("pred-c-" + p.id).value, sk = $("pred-s-" + p.id).checked;
+    ts.predict[p.id] = { answer: a, confidence: conf === "" ? null : Math.max(0, Math.min(100, parseInt(conf, 10))), skipped: sk };
+    if (!a && !sk) missing.push(p.name);
+  });
+  var msg = $("predmsg");
+  if (missing.length){ msg.className = "small err"; msg.textContent = "Each piece needs a cold attempt or an explicit skip: " + missing.join(", ") + "."; saveState(); return; }
+  ts.completed[0] = true; saveState();
+  msg.className = "small okmsg"; msg.textContent = "Saved. Baseline recorded; now go to Learn.";
+}
+
+/* ---------- Stage 1: Learn ---------- */
+var learnPage = {};
+function renderLearn(el, c, t){
+  var ts = tstate(c.id, t.id), key = tkey(c.id, t.id);
+  var page = learnPage[key] || 0;
+  var html = "<h2>Stage 2 · Learn</h2>"
+    + "<p class=\"muted\">One pass, actively. The skeleton stays in view as your filing plan. Worked examples end with a self-explain prompt: answer it in your own words, or skip it explicitly (the skip is logged).</p>";
+  html += "<div class=\"card\"><p class=\"small\" style=\"margin:0\"><strong>Skeleton:</strong> " + t.pieces.map(function(p){ return esc(p.name); }).join(" · ") + "</p></div>";
+  t.lesson.forEach(function(part, i){
+    var se = (ts.learn.selfExplains || {})[i] || {};
+    html += "<div class=\"learnpart\" data-part=\"" + i + "\" " + (i === page ? "" : "style=\"display:none\"") + ">"
+      + "<h3>" + esc(part.title) + "</h3>" + md(part.body);
+    if (part.workedExample){
+      html += "<div class=\"card\" style=\"background:#fbfcfd\"><h3>" + esc(part.workedExample.title) + "</h3>" + md(part.workedExample.body);
+      if (part.workedExample.selfExplain){
+        html += "<label class=\"flabel\">Self-explain: " + esc(part.workedExample.selfExplain) + "</label>"
+          + "<textarea id=\"se-" + i + "\" placeholder=\"Why does this step follow? In your own words.\">" + esc(se.text || "") + "</textarea>"
+          + "<p><button class=\"secondary\" onclick=\"saveSelfExplain('" + c.id + "','" + t.id + "'," + i + ",false)\">Save explanation</button> "
+          + "<button class=\"plain\" onclick=\"saveSelfExplain('" + c.id + "','" + t.id + "'," + i + ",true)\">Skip (logged)</button> "
+          + "<span id=\"semsg-" + i + "\" class=\"small muted\">" + (se.skipped ? "Skipped." : (se.text ? "Saved." : "")) + "</span></p>";
+      }
+      html += "</div>";
+    }
+    html += "</div>";
+  });
+  html += "<div class=\"pager\"><button class=\"secondary\" id=\"lprev\" onclick=\"turnLearn('" + c.id + "','" + t.id + "',-1)\">← Previous part</button>"
+    + "<span class=\"small muted\" id=\"lpage\">Part " + (page + 1) + " of " + t.lesson.length + "</span>"
+    + "<button class=\"secondary\" id=\"lnext\" onclick=\"turnLearn('" + c.id + "','" + t.id + "',1)\">Next part →</button></div>";
+  html += "<p><button onclick=\"completeLearn('" + c.id + "','" + t.id + "')\">" + (ts.completed[1] ? "Learn completed (revisit logged)" : "Mark Learn complete") + "</button></p>";
+  el.innerHTML = html;
+  updateLearnPager(c, t);
+}
+function updateLearnPager(c, t){
+  var key = tkey(c.id, t.id), page = learnPage[key] || 0;
+  var prev = $("lprev"), next = $("lnext"), lab = $("lpage");
+  if (prev) prev.disabled = page === 0;
+  if (next) next.disabled = page >= t.lesson.length - 1;
+  if (lab) lab.textContent = "Part " + (page + 1) + " of " + t.lesson.length;
+}
+function turnLearn(cid, tid, dir){
+  var c = courseById(cid), t = topicById(c, tid).topic, key = tkey(cid, tid);
+  var cur = learnPage[key] || 0, nxt = Math.max(0, Math.min(t.lesson.length - 1, cur + dir));
+  learnPage[key] = nxt;
+  document.querySelectorAll(".learnpart").forEach(function(el){ el.style.display = parseInt(el.getAttribute("data-part"), 10) === nxt ? "" : "none"; });
+  updateLearnPager(c, t);
+}
+function saveSelfExplain(cid, tid, idx, skipped){
+  var ts = tstate(cid, tid);
+  var txt = skipped ? "" : $("se-" + idx).value.trim();
+  ts.learn.selfExplains[idx] = { text: txt, skipped: skipped };
+  saveState();
+  var m = $("semsg-" + idx); if (m) m.textContent = skipped ? "Skipped." : "Saved.";
+}
+function completeLearn(cid, tid){
+  var ts = tstate(cid, tid);
+  ts.completed[1] = true; ts.learn.doneAt = Date.now(); saveState();
+  location.hash = "#/topic/" + cid + "/" + tid + "/2";
+}
+
+/* ---------- Stage 2: Organize ---------- */
+function renderOrganize(el, c, t){
+  var ts = tstate(c.id, t.id), org = ts.organize || {};
+  var html = "<h2>Stage 3 · Organize</h2>"
+    + "<p class=\"muted\">Restructure, never recopy: reorganize onto the skeleton in your own words, compress, add cue questions, correct against the lesson. Every field below is yours alone; nothing is prefilled. Do this within a day of the lesson or lecture, or the notes stay flagged unfinished.</p>"
+    + "<label class=\"flabel\">The principle (one line, your own words)</label>"
+    + "<textarea id=\"org-principle\">" + esc(org.principle || "") + "</textarea>";
+  t.pieces.forEach(function(p){
+    html += "<label class=\"flabel\">Skeleton block: " + esc(p.name) + " (conditions, procedure, failure modes)</label>"
+      + "<textarea id=\"org-block-" + p.id + "\">" + esc((org.blocks || {})[p.id] || "") + "</textarea>";
+  });
+  html += "<label class=\"flabel\">One worked example (rebuilt by you)</label><textarea id=\"org-worked\">" + esc(org.workedExample || "") + "</textarea>"
+    + "<label class=\"flabel\">Cue questions for your future self</label><textarea id=\"org-cues\">" + esc(org.cueQuestions || "") + "</textarea>"
+    + "<label class=\"flabel\">Confusions from the lesson, answered</label><textarea id=\"org-confusions\">" + esc(org.confusions || "") + "</textarea>"
+    + "<label class=\"flabel\">Summary (3 lines at most)</label><textarea id=\"org-summary\">" + esc(org.summary || "") + "</textarea>";
+  html += "<h3>Skeleton redrawn from memory</h3><p class=\"muted small\">Close the lesson first. Write each piece's name and one line function from memory; gaps here become retrieval questions.</p>";
+  t.pieces.forEach(function(p){
+    html += "<label class=\"flabel\">" + esc(p.name) + "</label><textarea id=\"org-redraw-" + p.id + "\" placeholder=\"Name and one line function, from memory\">" + esc((org.redraw || {})[p.id] || "") + "</textarea>";
+  });
+  if (t.matrix){
+    html += "<h3>Comparison matrix (required for this topic): " + esc(t.matrix.title) + "</h3>"
+      + "<p class=\"muted small\">Fill every cell in your own words. The canonical comparison is in the lesson; this matrix is your version of it.</p>"
+      + "<table class=\"md\"><tr><th></th>" + t.matrix.columns.map(function(col){ return "<th>" + esc(col) + "</th>"; }).join("") + "</tr>";
+    t.matrix.rows.forEach(function(row, r){
+      html += "<tr><th>" + esc(row) + "</th>" + t.matrix.columns.map(function(col, ci){
+        return "<td><textarea id=\"org-mx-" + r + "-" + ci + "\" style=\"min-height:44px\">" + esc(((org.matrix || {})[r + ":" + ci]) || "") + "</textarea></td>";
+      }).join("") + "</tr>";
+    });
+    html += "</table>";
+  }
+  html += "<label class=\"flabel\">Concept map (optional, at most one per topic: nodes and labelled links, in words)</label>"
+    + "<textarea id=\"org-map\">" + esc(org.conceptMap || "") + "</textarea>"
+    + "<p><button onclick=\"saveOrganize('" + c.id + "','" + t.id + "')\">Save and complete Organize</button> <span id=\"orgmsg\" class=\"small\"></span></p>";
+  el.innerHTML = html;
+}
+function saveOrganize(cid, tid){
+  var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
+  var org = { blocks: {}, redraw: {}, matrix: {} };
+  org.principle = $("org-principle").value.trim();
+  org.workedExample = $("org-worked").value.trim();
+  org.cueQuestions = $("org-cues").value.trim();
+  org.confusions = $("org-confusions").value.trim();
+  org.summary = $("org-summary").value.trim();
+  org.conceptMap = $("org-map").value.trim();
+  var missing = [];
+  t.pieces.forEach(function(p){
+    org.blocks[p.id] = $("org-block-" + p.id).value.trim();
+    org.redraw[p.id] = $("org-redraw-" + p.id).value.trim();
+    if (!org.redraw[p.id]) missing.push("redraw for " + p.name);
+  });
+  if (t.matrix){
+    t.matrix.rows.forEach(function(row, r){ t.matrix.columns.forEach(function(col, ci){
+      org.matrix[r + ":" + ci] = $("org-mx-" + r + "-" + ci).value.trim();
+      if (!org.matrix[r + ":" + ci]) missing.push("matrix cell: " + row + " / " + col);
+    }); });
+  }
+  if (!org.principle) missing.push("the principle");
+  if (!org.summary) missing.push("the summary");
+  if (org.summary && org.summary.split("\n").filter(function(x){ return x.trim(); }).length > 3) missing.push("a summary of 3 lines at most");
+  ts.organize = org; saveState();
+  var msg = $("orgmsg");
+  if (missing.length){ msg.className = "small err"; msg.textContent = "Still needed: " + missing.join("; ") + "."; return; }
+  ts.completed[2] = true; saveState();
+  msg.className = "small okmsg"; msg.textContent = "Organize complete.";
+  location.hash = "#/topic/" + cid + "/" + tid + "/3";
+}
+
+/* ---------- Stage 3: Encode ---------- */
+function renderEncode(el, c, t){
+  var ts = tstate(c.id, t.id);
+  var html = "<h2>Stage 4 · Encode</h2>"
+    + "<p class=\"muted\">Sort problems by their solution principle before solving anything: name the principle and the cue that gave it away. Then build the template card for each method, in your own words.</p>";
+  if (t.sorting && t.sorting.length){
+    var principles = [];
+    t.sorting.forEach(function(s){ if (principles.indexOf(s.principle) === -1) principles.push(s.principle); });
+    html += "<h3>Sorting drill</h3><div id=\"sortwrap\">";
+    t.sorting.forEach(function(s, i){
+      html += "<div class=\"card\"><p>" + esc(s.statement) + "</p>"
+        + "<select id=\"sort-" + i + "\"><option value=\"\">Choose the principle…</option>"
+        + principles.map(function(p){ return "<option value=\"" + esc(p) + "\">" + esc(p) + "</option>"; }).join("") + "</select>"
+        + "<p class=\"small\" id=\"sortfb-" + i + "\"></p></div>";
+    });
+    html += "<p><button class=\"secondary\" onclick=\"checkSorting('" + c.id + "','" + t.id + "')\">Check the sort</button> "
+      + "<span class=\"small muted\">Best so far: " + (ts.sorting.best != null ? Math.round(ts.sorting.best * 100) + "%" : "not attempted") + ". 80% completes this part.</span></p></div>";
+  }
+  (t.methods || []).forEach(function(m){
+    var card = (ts.cards || {})[m.id] || {};
+    html += "<div class=\"card\"><h3>Template card: " + esc(m.name) + "</h3>"
+      + "<p class=\"small muted\">Trigger: " + esc(m.trigger) + "</p>";
+    [["givens", "Givens (what the problem hands you)"], ["find", "Find (what you must produce)"], ["formula", "Formula or rule"], ["steps", "Steps, in order"], ["failureModes", "Failure modes"], ["example", "One canonical example, rebuilt by you"]].forEach(function(f){
+      html += "<label class=\"flabel\">" + f[1] + "</label><textarea id=\"card-" + m.id + "-" + f[0] + "\">" + esc(card[f[0]] || "") + "</textarea>";
+    });
+    html += "</div>";
+  });
+  if (!(t.sorting && t.sorting.length) && !(t.methods && t.methods.length))
+    html += "<p class=\"muted\">This topic has no sorting drill and no methods, so this stage has nothing to build.</p>";
+  html += "<p><button onclick=\"saveEncode('" + c.id + "','" + t.id + "')\">Save and complete Encode</button> <span id=\"encmsg\" class=\"small\"></span></p>";
+  el.innerHTML = html;
+}
+function checkSorting(cid, tid){
+  var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
+  var right = 0;
+  t.sorting.forEach(function(s, i){
+    var sel = $("sort-" + i), fb = $("sortfb-" + i);
+    var ok = sel.value === s.principle;
+    if (ok) right++;
+    fb.innerHTML = ok ? "<span class=\"okmsg\">Correct: " + esc(s.principle) + ".</span> " + esc(s.cue) : "<span class=\"err\">It is: " + esc(s.principle) + ".</span> " + esc(s.cue);
+  });
+  var pct = right / t.sorting.length;
+  ts.sorting.best = Math.max(ts.sorting.best || 0, pct); saveState();
+}
+function saveEncode(cid, tid){
+  var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid), missing = [];
+  (t.methods || []).forEach(function(m){
+    var card = {};
+    ["givens", "find", "formula", "steps", "failureModes", "example"].forEach(function(f){ card[f] = $("card-" + m.id + "-" + f).value.trim(); });
+    ts.cards[m.id] = card;
+    if (!card.givens || !card.formula) missing.push("givens and formula on the " + m.name + " card");
+  });
+  if (t.sorting && t.sorting.length && (ts.sorting.best || 0) < 0.8) missing.push("a sorting score of at least 80%");
+  saveState();
+  var msg = $("encmsg");
+  if (missing.length){ msg.className = "small err"; msg.textContent = "Still needed: " + missing.join("; ") + "."; return; }
+  ts.completed[3] = true; saveState();
+  msg.className = "small okmsg"; msg.textContent = "Encode complete.";
+  location.hash = "#/topic/" + cid + "/" + tid + "/4";
+}
+</script>
+<script>
+"use strict";
+/* ============================== STAGE 4: PRACTICE ============================== */
+function renderPractice(el, c, t){
+  var ts = tstate(c.id, t.id);
+  var handwritten = c.productionMode === "handwritten";
+  var html = "<h2>Stage 5 · Practice</h2>"
+    + "<p class=\"muted\">Three rungs: worked, then completion, then full problems unaided. " + (handwritten ? "This course is assessed handwritten, so production here is written on paper; reveal the solution only after your attempt, then mark yourself honestly." : "Produce each answer before revealing its solution, then mark yourself honestly.") + "</p>"
+    + "<p class=\"small muted\">Course AI rule: " + esc(c.aiPolicy) + "</p>";
+  if (!(t.practice && t.practice.length)) html += "<p class=\"muted\">No practice items for this topic.</p>";
+  (t.practice || []).forEach(function(item, i){
+    var st = (ts.practice || {})[i] || {};
+    html += "<div class=\"card\"><h3>" + esc(item.rung.charAt(0).toUpperCase() + item.rung.slice(1)) + ": " + esc(item.title) + "</h3>"
+      + md(item.prompt)
+      + "<div id=\"prac-sol-" + i + "\" class=\"hidden\">" + md(item.solution) + "</div>"
+      + "<p><button class=\"secondary\" onclick=\"togglePracticeSolution(this," + i + ")\">Reveal solution</button> "
+      + "<button class=\"plain\" onclick=\"markPractice('" + c.id + "','" + t.id + "'," + i + ",'done')\">I had it</button> "
+      + "<button class=\"plain\" onclick=\"markPractice('" + c.id + "','" + t.id + "'," + i + ",'missed')\">I missed it</button> "
+      + "<span class=\"small muted\" id=\"prac-st-" + i + "\">" + (st.status === "done" ? "Marked: had it." : (st.status === "missed" ? "Marked: missed. File it below if it is not already in the log." : "")) + "</span></p>"
+      + (st.status === "missed" ? "<p><button class=\"secondary\" onclick=\"filePracticeMiss('" + c.id + "','" + t.id + "'," + i + ")\">File this miss to the error log</button> <span class=\"small muted\">You will complete the entry (wrong step, correct principle) in the Error Log.</span></p>" : "")
+      + "</div>";
+  });
+  html += "<p><button onclick=\"completePractice('" + c.id + "','" + t.id + "')\">Complete Practice</button> <span id=\"pracmsg\" class=\"small\"></span></p>";
+  el.innerHTML = html;
+}
+function togglePracticeSolution(btn, i){
+  var el = $("prac-sol-" + i); var open = el.classList.toggle("hidden") === false;
+  btn.textContent = open ? "Hide solution" : "Reveal solution";
+}
+function markPractice(cid, tid, i, status){
+  var ts = tstate(cid, tid);
+  ts.practice[i] = { status: status, date: todayStr() }; saveState();
+  renderTopic(cid, tid, 4);
+}
+function filePracticeMiss(cid, tid, i){
+  var c = courseById(cid), t = topicById(c, tid).topic, item = t.practice[i];
+  var entry = fileErrorDraft(cid, tid, null, null);
+  entry.problem = item.title + "\n\n" + item.prompt;
+  entry.principle = "practice";
+  saveState();
+  location.hash = "#/errors";
+}
+function completePractice(cid, tid){
+  var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
+  var unmarked = (t.practice || []).filter(function(item, i){ return !((ts.practice || {})[i] || {}).status; }).length;
+  var msg = $("pracmsg");
+  if (unmarked){ msg.className = "small err"; msg.textContent = "Mark every practice item first (" + unmarked + " unmarked)."; return; }
+  ts.completed[4] = true; saveState();
+  location.hash = "#/topic/" + cid + "/" + tid + "/5";
+}
+
+/* ============================== QUIZ RUNNER ============================== */
+var run = null;
+function pickServing(topic, ts, n){
+  var unused = topic.questions.filter(function(q){ return ts.usedQ.indexOf(q.id) === -1; });
+  var rest = topic.questions.filter(function(q){ return ts.usedQ.indexOf(q.id) !== -1; });
+  return shuffle(unused).concat(shuffle(rest)).slice(0, Math.min(n, topic.questions.length));
+}
+function renderQuizStart(el, c, t){
+  var ts = tstate(c.id, t.id);
+  var last = ts.quizServings[ts.quizServings.length - 1];
+  el.innerHTML = "<h2>Stage 6 · Quiz</h2>"
+    + "<p class=\"muted\">Closed book, in this course's test format: " + (c.productionMode === "handwritten" ? "write every answer on paper, then self-mark against the revealed solution." : "produce every answer before revealing its solution.") + " For every question you rate your confidence before any feedback is shown. Every miss drafts an error log entry and schedules its own retests.</p>"
+    + "<p class=\"small muted\">Course AI rule: " + esc(c.aiPolicy) + "</p>"
+    + (last ? "<p class=\"small\">Last quiz: " + Math.round(last.score * 100) + "% (" + last.n + " questions, " + last.date + ").</p>" : "")
+    + "<p><button onclick=\"startTopicQuiz('" + c.id + "','" + t.id + "')\">Start the quiz</button></p>";
+}
+function startTopicQuiz(cid, tid){
+  var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
+  var qs = pickServing(t, ts, 6);
+  startRun({ cid: cid, mode: "quiz", tid: tid, title: "Quiz: " + t.title, items: qs.map(function(q){ return { topic: t, q: q }; }) });
+}
+function renderRetrieval(cid, tid){
+  var c = courseById(cid), found = c ? topicById(c, tid) : null, app = $("app");
+  if (!found){ app.innerHTML = "<p>Topic not found.</p>"; return; }
+  var ts = tstate(cid, tid);
+  app.innerHTML = "<p><a href=\"#/course/" + cid + "\">&larr; " + esc(c.name) + "</a></p><h1>Retrieval: " + esc(found.topic.title) + "</h1>"
+    + "<p class=\"muted\">A short closed book set of fresh questions, different from the ones you have already been served. Clean spaced retrievals so far: " + ts.retrievals.length + " of 3 needed, on separate days, for this topic to count as learned.</p>"
+    + "<p><button onclick=\"startRetrieval('" + cid + "','" + tid + "')\">Start the retrieval set</button></p>";
+}
+function startRetrieval(cid, tid){
+  var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
+  var qs = pickServing(t, ts, 4);
+  startRun({ cid: cid, mode: "retrieval", tid: tid, title: "Retrieval: " + t.title, items: qs.map(function(q){ return { topic: t, q: q }; }) });
+}
+function renderFinal(cid){
+  var c = courseById(cid), app = $("app");
+  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
+  var pool = 0;
+  allTopics(c).forEach(function(x){ pool += x.topic.questions.length; });
+  var past = state.finals.filter(function(f){ return f.cid === cid; });
+  var last = past[past.length - 1];
+  app.innerHTML = "<p><a href=\"#/course/" + cid + "\">&larr; " + esc(c.name) + "</a></p><h1>Final practice: " + esc(c.name) + "</h1>"
+    + "<p class=\"muted\">A mixed set of 10 questions drawn from every topic in the course (" + pool + " in the pools). Same rules as a topic quiz: confidence before feedback, and every miss drafts an error log entry.</p>"
+    + (last ? "<p class=\"small\">Last final practice: " + Math.round(last.score * 100) + "% (" + last.n + " questions, " + last.date + ").</p>" : "")
+    + "<p><button onclick=\"startFinal('" + cid + "')\">Start the final practice</button></p>";
+}
+function startFinal(cid){
+  var c = courseById(cid), all = [];
+  allTopics(c).forEach(function(x){ x.topic.questions.forEach(function(q){ all.push({ topic: x.topic, q: q }); }); });
+  startRun({ cid: cid, mode: "final", title: "Final practice: " + c.name, items: shuffle(all).slice(0, Math.min(10, all.length)) });
+}
+function startRun(cfg){
+  run = { cid: cfg.cid, mode: cfg.mode, tid: cfg.tid || null, entry: cfg.entry || null, title: cfg.title, items: cfg.items, idx: 0, correct: 0, misses: [], sel: null, produced: false, conf: null, checked: false, selfMark: null };
+  renderRunQuestion();
+}
+function renderRunQuestion(){
+  var app = $("app"), c = courseById(run.cid);
+  var item = run.items[run.idx], q = item.q;
+  var html = "<p class=\"small muted\">" + esc(run.title) + " · Question " + (run.idx + 1) + " of " + run.items.length + " · " + run.correct + " correct so far</p>"
+    + "<div class=\"card\">" + md(q.prompt);
+  if (q.type === "mc"){
+    html += q.options.map(function(opt, i){
+      return "<button class=\"opt\" id=\"opt-" + i + "\" onclick=\"runSelect(" + i + ")\">" + esc(opt) + "</button>";
+    }).join("");
+  } else {
+    if (c.productionMode === "handwritten"){
+      html += "<p class=\"muted\">Write your answer on paper now, in full, before doing anything else here.</p>"
+        + "<p><button class=\"secondary\" id=\"producedbtn\" onclick=\"runProduced()\">I have written it on paper</button></p>";
+    } else {
+      html += "<textarea id=\"prodanswer\" placeholder=\"Your answer\"></textarea>"
+        + "<p><button class=\"secondary\" id=\"producedbtn\" onclick=\"runProduced()\">Ready to check</button></p>";
+    }
+  }
+  html += "<label class=\"flabel\">Confidence before checking (0 to 100)</label>"
+    + "<input type=\"number\" id=\"confinput\" min=\"0\" max=\"100\" placeholder=\"Type a number: how sure are you?\" oninput=\"runConf()\">"
+    + "<p><button id=\"checkbtn\" onclick=\"runCheck()\" disabled>Check answer</button></p>"
+    + "<div id=\"runfeedback\"></div></div>";
+  app.innerHTML = html;
+}
+function runSelect(i){
+  if (run.checked) return;
+  run.sel = i;
+  run.items[run.idx].q.options.forEach(function(_, j){ var b = $("opt-" + j); if (b) b.classList.toggle("sel", j === i); });
+  updateCheckBtn();
+}
+function runProduced(){ run.produced = true; var b = $("producedbtn"); if (b){ b.disabled = true; b.textContent = "Answer produced"; } updateCheckBtn(); }
+function runConf(){ var v = $("confinput").value; run.conf = v === "" ? null : Math.max(0, Math.min(100, parseInt(v, 10))); updateCheckBtn(); }
+function updateCheckBtn(){
+  var q = run.items[run.idx].q;
+  var ready = run.conf != null && (q.type === "mc" ? run.sel != null : run.produced);
+  var b = $("checkbtn"); if (b) b.disabled = !ready;
+}
+function runCheck(){
+  var item = run.items[run.idx], q = item.q;
+  var fb = $("runfeedback");
+  if (q.type === "mc"){
+    run.checked = true;
+    var right = run.sel === q.answer;
+    q.options.forEach(function(_, j){ var b = $("opt-" + j); if (b){ b.disabled = true; if (j === q.answer) b.classList.add("right"); else if (j === run.sel) b.classList.add("wrong"); } });
+    $("checkbtn").disabled = true;
+    finishAnswer(right);
+    fb.innerHTML = feedbackHtml(q, right) + nextBtnHtml();
+  } else {
+    run.checked = true;
+    $("checkbtn").disabled = true;
+    fb.innerHTML = "<h3>Solution</h3>" + md(q.solution)
+      + "<p>Mark your paper answer honestly:</p>"
+      + "<p><button class=\"secondary\" onclick=\"runSelfMark(true)\">I had it right</button> "
+      + "<button class=\"plain\" onclick=\"runSelfMark(false)\">I missed it</button></p><div id=\"selfmarkfb\"></div>";
+  }
+}
+function runSelfMark(right){
+  var q = run.items[run.idx].q;
+  finishAnswer(right);
+  var fb = $("selfmarkfb");
+  fb.innerHTML = feedbackHtml(q, right) + nextBtnHtml();
+}
+function feedbackHtml(q, right){
+  return "<div class=\"feedback " + (right ? "ok" : "no") + "\"><strong>" + (right ? "Correct." : "Missed.") + "</strong>"
+    + "<p><strong>Step:</strong> " + esc(q.feedback.step) + "</p>"
+    + "<p><strong>Why:</strong> " + esc(q.feedback.why) + "</p>"
+    + "<p><strong>Cue:</strong> " + esc(q.feedback.cue) + "</p></div>";
+}
+function nextBtnHtml(){
+  var last = run.idx >= run.items.length - 1;
+  return "<p><button onclick=\"runNext()\">" + (last ? "Finish" : "Next question →") + "</button></p>";
+}
+function finishAnswer(right){
+  var item = run.items[run.idx];
+  if (right){ run.correct++; return; }
+  if (run.mode === "retest"){
+    var e = run.entry;
+    e.clean = 0; e.stageIdx = 0; e.nextDue = addDays(todayStr(), 1);
+    e.served.push(item.q.id);
+    var d = fileErrorDraft(run.cid, e.tid, item.q, run.conf);
+    run.retestDraft = d.id;
+    saveState();
+  } else {
+    run.misses.push({ topic: item.topic, q: item.q, confidence: run.conf });
+  }
+}
+function runNext(){
+  if (run.idx < run.items.length - 1){
+    run.idx++; run.sel = null; run.produced = false; run.conf = null; run.checked = false;
+    renderRunQuestion();
+  } else finishRun();
+}
+function finishRun(){
+  var app = $("app"), n = run.items.length, frac = n ? run.correct / n : 0;
+  var html = "<h1>" + esc(run.title) + ": done</h1>"
+    + "<p>Score: <strong>" + Math.round(frac * 100) + "%</strong> (" + run.correct + " of " + n + ").</p>";
+  if (run.mode === "quiz"){
+    var qids = run.items.map(function(it){ return it.q.id; });
+    recordQuizResult(run.cid, run.tid, frac, n, qids);
+    tstate(run.cid, run.tid).completed[5] = true; saveState();
+    if (frac < 0.5) html += "<p class=\"err\">Under half. This topic returns tomorrow, smaller, with a worked example first.</p>";
+    else if (frac < 0.7) html += "<p>Between half and 70%: this topic returns sooner and smaller on the schedule.</p>";
+    else html += "<p>A retrieval is now scheduled; this topic counts as learned after 3 successful spaced retrievals on separate days.</p>";
+    html += "<p><a class=\"btn\" href=\"#/topic/" + run.cid + "/" + run.tid + "/5\">Back to the topic</a></p>";
+  } else if (run.mode === "retrieval"){
+    recordRetrievalResult(run.cid, run.tid, frac, n, run.items.map(function(it){ return it.q.id; }));
+    var ts = tstate(run.cid, run.tid);
+    html += ts.learned ? "<p class=\"okmsg\">That was the third clean spaced retrieval: this topic now counts as learned.</p>" : "<p>Next retrieval for this topic: " + esc(ts.nextRetrieval || "") + ".</p>";
+    html += "<p><a class=\"btn\" href=\"#/course/" + run.cid + "\">Back to the course</a></p>";
+  } else if (run.mode === "final"){
+    state.finals.push({ cid: run.cid, date: todayStr(), score: frac, n: n }); saveState();
+    html += "<p><a class=\"btn\" href=\"#/course/" + run.cid + "\">Back to the course</a></p>";
+  } else if (run.mode === "retest"){
+    var e = run.entry;
+    if (frac >= 1){
+      // single question run: correct path handled here (miss path handled in finishAnswer)
+      e.clean = (e.clean || 0) + 1;
+      e.served.push(run.items[0].q.id);
+      if (e.clean >= 3){ e.status = "closed"; html += "<p class=\"okmsg\">Third clean retrieval: this error entry is closed.</p>"; }
+      else { e.stageIdx = Math.min((e.stageIdx || 0) + 1, RETEST_GAPS.length - 1); e.nextDue = addDays(todayStr(), RETEST_GAPS[e.stageIdx]); html += "<p>Clean retrieval " + e.clean + " of 3. Next retest: " + esc(e.nextDue) + ".</p>"; }
+      saveState();
+    } else {
+      html += "<p class=\"err\">Missed. This entry returns tomorrow, and the miss itself has been drafted as a new entry below.</p>";
+    }
+    html += "<p><a class=\"btn\" href=\"#/errors\">Back to the Error Log</a></p>";
+  }
+  if (run.misses.length){
+    html += "<h2>File the misses</h2><p class=\"muted\">Each miss is already drafted. It only becomes a scheduled retest once you write the wrong step and the correct principle.</p>";
+    run.misses.forEach(function(m){
+      var entry = fileErrorDraft(run.cid, m.topic.id, m.q, m.confidence);
+      html += errorDraftForm(entry, m.topic.title);
+    });
+  }
+  run = null;
+  app.innerHTML = html;
+}
+function errorDraftForm(entry, topicTitle){
+  return "<div class=\"card\"><h3>Miss: " + esc(topicTitle || entry.tid) + (entry.confidence != null && entry.confidence >= 80 ? " <span class=\"badge due\">HIGH CONFIDENCE MISS</span>" : "") + "</h3>"
+    + md(entry.problem)
+    + "<label class=\"flabel\">Your wrong step, and the reasoning you used</label><textarea id=\"derr-ws-" + entry.id + "\"></textarea>"
+    + "<label class=\"flabel\">The correct principle</label><textarea id=\"derr-cp-" + entry.id + "\"></textarea>"
+    + "<p><button onclick=\"saveDraftEntry('" + entry.id + "')\">Save entry and schedule its retests</button> <span id=\"derr-msg-" + entry.id + "\" class=\"small\"></span></p></div>";
+}
+function saveDraftEntry(entryId){
+  var entry = state.errors.filter(function(e){ return e.id === entryId; })[0];
+  if (!entry) return;
+  var ws = $("derr-ws-" + entryId).value.trim(), cp = $("derr-cp-" + entryId).value.trim();
+  var msg = $("derr-msg-" + entryId);
+  if (!ws || !cp){ msg.className = "small err"; msg.textContent = "Both fields are required."; return; }
+  completeErrorEntry(entry, ws, cp);
+  msg.className = "small okmsg"; msg.textContent = "Saved. First retest: " + entry.nextDue + ", then about 3 to 4 days, 8 to 10 days, and 21 days out.";
+}
+
+/* ============================== ERROR LOG VIEW ============================== */
+function renderErrors(){
+  var app = $("app");
+  var drafts = state.errors.filter(function(e){ return e.status === "draft"; });
+  var due = sortedDueErrors();
+  var open = state.errors.filter(function(e){ return e.status === "open"; });
+  var closed = state.errors.filter(function(e){ return e.status === "closed"; });
+  var html = "<h1>Error Log</h1>"
+    + "<p class=\"muted\">Every miss, its wrong step and correct principle, and its retest schedule (about 1 day, 3 to 4 days, 8 to 10 days, 21 days). Retests always serve a fresh question of similar difficulty, never the same question. An entry closes after 3 clean spaced retrievals.</p>";
+  if (drafts.length){
+    html += "<h2>Drafts to complete</h2>";
+    drafts.forEach(function(e){
+      var c = courseById(e.cid), found = c ? topicById(c, e.tid) : null;
+      html += errorDraftForm(e, found ? found.topic.title : e.tid);
+    });
+  }
+  html += "<h2>Retests due</h2>";
+  if (!due.length) html += "<p class=\"muted\">Nothing due today.</p>";
+  due.forEach(function(e){
+    var c = courseById(e.cid), found = c ? topicById(c, e.tid) : null;
+    var samePrinciple = open.filter(function(x){ return x.principle === e.principle; }).length;
+    html += "<div class=\"card\"><h3>" + esc(found ? found.topic.title : e.tid) + " "
+      + (samePrinciple >= 2 ? "<span class=\"badge due\">REPEAT PATTERN</span> " : "")
+      + (e.confidence != null && e.confidence >= 80 ? "<span class=\"badge due\">HIGH CONFIDENCE</span>" : "")
+      + "</h3><p class=\"small\"><strong>Principle:</strong> " + esc(e.correctPrinciple || e.principle) + "</p>"
+      + "<p class=\"small muted\">Clean retrievals: " + e.clean + " of 3 · Due " + esc(e.nextDue) + "</p>"
+      + "<p><button onclick=\"startErrorRetest('" + e.id + "')\">Retest now</button></p></div>";
+  });
+  html += "<h2>Open entries</h2>";
+  if (!open.length) html += "<p class=\"muted\">No open entries.</p>";
+  open.forEach(function(e){
+    var c = courseById(e.cid), found = c ? topicById(c, e.tid) : null;
+    html += "<div class=\"card\"><h3>" + esc(found ? found.topic.title : e.tid) + "</h3>"
+      + "<p class=\"small\"><strong>Wrong step:</strong> " + esc(e.wrongStep) + "</p>"
+      + "<p class=\"small\"><strong>Correct principle:</strong> " + esc(e.correctPrinciple) + "</p>"
+      + "<p class=\"small muted\">Confidence at the miss: " + (e.confidence == null ? "not recorded" : e.confidence + "%") + " · Clean retrievals: " + e.clean + " of 3 · Next retest: " + esc(e.nextDue || "") + "</p></div>";
+  });
+  if (closed.length) html += "<h2>Closed</h2><p class=\"small muted\">" + closed.length + " entr" + (closed.length === 1 ? "y" : "ies") + " closed after 3 clean spaced retrievals each.</p>";
+  var flagged = Object.keys(state.exampleFlags).filter(function(k){ return state.exampleFlags[k] === "no"; });
+  if (flagged.length){
+    html += "<h2>Flagged from examples</h2><p class=\"small muted\">Principles you marked as not producible cold:</p><ul class=\"tight\">"
+      + flagged.map(function(k){ return "<li class=\"small\">" + esc(k) + "</li>"; }).join("") + "</ul>";
+  }
+  app.innerHTML = html;
+}
+function startErrorRetest(entryId){
+  var entry = state.errors.filter(function(e){ return e.id === entryId; })[0];
+  if (!entry) return;
+  var q = pickRetestQuestion(entry);
+  if (!q){ alert("No fresh question is left in this topic's pool yet. The entry stays due."); return; }
+  var c = courseById(entry.cid), found = topicById(c, entry.tid);
+  startRun({ cid: entry.cid, mode: "retest", tid: entry.tid, entry: entry, title: "Retest: " + found.topic.title, items: [{ topic: found.topic, q: q }] });
+}
+
+/* ============================== BOOT ============================== */
+loadState();
+loadCourses(function(){
+  collectCourses();
+  var nav = $("navcourses");
+  if (nav) nav.innerHTML = COURSES.map(function(c){ return "<a href=\"#/course/" + c.id + "\">" + esc(c.name.split(":")[0]) + "</a>"; }).join("");
+  route();
+});
+</script>
+</body>
+</html>
