@@ -240,6 +240,37 @@
   .queue-item { display:flex; justify-content:space-between; gap:14px; align-items:baseline; padding:9px 0; }
   .queue-item + .queue-item { border-top:1px solid var(--line); }
   .queue-item a { font-weight:600; font-size:15px; white-space:nowrap; }
+
+  /* finals countdown calendar on the home page */
+  .fcal { margin:18px 0 8px; }
+  .fcal h2 { margin-bottom:6px; }
+  .fcal-lead { margin:0 0 14px; color:var(--muted); font-size:15.5px; }
+  .fcal-month { margin:0 0 18px; }
+  .fcal-month h3 { margin:0 0 8px; font-size:18px; }
+  .fcal-grid { display:grid; grid-template-columns:repeat(7, minmax(0, 1fr)); gap:5px; }
+  .fcal-dow { text-align:center; font-size:12px; font-weight:600; letter-spacing:.04em;
+              text-transform:uppercase; color:var(--muted); padding:2px 0 4px; }
+  .fcal-day { min-height:54px; border-radius:10px; border:1px solid transparent; padding:6px 5px;
+              display:flex; flex-direction:column; gap:2px; background:transparent; color:var(--muted); }
+  .fcal-day.empty { visibility:hidden; }
+  .fcal-day .dn { font-size:14px; font-weight:700; line-height:1.1; }
+  .fcal-day .fl { font-size:10.5px; line-height:1.2; font-weight:600; overflow-wrap:anywhere; }
+  .fcal-day.past { background:var(--surface-muted); border-color:var(--line); color:var(--muted); }
+  .fcal-day.countdown { background:var(--bad); border-color:var(--bad); color:#fff;
+                        box-shadow:0 1px 2px rgba(179,55,46,.25); }
+  .fcal-day.today { box-shadow:0 0 0 2px var(--ink); }
+  .fcal-day.final { background:#8f241c; border-color:#8f241c; color:#fff; }
+  .fcal-day.final .fl { color:#ffe3df; }
+  @media (prefers-color-scheme: dark) {
+    .fcal-day.countdown { background:#a94840; border-color:#a94840; color:#fff; }
+    .fcal-day.final { background:#c45a50; border-color:#c45a50; }
+    .fcal-day.final .fl { color:#ffe8e4; }
+  }
+  @media (max-width:640px) {
+    .fcal-day { min-height:46px; padding:4px 3px; border-radius:8px; }
+    .fcal-day .dn { font-size:12.5px; }
+    .fcal-day .fl { font-size:9.5px; }
+  }
   footer.site { border-top:1px solid var(--line); color:var(--muted); font-size:15px; }
   footer.site .wrap { padding-top:22px; padding-bottom:30px; }
   .hidden { display:none; }
@@ -717,6 +748,78 @@ function pillsHtml(c){
   return h + "</div>";
 }
 
+function collectFinalDates(){
+  var byDate = {};
+  COURSES.forEach(function(c){
+    var short = String(c.name || c.id).split(":")[0].trim();
+    var listed = false;
+    (c.finals || []).forEach(function(f){
+      if (!f || !f.date) return;
+      listed = true;
+      if (!byDate[f.date]) byDate[f.date] = [];
+      byDate[f.date].push({ cid: c.id, short: short, label: f.label || (short + " Final") });
+    });
+    if (!listed && COURSE_TIME[c.id] && COURSE_TIME[c.id].final){
+      var d = COURSE_TIME[c.id].final;
+      if (!byDate[d]) byDate[d] = [];
+      byDate[d].push({ cid: c.id, short: short, label: short + " final" });
+    }
+  });
+  return byDate;
+}
+function finalsCalendarHtml(){
+  var byDate = collectFinalDates();
+  var dates = Object.keys(byDate).sort();
+  if (!dates.length) return "";
+  var today = todayStr();
+  var last = dates[dates.length - 1];
+  if (daysBetween(today, last) < 0){
+    return "<div class=\"fcal card\"><h2>Finals calendar</h2>"
+      + "<p class=\"fcal-lead\">All listed finals have already passed.</p></div>";
+  }
+  var start = new Date(today + "T12:00:00");
+  var end = new Date(last + "T12:00:00");
+  var monthCursor = new Date(start.getFullYear(), start.getMonth(), 1);
+  var endMonth = new Date(end.getFullYear(), end.getMonth(), 1);
+  var dow = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var html = "<div class=\"fcal card\"><h2>Days until finals</h2>"
+    + "<p class=\"fcal-lead\">Every remaining day through the last final is marked in red. Final exam days are labeled.</p>";
+  while (monthCursor <= endMonth){
+    var y = monthCursor.getFullYear(), m = monthCursor.getMonth();
+    var monthLabel = monthCursor.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    var firstDow = new Date(y, m, 1).getDay();
+    var daysInMonth = new Date(y, m + 1, 0).getDate();
+    html += "<div class=\"fcal-month\"><h3>" + esc(monthLabel) + "</h3><div class=\"fcal-grid\" role=\"grid\" aria-label=\"" + esc(monthLabel) + "\">";
+    dow.forEach(function(d){ html += "<div class=\"fcal-dow\">" + d + "</div>"; });
+    var i;
+    for (i = 0; i < firstDow; i++) html += "<div class=\"fcal-day empty\" aria-hidden=\"true\"></div>";
+    for (var day = 1; day <= daysInMonth; day++){
+      var iso = y + "-" + (m + 1 < 10 ? "0" : "") + (m + 1) + "-" + (day < 10 ? "0" : "") + day;
+      var finals = byDate[iso] || [];
+      var beforeToday = daysBetween(iso, today) > 0;
+      var inCountdown = !beforeToday && daysBetween(iso, last) >= 0;
+      var cls = "fcal-day";
+      if (inCountdown) cls += finals.length ? " countdown final" : " countdown";
+      else cls += " past";
+      if (iso === today) cls += " today";
+      var labelBits = finals.map(function(f){ return f.short; });
+      var fromToday = daysBetween(today, iso);
+      var title = finals.length
+        ? finals.map(function(f){ return f.label; }).join("; ")
+        : (inCountdown
+          ? (fromToday === 0 ? "Today" : fromToday + " day" + (fromToday === 1 ? "" : "s") + " from today")
+          : iso);
+      html += "<div class=\"" + cls + "\" title=\"" + esc(title) + "\" role=\"gridcell\">"
+        + "<span class=\"dn\">" + day + "</span>"
+        + (labelBits.length ? "<span class=\"fl\">" + esc(labelBits.join(" · ")) + "</span>" : "")
+        + "</div>";
+    }
+    html += "</div></div>";
+    monthCursor = new Date(y, m + 1, 1);
+  }
+  html += "</div>";
+  return html;
+}
 function renderHome(){
   var app = $("app");
   var today = computeToday();
@@ -729,6 +832,7 @@ function renderHome(){
   if (today.topicsTouched >= 6) html += "<p class=\"small muted\">Dense day. Close it with quiet rest, no phone and no new input, after the last block.</p>";
   html += "</div>";
   if (drafts.length) html += "<div class=\"card\"><strong>" + drafts.length + " error log draft" + (drafts.length > 1 ? "s" : "") + "</strong> waiting for the wrong step and correct principle. <a href=\"#/errors\">Complete them</a> so their retests get scheduled.</div>";
+  html += finalsCalendarHtml();
   html += "<h2>Courses</h2>";
   COURSES.forEach(function(c){
     var total = allTopics(c).length, learned = learnedCount(c);
