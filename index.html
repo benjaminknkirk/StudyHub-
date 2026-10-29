@@ -91,6 +91,20 @@
   .bar > div { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--accent), var(--accent-strong));
                transition:width .6s ease; }
 
+  /* progress pills: content (teal) and time to final (amber) */
+  .pills { margin:12px 0 4px; display:grid; gap:8px; }
+  .pillrow { display:flex; align-items:center; gap:10px; }
+  .pillabel { font-size:12.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+              color:var(--muted); flex:0 0 118px; }
+  .pill { flex:1; height:12px; border-radius:999px; background:var(--surface-muted);
+          border:1px solid var(--line); overflow:hidden;
+          box-shadow:inset 0 1px 2px rgba(27,35,48,.08); }
+  .pill > div { height:100%; border-radius:999px; transition:width .6s ease; }
+  .pill .fc { background:linear-gradient(90deg, var(--accent), var(--accent-strong)); }
+  .pill .ft { background:linear-gradient(90deg, var(--warn-line), var(--warn)); }
+  .pillpct { font-size:14px; font-weight:600; flex:0 0 42px; text-align:right; }
+  @media (max-width:640px){ .pillabel { flex-basis:96px; } }
+
   /* badges */
   .badge { display:inline-block; font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
            padding:3px 9px; border-radius:999px; vertical-align:middle; }
@@ -424,6 +438,44 @@ function computeToday(){
   next.forEach(function(n){ items.push({ kind: "topic", label: (n.started ? "Continue: " : "New: ") + n.x.topic.title + " (" + n.c.name.split(":")[0] + ")", href: "#/topic/" + n.c.id + "/" + n.x.topic.id + "/0" }); });
   return { items: items, topicCount: Object.keys(seenTopics).length + next.length > 0 ? Object.keys(seenTopics).length : 0, topicsTouched: Object.keys(seenTopics).length };
 }
+/* ============================== PROGRESS PILLS ============================== */
+/* Content: share of all topic stages completed. Time: first class to final. */
+var COURSE_TIME = {
+  "mgmtmsa-402": { start:"2026-09-28", final:"2026-12-07" },
+  "mgmtmsa-400": { start:"2026-09-29", final:"2026-12-08" },
+  "mgmtmsa-401": { start:"2026-11-04", final:"2026-12-09" },
+  "mgmt-440":    { start:"2026-10-29", final:"2026-12-03" },
+  "python-workshop": { start:"2026-09-25", final:"2026-12-04" }
+};
+function contentPct(c){
+  var ts = allTopics(c); if (!ts.length) return 0;
+  var done = 0;
+  ts.forEach(function(t){ done += [0,1,2,3,4,5].filter(function(i){ return stageDone(c.id, t.id, i); }).length; });
+  return Math.round(100 * done / (ts.length * 6));
+}
+function timePct(c){
+  var w = COURSE_TIME[c.id]; if (!w) return null;
+  var s = new Date(w.start + "T00:00:00"), f = new Date(w.final + "T23:59:59"), n = new Date();
+  if (n <= s) return 0; if (n >= f) return 100;
+  return Math.round(100 * (n - s) / (f - s));
+}
+function pillsHtml(c){
+  var cp = contentPct(c), tp = timePct(c);
+  var h = "<div class=\"pills\">"
+    + "<div class=\"pillrow\"><span class=\"pillabel\">Content</span>"
+    + "<div class=\"pill\"><div class=\"fc\" style=\"width:" + cp + "%\"></div></div>"
+    + "<span class=\"pillpct\">" + cp + "%</span></div>";
+  if (tp !== null){
+    var w = COURSE_TIME[c.id];
+    var fl = new Date(w.final + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
+    h += "<div class=\"pillrow\"><span class=\"pillabel\">Time to final</span>"
+      + "<div class=\"pill\"><div class=\"ft\" style=\"width:" + tp + "%\"></div></div>"
+      + "<span class=\"pillpct\">" + tp + "%</span></div>"
+      + "<p class=\"small muted\" style=\"margin:0\">Time runs from the first class to the final (" + esc(fl) + ").</p>";
+  }
+  return h + "</div>";
+}
+
 function renderHome(){
   var app = $("app");
   var today = computeToday();
@@ -443,6 +495,7 @@ function renderHome(){
       + "<p class=\"muted small\">" + esc(c.professor) + (c.term ? " · " + esc(c.term) : "") + "</p>"
       + "<div class=\"bar\"><div style=\"width:" + (total ? Math.round(100 * learned / total) : 0) + "%\"></div></div>"
       + "<p class=\"small muted\">" + learned + " of " + total + " topics learned (3 successful spaced retrievals on separate days)</p>"
+      + pillsHtml(c)
       + "<p><a class=\"btn\" href=\"#/course/" + c.id + "\">Open course</a> "
       + "<a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> "
       + "<a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a></p></div>";
@@ -498,6 +551,7 @@ function renderCourse(cid){
   html += "<ul class=\"tight\">" + c.rules.map(function(r){ return "<li class=\"small\">" + esc(r) + "</li>"; }).join("") + "</ul></div>";
   html += "<div class=\"bar\"><div style=\"width:" + (total ? Math.round(100 * learned / total) : 0) + "%\"></div></div>"
     + "<p class=\"small muted\">" + learned + " of " + total + " topics learned</p>"
+    + pillsHtml(c)
     + "<p><a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> <a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a></p>";
   c.chapters.forEach(function(ch){
     html += "<h2>" + esc(ch.title) + "</h2>";
