@@ -79,7 +79,9 @@
   .seg { position:relative; display:flex; gap:2px; flex:1 1 auto; min-width:0;
          background:var(--surface-muted); border:1px solid var(--line); border-radius:999px;
          padding:3px; overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
-         -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y; }
+         -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y;
+         user-select:none; -webkit-user-select:none; }
+  .seg a { -webkit-user-drag:none; }
   .seg::-webkit-scrollbar { display:none; }
   .seg-thumb { position:absolute; top:3px; bottom:3px; left:0; width:0; border-radius:999px;
                background:var(--accent); box-shadow:var(--shadow-sm); opacity:0;
@@ -1405,18 +1407,26 @@ loadState();
 loadCourses(function(){
   collectCourses();
   var nav = $("navcourses");
-  if (nav) nav.innerHTML = "<span class=\"seg-thumb\" id=\"segthumb\"></span>" + COURSES.map(function(c){ return "<a href=\"#/course/" + c.id + "\" data-cid=\"" + c.id + "\">" + esc(c.name.split(":")[0]) + "</a>"; }).join("");
+  if (nav) nav.innerHTML = "<span class=\"seg-thumb\" id=\"segthumb\"></span>" + COURSES.map(function(c){ return "<a href=\"#/course/" + c.id + "\" data-cid=\"" + c.id + "\" draggable=\"false\">" + esc(c.name.split(":")[0]) + "</a>"; }).join("");
   route();
   updateBell();
   var seg = $("navcourses");
   if (seg && seg.addEventListener){
-    var sx = null;
-    seg.addEventListener("pointerdown", function(e){ sx = e.clientX; });
+    var sx = null, swiped = false;
+    seg.addEventListener("click", function(e){
+      if (swiped){ e.preventDefault(); e.stopPropagation(); swiped = false; }
+    }, true);
+    seg.addEventListener("pointerdown", function(e){ sx = e.clientX; swiped = false; });
     seg.addEventListener("pointercancel", function(){ sx = null; });
+    seg.addEventListener("pointermove", function(e){
+      if (sx === null) return;
+      var dx = e.clientX - sx;
+      if (Math.abs(dx) >= 40){ segStep(dx < 0 ? 1 : -1); swiped = true; sx = e.clientX; }
+    });
     seg.addEventListener("pointerup", function(e){
       if (sx === null) return;
       var dx = e.clientX - sx; sx = null;
-      if (Math.abs(dx) >= 40) segStep(dx < 0 ? 1 : -1);
+      if (!swiped && Math.abs(dx) >= 40){ segStep(dx < 0 ? 1 : -1); swiped = true; }
     });
   }
   if (window.addEventListener) window.addEventListener("resize", function(){ updateNavActive(); });
