@@ -1,5 +1,5 @@
 // File library manifest: every course file Ghost holds, generated from
-// ~/workspace/school. Regenerate, never hand edit. PDFs carry a u path into the site.
+// ~/workspace/school. Regenerate, never hand edit. PDFs carry a u path into the site. Site copy of 402 LEC1 is image-compressed (2.4 MB); the 38 MB original stays in Drive.
 window.COURSE_FILES = {
  "mgmtmsa-400": [
   {
@@ -341,12 +341,12 @@ window.COURSE_FILES = {
    "k": "IPYNB"
   },
   {
-   "n": "26F-MGMTMSA402-LEC1.pdf",
+   "n": "26F-MGMTMSA402-LEC1 (2).pdf",
    "g": "Lectures and handouts",
    "s": 38068637,
    "d": "2026-10-26",
    "k": "PDF",
-   "u": "files/mgmtmsa-402/26F-MGMTMSA402-LEC1.pdf"
+   "u": "files/mgmtmsa-402/26F-MGMTMSA402-LEC1 (2).pdf"
   },
   {
    "n": "26F-MGMTMSA402-LEC2.pdf",
