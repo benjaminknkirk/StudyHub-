@@ -274,13 +274,6 @@ window.COURSE_FILES = {
    "s": 84400,
    "d": "2026-10-01",
    "k": "PDF"
-  },
-  {
-   "n": "Syllabus.pdf",
-   "g": "Syllabus",
-   "s": 84421,
-   "d": "2026-10-06",
-   "k": "PDF"
   }
  ],
  "mgmtmsa-402": [
