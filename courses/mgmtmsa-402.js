@@ -30,7 +30,7 @@ window.COURSE_DATA["mgmtmsa-402"] = {
   chapters: [
     {
       id: "lec1",
-      title: "Lecture 1: Introduction to Databases",
+      title: "Chapter 1: Introduction to Databases",
       topics: [
         {
           id: "lec1-foundations",
@@ -68,7 +68,7 @@ window.COURSE_DATA["mgmtmsa-402"] = {
     },
     {
       id: "lec2",
-      title: "Lecture 2: Keys and Building Tables",
+      title: "Chapter 2: Keys and Building Tables",
       topics: [
         {
           id: "lec2-keys-ddl",
@@ -111,7 +111,7 @@ window.COURSE_DATA["mgmtmsa-402"] = {
     },
     {
       id: "lec3",
-      title: "Lecture 3: Querying a Single Table and Aggregations",
+      title: "Chapter 3: Querying a Single Table and Aggregations",
       topics: [
         {
           id: "lec3-fetching",
@@ -272,7 +272,7 @@ window.COURSE_DATA["mgmtmsa-402"] = {
     },
     {
       id: "lec4",
-      title: "Lecture 4: Joins and Set Operations",
+      title: "Chapter 4: Joins and Set Operations",
       topics: [
         {
           id: "lec4-equi-joins",

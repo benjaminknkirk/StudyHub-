@@ -1063,7 +1063,7 @@ function renderCourse(cid){
       if (t.provisional) html += "<p class=\"small\" style=\"color:var(--warn)\">" + esc(t.provisional) + "</p>";
       if (notesUnfinished(c.id, t.id)) html += "<p class=\"small err\">Notes unfinished: the lesson was finished over a day ago and the Organize stage is not done.</p>";
       html += "<ul class=\"tight\">" + t.pieces.map(function(p){ return "<li class=\"small\"><strong>" + esc(p.name) + ".</strong> " + esc(p.fn) + "</li>"; }).join("") + "</ul>";
-      html += "<p><a class=\"btn\" href=\"#/topic/" + c.id + "/" + t.id + "/0\">Start topic</a>"
+      html += "<p><a class=\"btn\" href=\"#/topic/" + c.id + "/" + t.id + "/0\">Start chapter</a>"
         + (topicRetrievalDue(c.id, t.id) ? " <a class=\"btn secondary\" href=\"#/retrieval/" + c.id + "/" + t.id + "\">" + (ts.learned ? "Do the maintenance review" : "Do the due retrieval") + "</a>" : "") + "</p></div>";
     });
   });

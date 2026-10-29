@@ -31,7 +31,7 @@ window.COURSE_DATA["python-workshop"] = {
   "chapters": [
     {
       "id": "lec1",
-      "title": "Lecture 1 (Thu Sep 3): Chapter 2, Introduction to Python Programming",
+      "title": "Chapter 1 (Thu Sep 3): Chapter 2, Introduction to Python Programming",
       "topics": [
         {
           "id": "lec1-variables-arithmetic",
@@ -541,7 +541,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec2",
-      "title": "Lecture 2 (Thu Sep 10): Chapter 3, Control Statements and Program Development",
+      "title": "Chapter 2 (Thu Sep 10): Chapter 3, Control Statements and Program Development",
       "topics": [
         {
           "id": "lec2-selection",
@@ -1069,7 +1069,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec3",
-      "title": "Lecture 3 (Thu Sep 24): Chapter 4, Functions",
+      "title": "Chapter 3 (Thu Sep 24): Chapter 4, Functions",
       "topics": [
         {
           "id": "lec3-functions",
@@ -1327,7 +1327,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec4",
-      "title": "Lecture 3 (Thu Sep 24): Chapter 5, Sequences: Lists and Tuples",
+      "title": "Chapter 3 (Thu Sep 24): Chapter 5, Sequences: Lists and Tuples",
       "topics": [
         {
           "id": "lec4-lists-tuples",
@@ -1850,7 +1850,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec5",
-      "title": "Lecture 4 (Thu Oct 8): Chapter 6, Dictionaries and Sets",
+      "title": "Chapter 4 (Thu Oct 8): Chapter 6, Dictionaries and Sets",
       "topics": [
         {
           "id": "lec5-dictionaries-sets",
@@ -2040,7 +2040,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec6",
-      "title": "Lecture 4-5 (Oct 8-22): Chapter 7, Array-Oriented Programming with NumPy and an Intro to Pandas",
+      "title": "Chapter 4-5 (Oct 8-22): Chapter 7, Array-Oriented Programming with NumPy and an Intro to Pandas",
       "topics": [
         {
           "id": "lec6-numpy",
@@ -2401,7 +2401,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec7",
-      "title": "Lecture 5 (Thu Oct 22): Chapter 8, Strings: A Deeper Look",
+      "title": "Chapter 5 (Thu Oct 22): Chapter 8, Strings: A Deeper Look",
       "topics": [
         {
           "id": "lec7-strings",
@@ -2597,7 +2597,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec8",
-      "title": "Lecture 6 (Thu Nov 5): Chapter 9, Files and Exceptions, and CSV Data with Pandas",
+      "title": "Chapter 6 (Thu Nov 5): Chapter 9, Files and Exceptions, and CSV Data with Pandas",
       "topics": [
         {
           "id": "lec8-files-exceptions",
@@ -2787,7 +2787,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec9",
-      "title": "Lecture 6 (Thu Nov 5): Chapter 10, Object-Oriented Programming (Selections)",
+      "title": "Chapter 6 (Thu Nov 5): Chapter 10, Object-Oriented Programming (Selections)",
       "topics": [
         {
           "id": "lec9-oop",
@@ -2977,7 +2977,7 @@ window.COURSE_DATA["python-workshop"] = {
     },
     {
       "id": "lec10",
-      "title": "Lecture 7 (Thu Nov 12): Generative and Agentic AI Programming",
+      "title": "Chapter 7 (Thu Nov 12): Generative and Agentic AI Programming",
       "topics": [
         {
           "id": "lec10-genai-agents",
