@@ -2,6 +2,51 @@
   "courseId": "mgmtmsa-402",
   "files": [
     {
+      "name": "26F-MGMTMSA402-LEC1.pdf",
+      "path": "26F-MGMTMSA402-LEC1.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 2414155,
+      "date": "2026-10-29T03:17:27.299Z"
+    },
+    {
+      "name": "26F-MGMTMSA402-LEC2.pdf",
+      "path": "26F-MGMTMSA402-LEC2.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 2933619,
+      "date": "2026-10-29T03:17:27.309Z"
+    },
+    {
+      "name": "26F-MGMTMSA402-LEC3.pdf",
+      "path": "26F-MGMTMSA402-LEC3.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 5040092,
+      "date": "2026-10-29T03:17:27.318Z"
+    },
+    {
+      "name": "26F-MGMTMSA402-LEC4.pdf",
+      "path": "26F-MGMTMSA402-LEC4.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 5197924,
+      "date": "2026-10-29T03:17:27.326Z"
+    },
+    {
+      "name": "26F-MGMTMSA402-PS1.pdf",
+      "path": "26F-MGMTMSA402-PS1.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 148118,
+      "date": "2026-10-29T03:17:27.327Z"
+    },
+    {
       "name": "402-course-skeleton.md",
       "path": "402-course-skeleton.md",
       "folder": "",
@@ -38,6 +83,15 @@
       "date": "2026-10-29T03:11:43.259Z"
     },
     {
+      "name": "402-syllabus.pdf",
+      "path": "402-syllabus.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 157602,
+      "date": "2026-10-29T03:17:27.328Z"
+    },
+    {
       "name": "402-template-cards.md",
       "path": "402-template-cards.md",
       "folder": "",
@@ -45,6 +99,42 @@
       "mime": "text/markdown",
       "size": 11486,
       "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "MSBA 402 Discussion 1.pdf",
+      "path": "MSBA 402 Discussion 1.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 321206,
+      "date": "2026-10-29T03:17:27.329Z"
+    },
+    {
+      "name": "MSBA 402 Discussion 2.pdf",
+      "path": "MSBA 402 Discussion 2.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 435126,
+      "date": "2026-10-29T03:17:27.331Z"
+    },
+    {
+      "name": "MSBA 402 Discussion Week 4.pdf",
+      "path": "MSBA 402 Discussion Week 4.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 80429,
+      "date": "2026-10-29T03:17:27.331Z"
+    },
+    {
+      "name": "MSBA 402 Practices Discussion 1.pdf",
+      "path": "MSBA 402 Practices Discussion 1.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 141207,
+      "date": "2026-10-29T03:17:27.332Z"
     },
     {
       "name": "MSBA_402_Discussion_Week_4_Practice.ipynb",
