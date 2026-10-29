@@ -2,6 +2,33 @@
   "courseId": "mgmtmsa-400",
   "files": [
     {
+      "name": "1_course_overview_and_intro_to_R Handout.pdf",
+      "path": "1_course_overview_and_intro_to_R Handout.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 1401925,
+      "date": "2026-10-29T03:12:07.883Z"
+    },
+    {
+      "name": "2_review_of_statistics handout.pdf",
+      "path": "2_review_of_statistics handout.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 2238722,
+      "date": "2026-10-29T03:12:07.890Z"
+    },
+    {
+      "name": "3_intro_predictive_models handout.pdf",
+      "path": "3_intro_predictive_models handout.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 508938,
+      "date": "2026-10-29T03:12:07.892Z"
+    },
+    {
       "name": "400-ch2-notes-sheet-simple-2026-10-24.md",
       "path": "400-ch2-notes-sheet-simple-2026-10-24.md",
       "folder": "",
@@ -18,6 +45,15 @@
       "mime": "text/markdown",
       "size": 9097,
       "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "400-cheat-sheet-printable-v11.pdf",
+      "path": "400-cheat-sheet-printable-v11.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 39871,
+      "date": "2026-10-29T03:12:07.893Z"
     },
     {
       "name": "400-course-skeleton.md",
@@ -65,6 +101,15 @@
       "date": "2026-10-29T03:11:43.257Z"
     },
     {
+      "name": "400-syllabus.pdf",
+      "path": "400-syllabus.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 84400,
+      "date": "2026-10-29T03:12:07.894Z"
+    },
+    {
       "name": "400-template-cards.md",
       "path": "400-template-cards.md",
       "folder": "",
@@ -72,6 +117,15 @@
       "mime": "text/markdown",
       "size": 10058,
       "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "4_estimation_testing_prediction_handout.pdf",
+      "path": "4_estimation_testing_prediction_handout.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 374799,
+      "date": "2026-10-29T03:12:07.895Z"
     },
     {
       "name": "Ch 1 Code Snippets.py",
@@ -164,6 +218,24 @@
       "date": "2026-10-29T03:11:43.257Z"
     },
     {
+      "name": "HW1.pdf",
+      "path": "HW1.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 111489,
+      "date": "2026-10-29T03:12:07.896Z"
+    },
+    {
+      "name": "HW1_solution.pdf",
+      "path": "HW1_solution.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 196771,
+      "date": "2026-10-29T03:12:07.897Z"
+    },
+    {
       "name": "HW2-Q3b-final.md",
       "path": "HW2-Q3b-final.md",
       "folder": "",
@@ -173,6 +245,15 @@
       "date": "2026-10-29T03:11:43.257Z"
     },
     {
+      "name": "HW2.pdf",
+      "path": "HW2.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 107556,
+      "date": "2026-10-29T03:12:07.897Z"
+    },
+    {
       "name": "Homework_Template.Rmd",
       "path": "Homework_Template.Rmd",
       "folder": "",
@@ -180,6 +261,69 @@
       "mime": "application/octet-stream",
       "size": 4400,
       "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Midterm-A-2025.pdf",
+      "path": "Midterm-A-2025.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 170460,
+      "date": "2026-10-29T03:12:07.898Z"
+    },
+    {
+      "name": "Midterm-A-solution-2025.pdf",
+      "path": "Midterm-A-solution-2025.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 181858,
+      "date": "2026-10-29T03:12:07.898Z"
+    },
+    {
+      "name": "PreReq.pdf",
+      "path": "PreReq.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 153776,
+      "date": "2026-10-29T03:12:07.899Z"
+    },
+    {
+      "name": "Quiz_4.pdf",
+      "path": "Quiz_4.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 82570,
+      "date": "2026-10-29T03:12:07.899Z"
+    },
+    {
+      "name": "RMarkdown_tutorial.pdf",
+      "path": "RMarkdown_tutorial.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 387215,
+      "date": "2026-10-29T03:12:07.900Z"
+    },
+    {
+      "name": "R_Python_Installation.pdf",
+      "path": "R_Python_Installation.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 411921,
+      "date": "2026-10-29T03:12:07.902Z"
+    },
+    {
+      "name": "Regression_Quiz.pdf",
+      "path": "Regression_Quiz.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 12330,
+      "date": "2026-10-29T03:12:07.902Z"
     },
     {
       "name": "Sample_Assignment_Solution.Rmd",
