@@ -4,15 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#17635a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="StudyHub">
 <title>Integrated Learning Plan</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -87,7 +79,7 @@
   .seg { position:relative; display:flex; gap:2px; flex:1 1 auto; min-width:0;
          background:var(--surface-muted); border:1px solid var(--line); border-radius:999px;
          padding:3px; overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
-         -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y;
+         -webkit-overflow-scrolling:touch; touch-action:pan-y;
          user-select:none; -webkit-user-select:none; }
   .seg a { -webkit-user-drag:none; }
   .seg::-webkit-scrollbar { display:none; }
@@ -113,6 +105,13 @@
   .nbtoolcur { background:var(--accent) !important; color:var(--accent-ink) !important; border-color:var(--accent) !important; }
   .nbsheetwrap { margin-top:10px; border-radius:10px; overflow:hidden; border:1px solid var(--line-strong);
                  box-shadow:var(--shadow-md); background:#fffdf8; }
+
+  /* file library */
+  .filerow { display:flex; gap:12px; align-items:baseline; padding:8px 0; flex-wrap:wrap; }
+  .filerow + .filerow { border-top:1px solid var(--line); }
+  .filerow .fname { flex:1 1 240px; font-weight:500; overflow-wrap:break-word; }
+  .filerow .fmeta { color:var(--muted); font-size:13.5px; white-space:nowrap; }
+  .filerow a { font-weight:600; font-size:14.5px; white-space:nowrap; }
   #nbcanvas { display:block; width:100%; height:auto; touch-action:none; cursor:crosshair; }
 
   .wrap { max-width:840px; margin:0 auto; padding:26px 20px 64px; }
@@ -135,35 +134,6 @@
           transition:box-shadow .2s ease, border-color .2s ease; animation:fadeUp .28s ease both; }
   .card:hover { box-shadow:var(--shadow-md); border-color:var(--line-strong); }
   .card h3 { margin-top:0; }
-  .course-banner { display:block; width:100%; height:auto; margin:4px 0 18px;
-                   border:1px solid var(--line); border-radius:16px; background:var(--surface);
-                   box-shadow:var(--shadow-sm); }
-  .file-tools { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:8px 0; }
-  .file-tools input[type=text] { flex:1 1 180px; margin:0; }
-  .file-chips { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 4px; }
-  .file-chip.cur { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
-  .file-row { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-top:1px solid var(--line); }
-  .file-ico { flex:none; width:36px; height:36px; color:var(--ink); }
-  .file-ico svg { display:block; width:36px; height:36px; }
-  .file-main { flex:1; min-width:0; }
-  .file-name { font-weight:600; word-break:break-word; }
-  .file-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-  .file-group { font-weight:600; margin:16px 0 0; }
-  .file-preview { position:fixed; inset:0; z-index:40; display:none; padding:18px;
-                  background:rgba(27,35,48,.5); }
-  .file-preview.open { display:flex; align-items:flex-start; justify-content:center; overflow:auto; }
-  .file-preview-card { background:var(--surface); color:var(--ink); width:min(960px, 100%);
-                       border-radius:16px; padding:16px 16px 20px; border:1px solid var(--line);
-                       box-shadow:var(--shadow-md); }
-  .file-preview img { display:block; width:100%; height:auto; max-height:70vh; object-fit:contain;
-                      background:var(--surface-muted); border-radius:12px; }
-  .file-preview iframe { display:block; width:100%; height:70vh; border:0; border-radius:12px;
-                         background:var(--surface-muted); }
-  @media (max-width:640px) {
-    .file-actions .btn, .file-actions button, .file-actions a.btn { flex:1 1 auto; text-align:center; }
-    .file-preview { padding:10px; }
-    .file-preview iframe { height:60vh; }
-  }
   .setup { background:var(--accent-soft); border-color:var(--line-strong); border-left:4px solid var(--accent); }
   .bar { height:10px; background:var(--surface-muted); border-radius:999px; overflow:hidden; margin:10px 0 5px;
          box-shadow:inset 0 1px 2px rgba(27,35,48,.08); }
@@ -266,34 +236,6 @@
   .queue-item { display:flex; justify-content:space-between; gap:14px; align-items:baseline; padding:9px 0; }
   .queue-item + .queue-item { border-top:1px solid var(--line); }
   .queue-item a { font-weight:600; font-size:15px; white-space:nowrap; }
-
-  /* next-7-days deadline strip */
-  .strip { display:flex; flex-direction:column; gap:8px; margin-top:4px; }
-  .dl { display:flex; gap:12px; align-items:flex-start; width:100%; text-align:left;
-        background:var(--surface); color:var(--ink); border:1px solid var(--line);
-        border-radius:12px; padding:12px 14px; font-weight:500; box-shadow:none; }
-  .dl:hover { border-color:var(--accent); background:var(--accent-soft); color:var(--ink); transform:none; box-shadow:none; }
-  .dl.done { opacity:.62; }
-  .dl .box { flex:none; width:22px; height:22px; border-radius:6px; border:2px solid var(--line-strong);
-             display:inline-flex; align-items:center; justify-content:center; margin-top:2px;
-             font-size:14px; line-height:1; background:var(--surface); }
-  .dl.done .box { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
-  .dl .when { display:block; font-size:12.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
-  .dl.exam { cursor:default; }
-  .dl.exam:hover { background:var(--surface); border-color:var(--line); color:var(--ink); }
-  .dl .grow { min-width:0; }
-  .loadbanner { margin:0 auto; max-width:840px; padding:14px 20px 0; }
-  .loadbanner .card { border-color:var(--bad-line); background:var(--bad-soft); }
-  .calrow { display:flex; align-items:center; gap:10px; margin:8px 0; }
-  .calmeta { flex:0 0 148px; font-size:13.5px; color:var(--muted); }
-  .caltrack { flex:1; height:10px; border-radius:999px; background:var(--surface-muted); border:1px solid var(--line); position:relative; overflow:hidden; }
-  .caltrack .acc { position:absolute; left:0; top:0; bottom:0; background:var(--accent); opacity:.85; }
-  .caltrack .conf { position:absolute; top:-3px; width:2px; height:16px; background:var(--ink); }
-  .nudge { border-left:4px solid var(--warn); }
-  @media (max-width:640px) {
-    .calmeta { flex-basis:108px; }
-    .dl { padding:12px; }
-  }
   footer.site { border-top:1px solid var(--line); color:var(--muted); font-size:15px; }
   footer.site .wrap { padding-top:22px; padding-bottom:30px; }
   .hidden { display:none; }
@@ -364,11 +306,11 @@
   <div class="seg" id="navcourses" aria-label="Courses"></div>
   <a class="bell" href="#/notifications" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="bellbadge" class="bellbadge hidden">0</span></a>
 </div></header>
-<div id="loadbanner" class="loadbanner"></div>
 <main class="wrap" id="app">Loading courses…</main>
 <footer class="site"><div class="wrap">Built for studying. Progress saves in this browser; export your state from Home to move it between devices.</div></footer>
 
 <script src="courses/registry.js"></script>
+<script src="courses/files-manifest.js"></script>
 <script>
 "use strict";
 /* ============================== utilities ============================== */
@@ -414,39 +356,11 @@ function md(t){
 /* ============================== state ============================== */
 var LS_KEY = "ilp-state-v1";
 var state = null;
-function blankState(){
-  return { v:2, topics:{}, errors:[], exampleFlags:{}, finals:[], notebooks:[], deadlineDone:{}, calibration:[], calibrationSeeded:true, activeRun:null };
-}
+function blankState(){ return { v:1, topics:{}, errors:[], exampleFlags:{}, finals:[], notebooks:[] }; }
 function loadState(){
   try { var raw = localStorage.getItem(LS_KEY); state = raw ? JSON.parse(raw) : blankState(); }
   catch(e){ state = blankState(); }
-  if (!state || !state.topics) state = blankState();
-  if (migrateState()) saveState();
-}
-/* Keep the same localStorage key. v2 adds deadline checkoffs, calibration
-   rows, and an in-progress quiz, without dropping topics, errors, or notes. */
-function migrateState(){
-  var changed = false;
-  if (!state.errors) { state.errors = []; changed = true; }
-  if (!state.exampleFlags) { state.exampleFlags = {}; changed = true; }
-  if (!state.finals) { state.finals = []; changed = true; }
-  if (!state.notebooks) { state.notebooks = []; changed = true; }
-  if (!state.deadlineDone) { state.deadlineDone = {}; changed = true; }
-  if (!state.calibration) { state.calibration = []; changed = true; }
-  if (!state.v || state.v < 2) { state.v = 2; changed = true; }
-  Object.keys(state.topics).forEach(function(k){
-    if (/\/undefined$/.test(k)) { delete state.topics[k]; changed = true; }
-  });
-  if (!state.calibrationSeeded) {
-    state.errors.forEach(function(e){
-      if (e.confidence != null && !isNaN(Number(e.confidence))) {
-        state.calibration.push({ c: Number(e.confidence), ok: false, d: e.created || todayStr(), cid: e.cid || "", src: "error" });
-      }
-    });
-    state.calibrationSeeded = true;
-    changed = true;
-  }
-  return changed;
+  if (!state.topics) state = blankState();
 }
 function saveState(){ try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){} updateBell(); }
 function tkey(cid, tid){ return cid + "/" + tid; }
@@ -459,7 +373,6 @@ function stageDone(cid, tid, idx){ return !!tstate(cid, tid).completed[idx]; }
 
 /* ============================== course registry ============================== */
 var COURSES = [];
-var COURSE_LOAD_ERRORS = [];
 function loadCourses(done){
   window.COURSE_DATA = window.COURSE_DATA || {};
   var ids = window.COURSE_REGISTRY || [];
@@ -468,34 +381,12 @@ function loadCourses(done){
   ids.forEach(function(id){
     var s = document.createElement("script");
     s.src = "courses/" + id + ".js";
-    s.onload = function(){ if (--pending === 0) done(); };
-    s.onerror = function(){
-      COURSE_LOAD_ERRORS.push({ id: id, reason: "courses/" + id + ".js failed to load. Check that the file is committed and that this page can reach it." });
-      if (--pending === 0) done();
-    };
+    s.onload = s.onerror = function(){ if (--pending === 0) done(); };
     document.body.appendChild(s);
   });
 }
 function collectCourses(){
-  var missing = [];
-  COURSES = (window.COURSE_REGISTRY || []).map(function(id){
-    var c = window.COURSE_DATA[id];
-    if (!c) missing.push(id);
-    return c;
-  }).filter(Boolean);
-  missing.forEach(function(id){
-    if (!COURSE_LOAD_ERRORS.some(function(e){ return e.id === id; })) {
-      COURSE_LOAD_ERRORS.push({ id: id, reason: "courses/" + id + ".js loaded but did not define COURSE_DATA[\"" + id + "\"]." });
-    }
-  });
-  renderLoadErrors();
-}
-function renderLoadErrors(){
-  var el = $("loadbanner"); if (!el) return;
-  if (!COURSE_LOAD_ERRORS.length) { el.innerHTML = ""; return; }
-  el.innerHTML = "<div class=\"card\"><h3>A course file did not load</h3><ul class=\"tight\">"
-    + COURSE_LOAD_ERRORS.map(function(e){ return "<li class=\"small\"><strong>" + esc(e.id) + ".</strong> " + esc(e.reason) + "</li>"; }).join("")
-    + "</ul><p class=\"small muted\">Other courses are still available. Fix the file and reload.</p></div>";
+  COURSES = (window.COURSE_REGISTRY || []).map(function(id){ return window.COURSE_DATA[id]; }).filter(Boolean);
 }
 function courseById(cid){ return COURSES.filter(function(c){ return c.id === cid; })[0] || null; }
 function topicById(course, tid){
@@ -561,109 +452,37 @@ function pickRetestQuestion(entry){
 }
 
 /* ============================== mastery ============================== */
-/* A raw 70% on 4 questions is one miss away from a coin flip. For sets
-   shorter than 8, also require the Wilson lower bound (z = 1.28) to clear
-   0.5, so 3/4 does not count and 5/6 still does. Single-question retests
-   stay on their own rule (the whole item must be right). */
-function clearsPass(correct, n){
-  if (!n) return false;
-  var p = correct / n;
-  if (p < 0.7) return false;
-  if (n >= 8) return true;
-  var z = 1.28;
-  var denom = 1 + (z * z) / n;
-  var centre = p + (z * z) / (2 * n);
-  var margin = z * Math.sqrt((p * (1 - p) + (z * z) / (4 * n)) / n);
-  return (centre - margin) / denom >= 0.5;
-}
-function retrievalPassed(r){
-  if (r.correct != null && r.n) return clearsPass(r.correct, r.n);
-  return r.score >= 0.7;
-}
-function daysUntilFinal(cid){
-  var c = courseById(cid);
-  if (!c || !c.finals || !c.finals.length || !c.finals[0].date) return null;
-  return daysUntil(c.finals[0].date);
-}
-/* Gaps are 10%, 15%, and 20% of the days left until the final (the retention
-   interval). The first gap is also capped at 3 days: that is the gap the old
-   schedule meant to use first, and the previous index skipped it (see
-   spacedGapDays). When the exam is close, the cap and the 10% floor compress
-   the list so the remaining retrievals still fit before a review ~3 days out.
-   No final date falls back to 3, 8, 21. */
-function gapListFor(cid){
-  var left = daysUntilFinal(cid);
-  if (left == null) return [3, 8, 21];
-  if (left <= 0) return [7, 7, 7];
-  var lo = Math.max(1, Math.round(left * 0.10));
-  var mid = Math.max(lo, Math.round(left * 0.15));
-  var hi = Math.max(mid, Math.round(left * 0.20));
-  var room = Math.max(1, left - 3);
-  var cap = Math.max(1, Math.floor(room / 2));
-  return [
-    Math.max(1, Math.min(3, lo, cap)),
-    Math.max(1, Math.min(mid, cap)),
-    Math.max(1, Math.min(hi, room))
-  ];
-}
-function spacedGapDays(cid, successes){
-  var gaps = gapListFor(cid);
-  /* Index with successes-1 AFTER the successful attempt is recorded.
-     The old line used Math.min(retrievals.length, gaps.length-1), which is
-     1 after the first success, so gaps[0] (the 3-day gap) never ran. */
-  var idx = successes <= 0 ? 0 : Math.min(successes - 1, gaps.length - 1);
-  var gap = gaps[idx];
-  var left = daysUntilFinal(cid);
-  if (left == null || left <= 0) return gap;
-  var reviewIn = left - 3;
-  if (left <= 4) return Math.max(1, reviewIn > 0 ? reviewIn : 1);
-  if (successes >= 3 && reviewIn > 0 && gap > reviewIn) return reviewIn;
-  return gap;
-}
-function scheduleNextRetrieval(cid, ts, passed){
-  var t = todayStr();
-  if (!passed) { ts.nextRetrieval = addDays(t, 1); return; }
-  ts.nextRetrieval = addDays(t, spacedGapDays(cid, ts.retrievals.length));
-}
-function recordAttempt(cid, confidence, correct){
-  if (confidence == null || isNaN(Number(confidence))) return;
-  if (!state.calibration) state.calibration = [];
-  state.calibration.push({ c: Number(confidence), ok: !!correct, d: todayStr(), cid: cid || "" });
-}
-function recordQuizResult(cid, tid, correct, n, qids){
+function recordQuizResult(cid, tid, score, n, qids){
   var ts = tstate(cid, tid), t = todayStr();
-  var frac = n ? correct / n : 0;
-  var passed = clearsPass(correct, n);
-  ts.quizServings.push({ date: t, score: frac, n: n, correct: correct });
+  ts.quizServings.push({ date: t, score: score, n: n });
   qids.forEach(function(id){ if (ts.usedQ.indexOf(id) === -1) ts.usedQ.push(id); });
-  if (frac < 0.5) ts.shrunk = true;
-  else ts.shrunk = false;
-  if (passed) {
-    if (ts.retrievals.filter(function(r){ return r.date === t; }).length === 0 && ts.quizServings.length > 1) {
-      ts.retrievals.push({ date: t, score: frac, n: n, correct: correct, via: "quiz" });
+  if (score >= 0.7){
+    if (ts.retrievals.filter(function(r){ return r.date === t; }).length === 0 && ts.quizServings.length > 1){
+      // a later passing serving on a new day counts as one spaced retrieval
+      ts.retrievals.push({ date: t, score: score, n: n, via: "quiz" });
     }
-    scheduleNextRetrieval(cid, ts, true);
+    ts.nextRetrieval = addDays(t, score > 0.9 ? 4 : 2);
+  } else if (score < 0.5){
+    ts.shrunk = true; ts.nextRetrieval = addDays(t, 1);
   } else {
     ts.nextRetrieval = addDays(t, 1);
   }
   updateLearned(cid, tid); saveState();
 }
-function recordRetrievalResult(cid, tid, correct, n, qids){
+function recordRetrievalResult(cid, tid, score, n, qids){
   var ts = tstate(cid, tid), t = todayStr();
-  var frac = n ? correct / n : 0;
-  var passed = clearsPass(correct, n);
   qids.forEach(function(id){ if (ts.usedQ.indexOf(id) === -1) ts.usedQ.push(id); });
   var alreadyToday = ts.retrievals.some(function(r){ return r.date === t; });
-  if (passed && !alreadyToday) ts.retrievals.push({ date: t, score: frac, n: n, correct: correct, via: "retrieval" });
-  if (frac < 0.5) ts.shrunk = true;
-  else ts.shrunk = false;
-  scheduleNextRetrieval(cid, ts, passed);
+  if (score >= 0.7 && !alreadyToday) ts.retrievals.push({ date: t, score: score, n: n, via: "retrieval" });
+  var gaps = [3, 8, 21];
+  var idx = Math.min(ts.retrievals.length, gaps.length - 1);
+  ts.nextRetrieval = addDays(t, score >= 0.7 ? gaps[idx] : 1);
   updateLearned(cid, tid); saveState();
 }
 function updateLearned(cid, tid){
   var ts = tstate(cid, tid);
   var days = {};
-  ts.retrievals.forEach(function(r){ if (retrievalPassed(r)) days[r.date] = true; });
+  ts.retrievals.forEach(function(r){ if (r.score >= 0.7) days[r.date] = true; });
   ts.learned = Object.keys(days).length >= 3;
 }
 function learnedCount(course){
@@ -671,84 +490,7 @@ function learnedCount(course){
 }
 function topicRetrievalDue(cid, tid){
   var ts = tstate(cid, tid);
-  if (!ts.nextRetrieval || ts.nextRetrieval > todayStr()) return false;
-  if (!ts.quizServings.length && !(ts.retrievals && ts.retrievals.length)) return false;
-  return true;
-}
-function firstWorked(topic){
-  var found = null;
-  (topic.lesson || []).forEach(function(part){
-    if (!found && part.workedExample && part.workedExample.body) found = { title: part.workedExample.title || "Worked example", body: part.workedExample.body };
-  });
-  if (!found) (topic.practice || []).forEach(function(p){
-    if (!found && p.rung === "worked") found = { title: p.title || "Worked example", body: (p.prompt || "") + (p.solution ? "\n\n" + p.solution : "") };
-  });
-  return found;
-}
-function inStudyQueue(c){ return !c || c.inStudyQueue !== false; }
-function courseWeight(c){
-  var exam = 0, any = 0;
-  (c.gradeWeights || []).forEach(function(w){
-    var n = parseFloat(String(w.weight).replace(/[^0-9.]/g, ""));
-    if (!isFinite(n)) return;
-    any = Math.max(any, n);
-    if (/final|exam|quiz/i.test(w.label || "")) exam = Math.max(exam, n);
-  });
-  return exam || any || 20;
-}
-function deadlineIsDone(id){ return !!(state.deadlineDone && state.deadlineDone[id]); }
-function courseEvents(c){
-  var out = [], short = c.name.split(":")[0];
-  (c.deadlines || []).forEach(function(d){
-    out.push({ id: c.id + ":" + d.id, cid: c.id, date: d.date, kind: "deadline", weekly: false, label: short + ": " + d.label, doneable: true });
-  });
-  (c.weekly || []).forEach(function(w){
-    var start = (c.termDates && c.termDates.start) || todayStr();
-    var until = w.until || (c.termDates && c.termDates.end) || addDays(todayStr(), 120);
-    var d = start, guard = 0;
-    while (d <= until && guard < 400) {
-      if (new Date(d + "T12:00:00").getDay() === w.weekday) {
-        out.push({ id: c.id + ":" + w.id + ":" + d, cid: c.id, date: d, kind: "deadline", weekly: true, label: short + ": " + w.label, doneable: true });
-      }
-      d = addDays(d, 1); guard++;
-    }
-  });
-  (c.finals || []).forEach(function(f){
-    if (!f.date) return;
-    var flabel = f.label || (short + " final");
-    out.push({ id: c.id + ":final:" + f.date, cid: c.id, date: f.date, kind: "final", weekly: false, label: flabel.indexOf(short) === 0 ? flabel : short + ": " + flabel, doneable: false });
-    [[21, "first full simulation"], [10, "second simulation"], [5, "last simulation"], [3, "final review, about 3 days out"]].forEach(function(pair){
-      var when = addDays(f.date, -pair[0]);
-      out.push({ id: c.id + ":prep" + pair[0] + ":" + when, cid: c.id, date: when, kind: "prep", weekly: false, label: short + " exam prep: " + pair[1], doneable: false, finalDate: f.date });
-    });
-  });
-  return out;
-}
-function allEvents(){
-  var out = [];
-  COURSES.forEach(function(c){ out = out.concat(courseEvents(c)); });
-  return out;
-}
-function soonestPressureDays(c){
-  var days = [];
-  var left = daysUntilFinal(c.id);
-  if (left != null && left >= 0) days.push(left);
-  courseEvents(c).forEach(function(ev){
-    if (ev.kind !== "deadline" || deadlineIsDone(ev.id)) return;
-    var n = daysUntil(ev.date);
-    if (n >= 0) days.push(n);
-  });
-  if (!days.length) return 45;
-  return Math.min.apply(null, days);
-}
-function pressureScore(c, kind){
-  var soon = soonestPressureDays(c);
-  var urg = 1 / (1 + soon);
-  if (kind === "errors") urg = Math.max(urg, 0.85);
-  else if (kind === "retrieval") urg = Math.max(urg, 0.55);
-  else if (kind === "maintenance") urg = Math.max(urg, 0.35) * 0.85;
-  else urg = urg * 0.45;
-  return urg * courseWeight(c);
+  return !ts.learned && ts.nextRetrieval && ts.nextRetrieval <= todayStr() && ts.quizServings.length > 0;
 }
 
 /* ============================== routing ============================== */
@@ -782,13 +524,11 @@ function segStep(dir){
   if (COURSES[j] && (idx < 0 || j !== idx)) location.hash = "#/course/" + COURSES[j].id;
 }
 function route(){
-  if (typeof closeFilePreview === "function") closeFilePreview();
   updateNavActive();
   var h = location.hash.replace(/^#\/?/, "");
   var seg = h.split("/").filter(function(x){ return x !== ""; });
   window.scrollTo(0, 0);
   if (seg.length === 0) return renderHome();
-  if (seg[0] === "course" && seg[1] && seg[2] === "files") return renderFiles(seg[1]);
   if (seg[0] === "course" && seg[1]) return renderCourse(seg[1]);
   if (seg[0] === "topic" && seg[1] && seg[2]) return renderTopic(seg[1], seg[2], seg[3] ? parseInt(seg[3], 10) : 0);
   if (seg[0] === "examples" && seg[1]) return renderExamples(seg[1]);
@@ -798,7 +538,6 @@ function route(){
   if (seg[0] === "notebook" && seg[1]) return renderNotebookPage(seg[1]);
   if (seg[0] === "notebook") return renderNotebookList();
   if (seg[0] === "retrieval" && seg[1] && seg[2]) return renderRetrieval(seg[1], seg[2]);
-  if (seg[0] === "quiz") return renderQuizRoute();
   renderHome();
 }
 window.addEventListener("hashchange", route);
@@ -807,71 +546,48 @@ window.addEventListener("hashchange", route);
 "use strict";
 /* ============================== HOME ============================== */
 function computeToday(){
-  var items = [], seen = {};
+  var items = [], seenTopics = {};
+  function addTopic(key){ seenTopics[key] = true; }
   var dueErrors = sortedDueErrors();
-  if (dueErrors.length) {
-    var best = 0;
-    dueErrors.forEach(function(e){
-      seen[tkey(e.cid, e.tid)] = true;
-      var c = courseById(e.cid);
-      if (c) best = Math.max(best, pressureScore(c, "errors"));
-    });
-    items.push({ kind: "errors", score: best, count: dueErrors.length, label: dueErrors.length + " error log retest" + (dueErrors.length > 1 ? "s" : "") + " due", href: "#/errors" });
-  }
-  COURSES.forEach(function(c){
-    if (!inStudyQueue(c)) return;
-    allTopics(c).forEach(function(x){
-      if (!topicRetrievalDue(c.id, x.topic.id)) return;
-      var key = tkey(c.id, x.topic.id);
-      seen[key] = true;
-      var ts = tstate(c.id, x.topic.id);
-      var kind = ts.learned ? "maintenance" : "retrieval";
-      var word = ts.learned ? "Maintenance review" : "Retrieval due";
-      items.push({ kind: kind, score: pressureScore(c, kind), label: word + ": " + x.topic.title + " (" + c.name.split(":")[0] + ")", href: "#/retrieval/" + c.id + "/" + x.topic.id, topicKey: key });
-    });
-  });
-  var candidates = [];
-  COURSES.forEach(function(c){
-    if (!inStudyQueue(c)) return;
-    allTopics(c).forEach(function(x){
-      var key = tkey(c.id, x.topic.id);
-      if (seen[key]) return;
-      var ts = tstate(c.id, x.topic.id);
-      if (ts.learned) return;
-      var started = Object.keys(ts.completed).length > 0 || (ts.quizServings && ts.quizServings.length > 0);
-      candidates.push({ c: c, x: x, started: started, key: key, score: pressureScore(c, "topic") });
-    });
-  });
-  candidates.sort(function(a, b){ return b.score - a.score; });
-  var room = Math.max(0, 7 - Object.keys(seen).length);
-  var fresh = 0;
-  candidates.forEach(function(n){
+  var errTopics = {};
+  dueErrors.forEach(function(e){ errTopics[tkey(e.cid, e.tid)] = true; addTopic(tkey(e.cid, e.tid)); });
+  if (dueErrors.length) items.push({ kind: "errors", count: dueErrors.length, label: dueErrors.length + " error log retest" + (dueErrors.length > 1 ? "s" : "") + " due", href: "#/errors" });
+  var dueRetr = [];
+  COURSES.forEach(function(c){ allTopics(c).forEach(function(x){
+    if (topicRetrievalDue(c.id, x.topic.id)){ dueRetr.push({ c: c, x: x }); addTopic(tkey(c.id, x.topic.id)); }
+  }); });
+  dueRetr.forEach(function(d){ items.push({ kind: "retrieval", label: "Retrieval due: " + d.x.topic.title + " (" + d.c.name.split(":")[0] + ")", href: "#/retrieval/" + d.c.id + "/" + d.x.topic.id }); });
+  var room = Math.max(0, 7 - Object.keys(seenTopics).length);
+  var next = [];
+  COURSES.forEach(function(c){ allTopics(c).forEach(function(x){
     if (room <= 0) return;
-    if (!n.started && fresh >= 2) return;
-    items.push({ kind: "topic", score: n.score, label: (n.started ? "Continue: " : "New: ") + n.x.topic.title + " (" + n.c.name.split(":")[0] + ")", href: "#/topic/" + n.c.id + "/" + n.x.topic.id + "/0", topicKey: n.key });
-    seen[n.key] = true;
-    if (!n.started) fresh++;
-    room--;
-  });
-  items.sort(function(a, b){ return (b.score || 0) - (a.score || 0); });
-  return { items: items, topicsTouched: Object.keys(seen).length };
-}
-function goNext(){
-  var items = computeToday().items;
-  if (!items.length) return;
-  location.hash = items[0].href;
+    var ts = tstate(c.id, x.topic.id);
+    var started = Object.keys(ts.completed).length > 0;
+    if (!ts.learned && !seenTopics[tkey(c.id, x.topic.id)] && (started || next.length === 0 || started)){
+      if (started || next.filter(function(n){ return !n.started; }).length < 2){ next.push({ c: c, x: x, started: started }); addTopic(tkey(c.id, x.topic.id)); room--; }
+    }
+  }); });
+  next.forEach(function(n){ items.push({ kind: "topic", label: (n.started ? "Continue: " : "New: ") + n.x.topic.title + " (" + n.c.name.split(":")[0] + ")", href: "#/topic/" + n.c.id + "/" + n.x.topic.id + "/0" }); });
+  return { items: items, topicCount: Object.keys(seenTopics).length + next.length > 0 ? Object.keys(seenTopics).length : 0, topicsTouched: Object.keys(seenTopics).length };
 }
 /* ============================== PROGRESS PILLS ============================== */
-/* Content: share of all topic stages completed. Time: termDates start to end. */
+/* Content: share of all topic stages completed. Time: first class to final. */
+var COURSE_TIME = {
+  "mgmtmsa-402": { start:"2026-09-28", final:"2026-12-07" },
+  "mgmtmsa-400": { start:"2026-09-29", final:"2026-12-08" },
+  "mgmtmsa-401": { start:"2026-11-04", final:"2026-12-09" },
+  "mgmt-440":    { start:"2026-10-29", final:"2026-12-03" },
+  "python-workshop": { start:"2026-09-25", final:"2026-12-04" }
+};
 function contentPct(c){
   var ts = allTopics(c); if (!ts.length) return 0;
   var done = 0;
-  ts.forEach(function(x){ done += [0,1,2,3,4,5].filter(function(i){ return stageDone(c.id, x.topic.id, i); }).length; });
+  ts.forEach(function(t){ done += [0,1,2,3,4,5].filter(function(i){ return stageDone(c.id, t.id, i); }).length; });
   return Math.round(100 * done / (ts.length * 6));
 }
 function timePct(c){
-  var w = c.termDates; if (!w || !w.start || !w.end) return null;
-  var s = new Date(w.start + "T00:00:00"), f = new Date(w.end + "T23:59:59"), n = new Date();
+  var w = COURSE_TIME[c.id]; if (!w) return null;
+  var s = new Date(w.start + "T00:00:00"), f = new Date(w.final + "T23:59:59"), n = new Date();
   if (n <= s) return 0; if (n >= f) return 100;
   return Math.round(100 * (n - s) / (f - s));
 }
@@ -882,93 +598,14 @@ function pillsHtml(c){
     + "<div class=\"pill\"><div class=\"fc\" style=\"width:" + cp + "%\"></div></div>"
     + "<span class=\"pillpct\">" + cp + "%</span></div>";
   if (tp !== null){
-    var fl = new Date(c.termDates.end + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
-    var endWord = (c.finals && c.finals.length) ? "the final" : "the end of the term";
+    var w = COURSE_TIME[c.id];
+    var fl = new Date(w.final + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
     h += "<div class=\"pillrow\"><span class=\"pillabel\">Time to final</span>"
       + "<div class=\"pill\"><div class=\"ft\" style=\"width:" + tp + "%\"></div></div>"
       + "<span class=\"pillpct\">" + tp + "%</span></div>"
-      + "<p class=\"small muted\" style=\"margin:0\">Time runs from the first class to " + endWord + " (" + esc(fl) + ").</p>";
+      + "<p class=\"small muted\" style=\"margin:0\">Time runs from the first class to the final (" + esc(fl) + ").</p>";
   }
   return h + "</div>";
-}
-function weekEvents(){
-  var end = addDays(todayStr(), 7);
-  return allEvents().filter(function(ev){
-    if (ev.kind === "prep") return false;
-    return ev.date >= todayStr() && ev.date <= end;
-  }).sort(function(a, b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : (a.label < b.label ? -1 : 1)); });
-}
-function deadlineStripHtml(){
-  var evs = weekEvents();
-  var h = "<div class=\"card\"><h3>Next 7 days</h3>";
-  if (!evs.length) h += "<p class=\"muted\" style=\"margin:0\">No deadlines or finals in the next 7 days.</p>";
-  else {
-    h += "<div class=\"strip\">";
-    evs.forEach(function(ev){
-      var done = ev.doneable && deadlineIsDone(ev.id);
-      var when = fmtDate(ev.date);
-      var n = daysUntil(ev.date);
-      var rel = n === 0 ? "Today" : (n === 1 ? "Tomorrow" : "In " + n + " days");
-      if (ev.doneable) {
-        h += "<button type=\"button\" class=\"dl" + (done ? " done" : "") + "\" onclick=\"toggleDeadline('" + esc(ev.id) + "')\">"
-          + "<span class=\"box\" aria-hidden=\"true\">" + (done ? "✓" : "") + "</span>"
-          + "<span class=\"grow\"><span class=\"when\">" + esc(rel) + " · " + esc(when) + "</span>" + esc(ev.label) + "</span></button>";
-      } else {
-        h += "<div class=\"dl exam\"><span class=\"box\" aria-hidden=\"true\">·</span>"
-          + "<span class=\"grow\"><span class=\"when\">" + esc(rel) + " · " + esc(when) + " · exam</span>" + esc(ev.label) + "</span></div>";
-      }
-    });
-    h += "</div><p class=\"small muted\">Tap a deadline to mark it done. Done items drop out of notifications. Exams stay on the strip.</p>";
-  }
-  h += "</div>";
-  return h;
-}
-function toggleDeadline(id){
-  if (!state.deadlineDone) state.deadlineDone = {};
-  if (state.deadlineDone[id]) delete state.deadlineDone[id];
-  else state.deadlineDone[id] = todayStr();
-  saveState();
-  route();
-}
-function calibrationHtml(){
-  var rows = state.calibration || [];
-  var seeded = rows.some(function(r){ return r.src === "error"; });
-  var h = "<div class=\"card\"><h3>Calibration</h3>";
-  if (!rows.length) {
-    return h + "<p class=\"small muted\" style=\"margin:0\">Each quiz answer already asks for a 0 to 100 confidence rating. As those pile up, this chart compares the confidence you reported with how often you were actually right.</p></div>";
-  }
-  var bins = [ { lo:0, hi:20, label:"0–20" }, { lo:20, hi:40, label:"20–40" }, { lo:40, hi:60, label:"40–60" }, { lo:60, hi:80, label:"60–80" }, { lo:80, hi:101, label:"80–100" } ];
-  var gapSum = 0, used = 0;
-  bins.forEach(function(b){
-    var inb = rows.filter(function(r){ return r.c >= b.lo && r.c < b.hi; });
-    h += "<div class=\"calrow\"><span class=\"calmeta\">" + b.label;
-    if (!inb.length) { h += " · none</span><div class=\"caltrack\"></div></div>"; return; }
-    var acc = inb.filter(function(r){ return r.ok; }).length / inb.length;
-    var meanC = inb.reduce(function(s, r){ return s + Number(r.c); }, 0) / inb.length / 100;
-    gapSum += Math.abs(acc - meanC) * inb.length;
-    used += inb.length;
-    h += " · " + inb.length + "</span><div class=\"caltrack\" title=\"Accuracy " + Math.round(acc * 100) + "%, mean confidence " + Math.round(meanC * 100) + "%\">"
-      + "<div class=\"acc\" style=\"width:" + Math.round(acc * 100) + "%\"></div>"
-      + "<div class=\"conf\" style=\"left:" + Math.max(0, Math.min(100, Math.round(meanC * 100))) + "%\"></div></div></div>";
-  });
-  var score = used ? Math.round(100 * (1 - gapSum / used)) : 0;
-  var over = rows.reduce(function(s, r){ return s + (Number(r.c) / 100 - (r.ok ? 1 : 0)); }, 0) / rows.length;
-  var lean = over > 0.05 ? "Overconfident by " + Math.round(over * 100) + " points: confidence is running ahead of accuracy."
-    : (over < -0.05 ? "Underconfident by " + Math.round(-over * 100) + " points: you are righter than you feel." : "Confidence and accuracy are close.");
-  h += "<p class=\"small\" style=\"margin-bottom:0\"><strong>Calibration score " + score + "</strong> out of 100. " + lean + "</p>"
-    + "<p class=\"small muted\">The bar is your accuracy in that confidence band. The mark is your average confidence. A score of 100 means those two line up. "
-    + (seeded ? "Misses already in the error log are included (earlier sessions only stored confidence on misses). Correct answers count from here on." : "Built from the confidence you rate before each answer is checked.")
-    + "</p></div>";
-  return h;
-}
-function sleepNudgeHtml(){
-  var hour = new Date().getHours();
-  var late = hour >= 21 || hour < 5;
-  if (late) {
-    return "<div class=\"card nudge\"><strong>Review a little, then sleep.</strong> "
-      + "<p class=\"small\" style=\"margin-bottom:0\">A short retrieval before bed is when the day consolidates. An all-nighter hands that work back: sleep loss hurts tomorrow's recall more than another hour of cramming helps.</p></div>";
-  }
-  return "<p class=\"small muted\">One pass before sleep beats a longer session that steals the night. Sleep is what consolidates a retrieval; an all-nighter gives it back.</p>";
 }
 
 function renderHome(){
@@ -977,17 +614,11 @@ function renderHome(){
   var drafts = state.errors.filter(function(e){ return e.status === "draft"; });
   var html = "<h1>Today</h1>";
   html += "<div class=\"card setup\"><strong>Setup first:</strong> Do Not Disturb on, phone out of sight and out of reach, checks batched at block boundaries.</div>";
-  html += deadlineStripHtml();
-  html += sleepNudgeHtml();
-  if (state.activeRun) html += "<div class=\"card\"><strong>Quiz in progress.</strong> A reload will pick it up where you left it. <a href=\"#/quiz\">Resume</a></div>";
   html += "<div class=\"card\"><h3>Today's queue: " + today.topicsTouched + " topic" + (today.topicsTouched === 1 ? "" : "s") + "</h3>";
-  html += "<p class=\"small muted\">Ranked by how soon that course's next deadline or final is, times how much the exam is worth.</p>";
   if (!today.items.length) html += "<p class=\"muted\">Nothing due and nothing queued. Open a course below and start its next topic.</p>";
-  else html += "<p><button onclick=\"goNext()\">What should I do next?</button></p>";
   today.items.forEach(function(it){ html += "<div class=\"queue-item\"><span>" + esc(it.label) + "</span><a href=\"" + it.href + "\">Open</a></div>"; });
   if (today.topicsTouched >= 6) html += "<p class=\"small muted\">Dense day. Close it with quiet rest, no phone and no new input, after the last block.</p>";
   html += "</div>";
-  html += calibrationHtml();
   if (drafts.length) html += "<div class=\"card\"><strong>" + drafts.length + " error log draft" + (drafts.length > 1 ? "s" : "") + "</strong> waiting for the wrong step and correct principle. <a href=\"#/errors\">Complete them</a> so their retests get scheduled.</div>";
   html += "<h2>Courses</h2>";
   COURSES.forEach(function(c){
@@ -995,16 +626,15 @@ function renderHome(){
     html += "<div class=\"card\"><h3>" + esc(c.name) + "</h3>"
       + "<p class=\"muted small\">" + esc(c.professor) + (c.term ? " · " + esc(c.term) : "") + "</p>"
       + "<div class=\"bar\"><div style=\"width:" + (total ? Math.round(100 * learned / total) : 0) + "%\"></div></div>"
-      + "<p class=\"small muted\">" + learned + " of " + total + " topics learned (3 successful spaced retrievals on separate days; maintenance reviews continue after that)</p>"
+      + "<p class=\"small muted\">" + learned + " of " + total + " topics learned (3 successful spaced retrievals on separate days)</p>"
       + pillsHtml(c)
       + "<p><a class=\"btn\" href=\"#/course/" + c.id + "\">Open course</a> "
       + "<a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> "
       + "<a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a></p></div>";
   });
   html += "<div class=\"card\"><h3>Your saved state</h3>"
-    + "<p class=\"small muted\">Everything you type and every score saves in this browser. Export a copy to move it to another device; import restores it. Add the site to your home screen so it opens offline, and so iOS is less likely to clear this browser's saved progress.</p>"
+    + "<p class=\"small muted\">Everything you type and every score saves in this browser. Export a copy to move it to another device; import restores it.</p>"
     + "<p><button class=\"secondary\" onclick=\"exportState()\">Export state (JSON)</button> "
-    + "<button class=\"secondary\" onclick=\"exportCalendar()\">Download calendar (.ics)</button> "
     + "<label class=\"btn secondary\" style=\"cursor:pointer\">Import state<input type=\"file\" accept=\".json,application/json\" class=\"hidden\" onchange=\"importState(this)\"></label> "
     + "<button class=\"plain\" onclick=\"resetState()\">Erase saved state</button></p>"
     + "<p class=\"small\" id=\"statemsg\"></p></div>";
@@ -1020,40 +650,13 @@ function importState(input){
   var f = input.files && input.files[0]; if (!f) return;
   var r = new FileReader();
   r.onload = function(){
-    try { var parsed = JSON.parse(r.result); if (!parsed || !parsed.topics || !parsed.errors) throw new Error("shape"); state = parsed; migrateState(); saveState(); route(); }
+    try { var parsed = JSON.parse(r.result); if (!parsed || !parsed.topics || !parsed.errors) throw new Error("shape"); state = parsed; saveState(); route(); }
     catch(e){ var m = $("statemsg"); if (m){ m.className = "small err"; m.textContent = "That file is not a valid exported state."; } }
   };
   r.readAsText(f);
 }
 function resetState(){
-  if (confirm("Erase all saved progress, error entries, and written work in this browser?")){ run = null; state = blankState(); saveState(); route(); }
-}
-function icsStamp(){
-  var d = new Date();
-  function p(n){ return (n < 10 ? "0" : "") + n; }
-  return d.getUTCFullYear() + p(d.getUTCMonth() + 1) + p(d.getUTCDate()) + "T" + p(d.getUTCHours()) + p(d.getUTCMinutes()) + p(d.getUTCSeconds()) + "Z";
-}
-function icsEscape(s){
-  return String(s == null ? "" : s).replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
-}
-function exportCalendar(){
-  var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//StudyHub//Integrated Learning Plan//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH"];
-  var stamp = icsStamp();
-  allEvents().forEach(function(ev){
-    var end = addDays(ev.date, 1);
-    lines.push("BEGIN:VEVENT");
-    lines.push("UID:" + icsEscape(ev.id) + "@studyhub");
-    lines.push("DTSTAMP:" + stamp);
-    lines.push("DTSTART;VALUE=DATE:" + ev.date.replace(/-/g, ""));
-    lines.push("DTEND;VALUE=DATE:" + end.replace(/-/g, ""));
-    lines.push("SUMMARY:" + icsEscape(ev.label));
-    lines.push("END:VEVENT");
-  });
-  lines.push("END:VCALENDAR");
-  var blob = new Blob([lines.join("\r\n") + "\r\n"], { type: "text/calendar" });
-  var a = document.createElement("a");
-  a.href = URL.createObjectURL(blob); a.download = "studyhub.ics"; a.click();
-  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  if (confirm("Erase all saved progress, error entries, and written work in this browser?")){ state = blankState(); saveState(); route(); }
 }
 
 /* ============================== COURSE PAGE ============================== */
@@ -1065,13 +668,39 @@ function stageSummary(cid, tid){
   var n = [0,1,2,3,4,5].filter(function(i){ return stageDone(cid, tid, i); }).length;
   return n + " of 6 stages";
 }
+/* ============================== FILE LIBRARY ============================== */
+var FILE_GROUPS = ["Syllabus", "Lectures and handouts", "Discussions and problem sets", "Assignments and exams", "Recordings", "Study materials"];
+function fmtSize(b){
+  if (b >= 1e9) return (b / 1e9).toFixed(1) + " GB";
+  if (b >= 1e6) return (b / 1e6).toFixed(1) + " MB";
+  if (b >= 1e3) return Math.round(b / 1e3) + " KB";
+  return b + " B";
+}
+function filesHtml(c){
+  var files = (window.COURSE_FILES || {})[c.id];
+  if (!files || !files.length) return "";
+  var html = "<h2>File library</h2>"
+    + "<p class=\"small muted\">Every file I hold for this course, " + files.length + " in total. The files themselves live in your Google Drive and in my workspace; Find in Drive opens the file in your Drive, and anything it cannot find, ask me for and I will send it.</p>";
+  FILE_GROUPS.forEach(function(g){
+    var rows = files.filter(function(f){ return f.g === g; });
+    if (!rows.length) return;
+    html += "<div class=\"card\"><h3>" + esc(g) + "</h3>";
+    rows.forEach(function(f){
+      var d = new Date(f.d + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
+      html += "<div class=\"filerow\"><span class=\"fname\">" + esc(f.n) + "</span>"
+        + "<span class=\"fmeta\">" + esc(f.k) + " · " + fmtSize(f.s) + " · " + d + "</span>"
+        + "<a target=\"_blank\" rel=\"noopener\" href=\"https://drive.google.com/drive/search?q=" + encodeURIComponent(f.n) + "\">Find in Drive</a></div>";
+    });
+    html += "</div>";
+  });
+  return html;
+}
+
 function renderCourse(cid){
   var c = courseById(cid), app = $("app");
   if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
   var total = allTopics(c).length, learned = learnedCount(c);
-  var html = "<p><a href=\"#/\">&larr; All courses</a></p>";
-  if (c.banner) html += "<img class=\"course-banner\" src=\"" + esc(c.banner) + "\" alt=\"" + esc(c.bannerAlt || c.name) + "\" width=\"1200\" height=\"320\">";
-  html += "<h1>" + esc(c.name) + "</h1>";
+  var html = "<p><a href=\"#/\">&larr; All courses</a></p><h1>" + esc(c.name) + "</h1>";
   html += "<div class=\"card\"><h3>Course rules</h3>"
     + "<p class=\"small\"><strong>" + esc(c.professor) + "</strong>" + (c.term ? " · " + esc(c.term) : "") + "</p>"
     + "<p class=\"small\">" + esc(c.examInfo) + "</p>"
@@ -1083,8 +712,8 @@ function renderCourse(cid){
   html += "<div class=\"bar\"><div style=\"width:" + (total ? Math.round(100 * learned / total) : 0) + "%\"></div></div>"
     + "<p class=\"small muted\">" + learned + " of " + total + " topics learned</p>"
     + pillsHtml(c)
-    + "<p><a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> <a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a> <a class=\"btn secondary\" href=\"#/course/" + c.id + "/files\">File library</a></p>"
-    + fileLibraryShell(c);
+    + "<p><a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a> <a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a></p>"
+    + filesHtml(c);
   c.chapters.forEach(function(ch){
     html += "<h2>" + esc(ch.title) + "</h2>";
     ch.topics.forEach(function(t){
@@ -1092,215 +721,17 @@ function renderCourse(cid){
       html += "<div class=\"card\"><h3>" + esc(t.title) + " "
         + (t.provisional ? "<span class=\"badge prov\">PROVISIONAL</span> " : "")
         + (ts.learned ? "<span class=\"badge learned\">LEARNED</span> " : "")
-        + (topicRetrievalDue(c.id, t.id) ? "<span class=\"badge due\">" + (ts.learned ? "REVIEW DUE" : "RETRIEVAL DUE") + "</span> " : "")
+        + (topicRetrievalDue(c.id, t.id) ? "<span class=\"badge due\">RETRIEVAL DUE</span> " : "")
         + "<span class=\"badge stage\">" + stageSummary(c.id, t.id) + "</span></h3>";
       if (t.provisional) html += "<p class=\"small\" style=\"color:var(--warn)\">" + esc(t.provisional) + "</p>";
       if (notesUnfinished(c.id, t.id)) html += "<p class=\"small err\">Notes unfinished: the lesson was finished over a day ago and the Organize stage is not done.</p>";
       html += "<ul class=\"tight\">" + t.pieces.map(function(p){ return "<li class=\"small\"><strong>" + esc(p.name) + ".</strong> " + esc(p.fn) + "</li>"; }).join("") + "</ul>";
-      html += "<p><a class=\"btn\" href=\"#/topic/" + c.id + "/" + t.id + "/0\">Start chapter</a>"
-        + (topicRetrievalDue(c.id, t.id) ? " <a class=\"btn secondary\" href=\"#/retrieval/" + c.id + "/" + t.id + "\">" + (ts.learned ? "Do the maintenance review" : "Do the due retrieval") + "</a>" : "") + "</p></div>";
+      html += "<p><a class=\"btn\" href=\"#/topic/" + c.id + "/" + t.id + "/0\">Start topic</a>"
+        + (topicRetrievalDue(c.id, t.id) ? " <a class=\"btn secondary\" href=\"#/retrieval/" + c.id + "/" + t.id + "\">Do the due retrieval</a>" : "") + "</p></div>";
     });
   });
   app.innerHTML = html;
-  mountFileLibrary(c.id);
 }
-
-/* ============================== FILE LIBRARY ============================== */
-/* One library per course. The list comes from files/<id>/index.json, which
-   scripts/build-file-manifests.js regenerates. The repo is public, so every
-   file listed here is publicly downloadable. */
-var fileLibCid = null;
-var fileLibType = "all";
-var fileLibData = null;
-function fileLibraryShell(c, alone){
-  return "<section class=\"card\" id=\"filelib\">" + (alone ? "" : "<h3>File library</h3>")
-    + "<p class=\"small\">This library is in a public repository. Anyone who can open the site can download these files. Do not put private or unlicensed material here.</p>"
-    + "<div class=\"file-tools\"><input type=\"text\" id=\"file-q\" placeholder=\"Search files\" oninput=\"paintFileList()\" aria-label=\"Search files\">"
-    + (alone ? "" : "<a class=\"btn secondary\" href=\"#/course/" + c.id + "/files\">Library page</a>") + "</div>"
-    + "<div class=\"file-chips\" id=\"file-chips\"></div>"
-    + "<div id=\"file-list\"><p class=\"muted\">Loading the library…</p></div></section>";
-}
-function renderFiles(cid){
-  var c = courseById(cid), app = $("app");
-  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
-  app.innerHTML = "<p><a href=\"#/course/" + c.id + "\">&larr; " + esc(c.name) + "</a></p><h1>File library</h1>"
-    + "<p class=\"muted\">" + esc(c.name) + "</p>"
-    + fileLibraryShell(c, true);
-  mountFileLibrary(c.id);
-}
-function mountFileLibrary(cid){
-  if (fileLibCid !== cid){ fileLibCid = cid; fileLibType = "all"; fileLibData = null; }
-  var q = $("file-q"); if (q) q.value = "";
-  var list = $("file-list");
-  if (list) list.innerHTML = "<p class=\"muted\">Loading the library…</p>";
-  fetch("files/" + cid + "/index.json", { cache: "no-cache" }).then(function(res){
-    if (!res.ok) throw new Error("missing");
-    return res.json();
-  }).then(function(data){
-    if (fileLibCid !== cid) return;
-    fileLibData = data && data.files ? data : { files: [] };
-    paintFileList();
-  }).catch(function(){
-    if (fileLibCid !== cid) return;
-    fileLibData = { files: [], failed: true };
-    paintFileList();
-  });
-}
-function fileKind(ext){
-  ext = String(ext || "").toLowerCase();
-  if (ext === "pdf") return "pdf";
-  if (["png", "jpg", "jpeg", "gif", "webp", "svg"].indexOf(ext) >= 0) return "image";
-  return "file";
-}
-function fileKindLabel(kind){
-  if (kind === "pdf") return "PDF";
-  if (kind === "image") return "Image";
-  return "File";
-}
-function formatBytes(n){
-  n = Number(n) || 0;
-  if (n < 1024) return n + " B";
-  if (n < 1048576) return (n / 1024).toFixed(n < 10240 ? 1 : 0) + " KB";
-  return (n / 1048576).toFixed(1) + " MB";
-}
-function formatFileDate(iso){
-  var d = new Date(iso);
-  if (isNaN(d.getTime())) return "";
-  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-}
-function fileIcon(kind){
-  var body = kind === "image"
-    ? "<rect x=\"4\" y=\"6\" width=\"16\" height=\"12\" rx=\"2\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><circle cx=\"9\" cy=\"10\" r=\"1.4\" fill=\"currentColor\"/><path d=\"M4 15 l4-3 3 2 3-4 6 5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/>"
-    : (kind === "pdf"
-      ? "<path d=\"M6 3 h8 l4 4 v14 a1 1 0 0 1 -1 1 H6 a1 1 0 0 1 -1 -1 V4 a1 1 0 0 1 1 -1 z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M14 3 v5 h5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"7\" y=\"17\" font-size=\"6\" font-family=\"Inter, sans-serif\" fill=\"currentColor\">PDF</text>"
-      : "<path d=\"M6 3 h8 l4 4 v14 a1 1 0 0 1 -1 1 H6 a1 1 0 0 1 -1 -1 V4 a1 1 0 0 1 1 -1 z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><path d=\"M14 3 v5 h5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/>");
-  return "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">" + body + "</svg>";
-}
-function setFileType(t){ fileLibType = t; paintFileList(); }
-function paintFileList(){
-  var list = $("file-list"), chips = $("file-chips");
-  if (!list) return;
-  if (!fileLibData){ list.innerHTML = "<p class=\"muted\">Loading the library…</p>"; return; }
-  if (fileLibData.failed){ list.innerHTML = "<p class=\"err\">The library list could not be loaded. It may be unavailable offline until you have opened it once.</p>"; if (chips) chips.innerHTML = ""; return; }
-  var all = fileLibData.files || [];
-  var q = ($("file-q") && $("file-q").value || "").trim().toLowerCase();
-  var kinds = {};
-  all.forEach(function(f){ kinds[fileKind(f.ext)] = true; });
-  var kindOrder = ["pdf", "image", "file"].filter(function(k){ return kinds[k]; });
-  if (chips){
-    var chipHtml = "<button type=\"button\" class=\"plain file-chip" + (fileLibType === "all" ? " cur" : "") + "\" onclick=\"setFileType('all')\">All</button>";
-    kindOrder.forEach(function(k){
-      chipHtml += "<button type=\"button\" class=\"plain file-chip" + (fileLibType === k ? " cur" : "") + "\" onclick=\"setFileType('" + k + "')\">" + fileKindLabel(k) + "</button>";
-    });
-    chips.innerHTML = kindOrder.length ? chipHtml : "";
-  }
-  var shown = all.filter(function(f){
-    if (fileLibType !== "all" && fileKind(f.ext) !== fileLibType) return false;
-    if (!q) return true;
-    return (f.name + " " + (f.folder || "")).toLowerCase().indexOf(q) >= 0;
-  });
-  if (!all.length){ list.innerHTML = "<p class=\"muted\">No files in this library yet.</p>"; return; }
-  if (!shown.length){ list.innerHTML = "<p class=\"muted\">Nothing matches that search.</p>"; return; }
-  var hasFolder = all.some(function(f){ return !!f.folder; });
-  var groups = [];
-  var index = {};
-  shown.forEach(function(f){
-    var key = hasFolder ? (f.folder || "Course folder") : fileKindLabel(fileKind(f.ext));
-    if (!index[key]){ index[key] = []; groups.push(key); }
-    index[key].push(f);
-  });
-  var html = "";
-  groups.forEach(function(key){
-    html += "<p class=\"file-group\">" + esc(key) + "</p>";
-    index[key].forEach(function(f){
-      var kind = fileKind(f.ext);
-      var url = "files/" + fileLibCid + "/" + f.path.split("/").map(encodeURIComponent).join("/");
-      var encUrl = encodeURIComponent(url);
-      var encName = encodeURIComponent(f.name);
-      html += "<div class=\"file-row\"><div class=\"file-ico\">" + fileIcon(kind) + "</div><div class=\"file-main\">"
-        + "<div class=\"file-name\">" + esc(f.name) + "</div>"
-        + "<p class=\"small muted\" style=\"margin:2px 0 0\">" + esc(fileKindLabel(kind)) + " · " + esc(formatBytes(f.size)) + (f.date ? " · " + esc(formatFileDate(f.date)) : "") + "</p>"
-        + "<div class=\"file-actions\">"
-        + "<button type=\"button\" class=\"secondary\" onclick=\"downloadLibraryFile('" + encUrl + "','" + encName + "')\">Download</button>"
-        + (kind === "pdf" || kind === "image" ? "<button type=\"button\" class=\"plain\" onclick=\"openFilePreview('" + encUrl + "','" + encName + "','" + kind + "')\">Preview</button>" : "")
-        + "<a class=\"btn secondary\" href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">Open</a>"
-        + "</div></div></div>";
-    });
-  });
-  list.innerHTML = html;
-}
-function cacheLibraryResponse(url, response){
-  if (!window.caches || !response) return;
-  caches.open(CACHE_FILES).then(function(cache){ cache.put(url, response); }).catch(function(){});
-}
-var CACHE_FILES = "studyhub-files-v1";
-function saveBlobAs(blob, name){
-  var u = URL.createObjectURL(blob);
-  var a = document.createElement("a");
-  a.href = u;
-  a.download = name;
-  a.target = "_blank";
-  a.rel = "noopener";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(function(){ URL.revokeObjectURL(u); }, 4000);
-}
-function downloadLibraryFile(encUrl, encName){
-  var url = decodeURIComponent(encUrl);
-  var name = decodeURIComponent(encName);
-  fetch(url).then(function(res){
-    if (!res.ok) throw new Error("missing");
-    cacheLibraryResponse(url, res.clone());
-    return res.blob();
-  }).then(function(blob){
-    var file = null, canShare = false;
-    try { file = new File([blob], name, { type: blob.type || "application/octet-stream" }); } catch (e) { file = null; }
-    try { canShare = !!(file && navigator.canShare && navigator.canShare({ files: [file] })); } catch (e2) { canShare = false; }
-    if (canShare) {
-      navigator.share({ files: [file], title: name }).catch(function(err){
-        if (err && err.name === "AbortError") return;
-        saveBlobAs(blob, name);
-      });
-    } else saveBlobAs(blob, name);
-  }).catch(function(){
-    var fallback = window.caches && caches.match(url);
-    if (!fallback){ alert("That file could not be downloaded."); return; }
-    fallback.then(function(hit){
-      if (!hit){ alert("That file could not be downloaded. Open it once while online to keep a copy."); return; }
-      return hit.blob().then(function(blob){ saveBlobAs(blob, name); });
-    }).catch(function(){ alert("That file could not be downloaded."); });
-  });
-}
-function openFilePreview(encUrl, encName, kind){
-  var url = decodeURIComponent(encUrl);
-  var name = decodeURIComponent(encName);
-  fetch(url).then(function(res){ if (res.ok) cacheLibraryResponse(url, res.clone()); }).catch(function(){});
-  var box = $("file-preview");
-  if (!box){
-    box = document.createElement("div");
-    box.id = "file-preview";
-    box.className = "file-preview";
-    box.addEventListener("click", function(e){ if (e.target === box) closeFilePreview(); });
-    document.body.appendChild(box);
-  }
-  var view = kind === "image"
-    ? "<img src=\"" + esc(url) + "\" alt=\"" + esc(name) + "\">"
-    : "<iframe src=\"" + esc(url) + "\" title=\"" + esc(name) + "\"></iframe>";
-  box.innerHTML = "<div class=\"file-preview-card\"><p><strong>" + esc(name) + "</strong></p>"
-    + "<p><button type=\"button\" class=\"plain\" onclick=\"closeFilePreview()\">Close</button> "
-    + "<a class=\"btn secondary\" href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">Open</a> "
-    + "<button type=\"button\" class=\"secondary\" onclick=\"downloadLibraryFile('" + encodeURIComponent(url) + "','" + encodeURIComponent(name) + "')\">Download</button></p>"
-    + view + "</div>";
-  box.classList.add("open");
-}
-function closeFilePreview(){
-  var box = $("file-preview");
-  if (!box) return;
-  box.classList.remove("open");
-  box.innerHTML = "";
-}
-document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeFilePreview(); });
 
 /* ============================== EXAMPLES ============================== */
 function renderExamples(cid){
@@ -1351,7 +782,7 @@ function renderTopic(cid, tid, stage){
     + (ts.learned ? "<span class=\"badge learned\">LEARNED</span>" : "") + "</h1>";
   if (t.provisional) html += "<p class=\"small\" style=\"color:var(--warn)\">" + esc(t.provisional) + "</p>";
   if (notesUnfinished(cid, tid)) html += "<p class=\"small err\">Notes unfinished: finish the Organize stage.</p>";
-  if (ts.shrunk) html += "<p class=\"small err\">This topic scored under half on its last quiz, so the next set is smaller" + (firstWorked(t) ? ", and it starts with a worked example," : "") + " until a retest improves it.</p>";
+  if (ts.shrunk) html += "<p class=\"small err\">This topic scored under half on its last quiz, so it is served smaller, with a worked example first, until a retest improves it.</p>";
   if (ts.learn.revisits) html += "<p class=\"small muted\">Lesson revisits logged: " + ts.learn.revisits + ". A revisit is not review and never counts as progress.</p>";
   html += "<div class=\"rail\">" + STAGE_NAMES.map(function(name, i){
     return "<button class=\"" + (i === stage ? "cur" : "") + (ts.completed[i] ? " done" : "") + "\" onclick=\"location.hash='#/topic/" + cid + "/" + tid + "/" + i + "'\">" + (ts.completed[i] ? "✓ " : "") + (i + 1) + " · " + name + "</button>";
@@ -1644,48 +1075,32 @@ function pickServing(topic, ts, n){
   var rest = topic.questions.filter(function(q){ return ts.usedQ.indexOf(q.id) !== -1; });
   return shuffle(unused).concat(shuffle(rest)).slice(0, Math.min(n, topic.questions.length));
 }
-function retrievalSize(topic, ts){
-  var pool = (topic.questions || []).length;
-  var n = pool >= 12 ? 8 : 6;
-  if (ts.shrunk) n = Math.min(n, 4);
-  return Math.max(0, Math.min(n, pool));
-}
 function renderQuizStart(el, c, t){
   var ts = tstate(c.id, t.id);
   var last = ts.quizServings[ts.quizServings.length - 1];
-  var n = Math.min(ts.shrunk ? 4 : 6, t.questions.length);
   el.innerHTML = "<h2>Stage 6 · Quiz</h2>"
-    + "<p class=\"muted\">Closed book, in this course's test format: " + (c.productionMode === "handwritten" ? "write every answer on paper, then self-mark against the revealed solution." : "produce every answer before revealing its solution.") + " For every question you rate your confidence before any feedback is shown. Every miss drafts an error log entry and schedules its own retests. Answer choices are reshuffled every time a question is served.</p>"
+    + "<p class=\"muted\">Closed book, in this course's test format: " + (c.productionMode === "handwritten" ? "write every answer on paper, then self-mark against the revealed solution." : "produce every answer before revealing its solution.") + " For every question you rate your confidence before any feedback is shown. Every miss drafts an error log entry and schedules its own retests.</p>"
     + "<p class=\"small muted\">Course AI rule: " + esc(c.aiPolicy) + "</p>"
-    + "<p class=\"small muted\">This serving is " + n + " question" + (n === 1 ? "" : "s") + (ts.shrunk ? ", a smaller set because the last score was under half" : "") + ". A short set has to be cleaner than 70% before it counts as a pass.</p>"
     + (last ? "<p class=\"small\">Last quiz: " + Math.round(last.score * 100) + "% (" + last.n + " questions, " + last.date + ").</p>" : "")
     + "<p><button onclick=\"startTopicQuiz('" + c.id + "','" + t.id + "')\">Start the quiz</button></p>";
 }
 function startTopicQuiz(cid, tid){
   var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
-  var n = Math.min(ts.shrunk ? 4 : 6, t.questions.length);
-  var qs = pickServing(t, ts, n);
-  var preface = ts.shrunk ? firstWorked(t) : null;
-  startRun({ cid: cid, mode: "quiz", tid: tid, title: "Quiz: " + t.title, preface: preface, items: qs.map(function(q){ return { topic: t, q: q }; }) });
+  var qs = pickServing(t, ts, 6);
+  startRun({ cid: cid, mode: "quiz", tid: tid, title: "Quiz: " + t.title, items: qs.map(function(q){ return { topic: t, q: q }; }) });
 }
 function renderRetrieval(cid, tid){
   var c = courseById(cid), found = c ? topicById(c, tid) : null, app = $("app");
-  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
   if (!found){ app.innerHTML = "<p>Topic not found.</p>"; return; }
   var ts = tstate(cid, tid);
-  var n = retrievalSize(found.topic, ts);
-  var left = daysUntilFinal(cid);
-  app.innerHTML = "<p><a href=\"#/course/" + cid + "\">&larr; " + esc(c.name) + "</a></p><h1>" + (ts.learned ? "Maintenance review: " : "Retrieval: ") + esc(found.topic.title) + "</h1>"
-    + "<p class=\"muted\">A closed book set of " + n + " fresh questions, different from the ones you have already been served when the pool allows. Clean spaced retrievals so far: " + ts.retrievals.length + " of 3 on separate days to count as learned. Reviews continue after that"
-    + (left == null ? " on a lengthening gap." : ", and one of them lands about 3 days before the final.") + "</p>"
-    + (ts.nextRetrieval ? "<p class=\"small\">Next date on the schedule: " + esc(ts.nextRetrieval) + ".</p>" : "")
+  app.innerHTML = "<p><a href=\"#/course/" + cid + "\">&larr; " + esc(c.name) + "</a></p><h1>Retrieval: " + esc(found.topic.title) + "</h1>"
+    + "<p class=\"muted\">A short closed book set of fresh questions, different from the ones you have already been served. Clean spaced retrievals so far: " + ts.retrievals.length + " of 3 needed, on separate days, for this topic to count as learned.</p>"
     + "<p><button onclick=\"startRetrieval('" + cid + "','" + tid + "')\">Start the retrieval set</button></p>";
 }
 function startRetrieval(cid, tid){
   var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
-  var qs = pickServing(t, ts, retrievalSize(t, ts));
-  var preface = ts.shrunk ? firstWorked(t) : null;
-  startRun({ cid: cid, mode: "retrieval", tid: tid, title: (ts.learned ? "Maintenance review: " : "Retrieval: ") + t.title, preface: preface, items: qs.map(function(q){ return { topic: t, q: q }; }) });
+  var qs = pickServing(t, ts, 4);
+  startRun({ cid: cid, mode: "retrieval", tid: tid, title: "Retrieval: " + t.title, items: qs.map(function(q){ return { topic: t, q: q }; }) });
 }
 function renderFinal(cid){
   var c = courseById(cid), app = $("app");
@@ -1704,212 +1119,71 @@ function startFinal(cid){
   allTopics(c).forEach(function(x){ x.topic.questions.forEach(function(q){ all.push({ topic: x.topic, q: q }); }); });
   startRun({ cid: cid, mode: "final", title: "Final practice: " + c.name, items: shuffle(all).slice(0, Math.min(10, all.length)) });
 }
-function cloneQ(q){
-  var copy = {};
-  Object.keys(q).forEach(function(k){ copy[k] = q[k]; });
-  return copy;
-}
-function applyOrder(q, order){
-  if (!q || q.type !== "mc" || !order) return { q: q, order: order || null };
-  var copy = cloneQ(q);
-  copy.options = order.map(function(i){ return q.options[i]; });
-  copy.answer = order.indexOf(q.answer);
-  return { q: copy, order: order };
-}
-function presentQuestion(q){
-  if (!q || q.type !== "mc" || !q.options || !q.options.length) return { q: q, order: null };
-  var order = shuffle(q.options.map(function(_, i){ return i; }));
-  return applyOrder(q, order);
-}
-function persistRun(){
-  if (!run) { state.activeRun = null; saveState(); return; }
-  state.activeRun = {
-    cid: run.cid, mode: run.mode, tid: run.tid,
-    entryId: run.entry ? run.entry.id : null,
-    title: run.title,
-    items: run.items.map(function(it){ return { tid: it.topic.id, qid: it.q.id, order: it.order || null, scored: !!it.scored }; }),
-    idx: run.idx, correct: run.correct,
-    misses: (run.misses || []).map(function(m){ return { tid: m.topic.id, qid: m.q.id, confidence: m.confidence }; }),
-    sel: run.sel, produced: !!run.produced, conf: run.conf,
-    checked: !!run.checked, selfMarked: !!run.selfMarked, lastRight: run.lastRight,
-    preface: run.preface || null, prefaceOn: !!run.prefaceOn, recorded: !!run.recorded
-  };
-  saveState();
-}
-function discardRun(){
-  run = null; state.activeRun = null; saveState();
-  location.hash = "#/";
-}
-function restoreRun(snap){
-  var c = courseById(snap.cid);
-  var app = $("app");
-  function fail(msg){
-    app.innerHTML = "<div class=\"card\"><h3>Could not resume the quiz</h3><p>" + msg + "</p><p><button class=\"plain\" onclick=\"discardRun()\">Discard the saved quiz</button></p></div>";
-    return false;
-  }
-  if (!c) return fail("The course <strong>" + esc(snap.cid) + "</strong> is not loaded, so this in-progress quiz cannot be rebuilt.");
-  var items = [];
-  for (var i = 0; i < (snap.items || []).length; i++) {
-    var spec = snap.items[i];
-    var found = questionById(c, spec.qid);
-    if (!found) return fail("Question <strong>" + esc(spec.qid) + "</strong> is no longer in " + esc(c.name) + ".");
-    var presented = applyOrder(found.q, spec.order);
-    if (spec.order && presented.q.answer < 0) return fail("The saved choice order for <strong>" + esc(spec.qid) + "</strong> no longer matches that question.");
-    items.push({ topic: found.topic, q: presented.q, order: presented.order, scored: !!spec.scored });
-  }
-  if (!items.length) return fail("The saved quiz has no questions.");
-  var misses = [];
-  (snap.misses || []).forEach(function(m){
-    var fq = questionById(c, m.qid);
-    var tf = topicById(c, m.tid);
-    if (fq && tf) misses.push({ topic: tf.topic, q: fq.q, confidence: m.confidence });
-  });
-  var entry = null;
-  if (snap.entryId) entry = state.errors.filter(function(e){ return e.id === snap.entryId; })[0] || null;
-  run = {
-    cid: snap.cid, mode: snap.mode, tid: snap.tid || null, entry: entry, title: snap.title || "Quiz",
-    items: items, idx: Math.max(0, Math.min(snap.idx || 0, items.length - 1)),
-    correct: snap.correct || 0, misses: misses,
-    sel: snap.sel != null ? snap.sel : null, produced: !!snap.produced,
-    conf: snap.conf != null ? snap.conf : null, checked: !!snap.checked,
-    selfMarked: !!snap.selfMarked, lastRight: snap.lastRight,
-    preface: snap.preface || null, prefaceOn: !!snap.prefaceOn, recorded: !!snap.recorded
-  };
-  return true;
-}
-function renderQuizRoute(){
-  if (!run && state.activeRun) {
-    if (!restoreRun(state.activeRun)) return;
-  }
-  if (!run || !run.items || !run.items.length) {
-    $("app").innerHTML = "<h1>Quiz</h1><p>No quiz is in progress.</p><p><a class=\"btn\" href=\"#/\">Home</a></p>";
-    return;
-  }
+function startRun(cfg){
+  run = { cid: cfg.cid, mode: cfg.mode, tid: cfg.tid || null, entry: cfg.entry || null, title: cfg.title, items: cfg.items, idx: 0, correct: 0, misses: [], sel: null, produced: false, conf: null, checked: false, selfMark: null };
   renderRunQuestion();
 }
-function startRun(cfg){
-  run = {
-    cid: cfg.cid, mode: cfg.mode, tid: cfg.tid || null, entry: cfg.entry || null, title: cfg.title,
-    items: (cfg.items || []).map(function(it){
-      var p = presentQuestion(it.q);
-      return { topic: it.topic, q: p.q, order: p.order, scored: false };
-    }),
-    idx: 0, correct: 0, misses: [], sel: null, produced: false, conf: null, checked: false,
-    selfMarked: false, lastRight: null, preface: cfg.preface || null, prefaceOn: !!cfg.preface, recorded: false
-  };
-  if (!run.items.length) {
-    $("app").innerHTML = "<p>This topic has no questions to serve.</p>";
-    run = null; return;
-  }
-  if (location.hash !== "#/quiz") location.hash = "#/quiz";
-  else renderRunQuestion();
-}
-function renderPreface(){
-  var p = run.preface || { title: "Worked example", body: "" };
-  $("app").innerHTML = "<p class=\"small muted\">" + esc(run.title) + " · worked example first</p>"
-    + "<div class=\"card\"><h3>" + esc(p.title) + "</h3>" + md(p.body)
-    + "<p class=\"small muted\">This example is not scored. The shorter set starts after it, because the last quiz on this topic was under half.</p>"
-    + "<p><button onclick=\"dismissPreface()\">I've studied this example</button> "
-    + "<button class=\"plain\" onclick=\"discardRun()\">Discard quiz</button></p></div>";
-  persistRun();
-}
-function dismissPreface(){ if (!run) return; run.prefaceOn = false; renderRunQuestion(); }
 function renderRunQuestion(){
-  if (!run) return;
-  if (run.prefaceOn && run.preface) { renderPreface(); return; }
   var app = $("app"), c = courseById(run.cid);
   var item = run.items[run.idx], q = item.q;
-  var html = "<p class=\"small muted\">" + esc(run.title) + " · Question " + (run.idx + 1) + " of " + run.items.length + " · " + run.correct + " correct so far"
-    + " · <a href=\"#/\">Leave for now</a></p>"
+  var html = "<p class=\"small muted\">" + esc(run.title) + " · Question " + (run.idx + 1) + " of " + run.items.length + " · " + run.correct + " correct so far</p>"
     + "<div class=\"card\">" + md(q.prompt);
   if (q.type === "mc"){
     html += q.options.map(function(opt, i){
-      var cls = "opt";
-      if (run.checked) {
-        if (i === q.answer) cls += " right";
-        else if (i === run.sel) cls += " wrong";
-      } else if (i === run.sel) cls += " sel";
-      return "<button class=\"" + cls + "\" id=\"opt-" + i + "\" onclick=\"runSelect(" + i + ")\"" + (run.checked ? " disabled" : "") + ">" + esc(opt) + "</button>";
+      return "<button class=\"opt\" id=\"opt-" + i + "\" onclick=\"runSelect(" + i + ")\">" + esc(opt) + "</button>";
     }).join("");
   } else {
-    if (c && c.productionMode === "handwritten"){
+    if (c.productionMode === "handwritten"){
       html += "<p class=\"muted\">Write your answer on paper now, in full, before doing anything else here.</p>"
-        + "<p><button class=\"secondary\" id=\"producedbtn\" onclick=\"runProduced()\"" + (run.produced || run.checked ? " disabled" : "") + ">" + (run.produced || run.checked ? "Answer produced" : "I have written it on paper") + "</button></p>";
+        + "<p><button class=\"secondary\" id=\"producedbtn\" onclick=\"runProduced()\">I have written it on paper</button></p>";
     } else {
-      html += "<textarea id=\"prodanswer\" placeholder=\"Your answer\"" + (run.checked ? " disabled" : "") + "></textarea>"
-        + "<p><button class=\"secondary\" id=\"producedbtn\" onclick=\"runProduced()\"" + (run.produced || run.checked ? " disabled" : "") + ">" + (run.produced || run.checked ? "Answer produced" : "Ready to check") + "</button></p>";
+      html += "<textarea id=\"prodanswer\" placeholder=\"Your answer\"></textarea>"
+        + "<p><button class=\"secondary\" id=\"producedbtn\" onclick=\"runProduced()\">Ready to check</button></p>";
     }
   }
   html += "<label class=\"flabel\">Confidence before checking (0 to 100)</label>"
-    + "<input type=\"number\" id=\"confinput\" min=\"0\" max=\"100\" placeholder=\"Type a number: how sure are you?\" oninput=\"runConf()\""
-    + (run.conf != null ? " value=\"" + esc(String(run.conf)) + "\"" : "") + (run.checked ? " disabled" : "") + ">"
-    + "<p><button id=\"checkbtn\" onclick=\"runCheck()\"" + (run.checked ? " disabled" : "") + ">Check answer</button></p>"
-    + "<div id=\"runfeedback\"></div></div>"
-    + "<p><button class=\"plain\" onclick=\"discardRun()\">Discard this quiz</button></p>";
+    + "<input type=\"number\" id=\"confinput\" min=\"0\" max=\"100\" placeholder=\"Type a number: how sure are you?\" oninput=\"runConf()\">"
+    + "<p><button id=\"checkbtn\" onclick=\"runCheck()\" disabled>Check answer</button></p>"
+    + "<div id=\"runfeedback\"></div></div>";
   app.innerHTML = html;
-  if (run.checked) paintChecked();
-  else updateCheckBtn();
-  persistRun();
-}
-function paintChecked(){
-  var q = run.items[run.idx].q;
-  var fb = $("runfeedback"); if (!fb) return;
-  if (q.type === "mc") {
-    fb.innerHTML = feedbackHtml(q, !!run.lastRight) + nextBtnHtml();
-  } else if (!run.selfMarked) {
-    fb.innerHTML = "<h3>Solution</h3>" + md(q.solution)
-      + "<p>Mark your paper answer honestly:</p>"
-      + "<p><button class=\"secondary\" onclick=\"runSelfMark(true)\">I had it right</button> "
-      + "<button class=\"plain\" onclick=\"runSelfMark(false)\">I missed it</button></p><div id=\"selfmarkfb\"></div>";
-  } else {
-    fb.innerHTML = feedbackHtml(q, !!run.lastRight) + nextBtnHtml();
-  }
 }
 function runSelect(i){
-  if (!run || run.checked) return;
+  if (run.checked) return;
   run.sel = i;
   run.items[run.idx].q.options.forEach(function(_, j){ var b = $("opt-" + j); if (b) b.classList.toggle("sel", j === i); });
   updateCheckBtn();
-  persistRun();
 }
-function runProduced(){ if (!run || run.checked) return; run.produced = true; var b = $("producedbtn"); if (b){ b.disabled = true; b.textContent = "Answer produced"; } updateCheckBtn(); persistRun(); }
-function runConf(){ if (!run || run.checked) return; var v = $("confinput").value; run.conf = v === "" ? null : Math.max(0, Math.min(100, parseInt(v, 10))); updateCheckBtn(); }
+function runProduced(){ run.produced = true; var b = $("producedbtn"); if (b){ b.disabled = true; b.textContent = "Answer produced"; } updateCheckBtn(); }
+function runConf(){ var v = $("confinput").value; run.conf = v === "" ? null : Math.max(0, Math.min(100, parseInt(v, 10))); updateCheckBtn(); }
 function updateCheckBtn(){
-  if (!run || run.checked) return;
   var q = run.items[run.idx].q;
-  var ready = run.conf != null && !isNaN(run.conf) && (q.type === "mc" ? run.sel != null : run.produced);
+  var ready = run.conf != null && (q.type === "mc" ? run.sel != null : run.produced);
   var b = $("checkbtn"); if (b) b.disabled = !ready;
 }
 function runCheck(){
-  if (!run || run.checked) return;
   var item = run.items[run.idx], q = item.q;
   var fb = $("runfeedback");
   if (q.type === "mc"){
     run.checked = true;
     var right = run.sel === q.answer;
     q.options.forEach(function(_, j){ var b = $("opt-" + j); if (b){ b.disabled = true; if (j === q.answer) b.classList.add("right"); else if (j === run.sel) b.classList.add("wrong"); } });
-    var check = $("checkbtn"); if (check) check.disabled = true;
-    var confEl = $("confinput"); if (confEl) confEl.disabled = true;
+    $("checkbtn").disabled = true;
     finishAnswer(right);
-    if (fb) fb.innerHTML = feedbackHtml(q, right) + nextBtnHtml();
+    fb.innerHTML = feedbackHtml(q, right) + nextBtnHtml();
   } else {
     run.checked = true;
-    var check2 = $("checkbtn"); if (check2) check2.disabled = true;
-    var confEl2 = $("confinput"); if (confEl2) confEl2.disabled = true;
-    if (fb) fb.innerHTML = "<h3>Solution</h3>" + md(q.solution)
+    $("checkbtn").disabled = true;
+    fb.innerHTML = "<h3>Solution</h3>" + md(q.solution)
       + "<p>Mark your paper answer honestly:</p>"
       + "<p><button class=\"secondary\" onclick=\"runSelfMark(true)\">I had it right</button> "
       + "<button class=\"plain\" onclick=\"runSelfMark(false)\">I missed it</button></p><div id=\"selfmarkfb\"></div>";
-    persistRun();
   }
 }
 function runSelfMark(right){
-  if (!run) return;
-  run.selfMarked = true;
-  finishAnswer(right);
   var q = run.items[run.idx].q;
+  finishAnswer(right);
   var fb = $("selfmarkfb");
-  if (fb) fb.innerHTML = feedbackHtml(q, right) + nextBtnHtml();
+  fb.innerHTML = feedbackHtml(q, right) + nextBtnHtml();
 }
 function feedbackHtml(q, right){
   return "<div class=\"feedback " + (right ? "ok" : "no") + "\"><strong>" + (right ? "Correct." : "Missed.") + "</strong>"
@@ -1923,82 +1197,53 @@ function nextBtnHtml(){
 }
 function finishAnswer(right){
   var item = run.items[run.idx];
-  run.lastRight = !!right;
-  if (item.scored) return;
-  item.scored = true;
-  recordAttempt(run.cid, run.conf, right);
-  if (right){ run.correct++; persistRun(); return; }
+  if (right){ run.correct++; return; }
   if (run.mode === "retest"){
     var e = run.entry;
-    if (e) {
-      e.clean = 0; e.stageIdx = 0; e.nextDue = addDays(todayStr(), 1);
-      e.served.push(item.q.id);
-      var d = fileErrorDraft(run.cid, e.tid, item.q, run.conf);
-      run.retestDraft = d.id;
-    }
+    e.clean = 0; e.stageIdx = 0; e.nextDue = addDays(todayStr(), 1);
+    e.served.push(item.q.id);
+    var d = fileErrorDraft(run.cid, e.tid, item.q, run.conf);
+    run.retestDraft = d.id;
     saveState();
   } else {
     run.misses.push({ topic: item.topic, q: item.q, confidence: run.conf });
   }
-  persistRun();
 }
 function runNext(){
-  if (!run) return;
   if (run.idx < run.items.length - 1){
-    run.idx++; run.sel = null; run.produced = false; run.conf = null; run.checked = false; run.selfMarked = false; run.lastRight = null;
+    run.idx++; run.sel = null; run.produced = false; run.conf = null; run.checked = false;
     renderRunQuestion();
   } else finishRun();
 }
 function finishRun(){
   var app = $("app"), n = run.items.length, frac = n ? run.correct / n : 0;
-  var passed = clearsPass(run.correct, n);
   var html = "<h1>" + esc(run.title) + ": done</h1>"
     + "<p>Score: <strong>" + Math.round(frac * 100) + "%</strong> (" + run.correct + " of " + n + ").</p>";
-  if (!run.recorded) {
-    if (run.mode === "quiz"){
-      var qids = run.items.map(function(it){ return it.q.id; });
-      recordQuizResult(run.cid, run.tid, run.correct, n, qids);
-      tstate(run.cid, run.tid).completed[5] = true; saveState();
-    } else if (run.mode === "retrieval"){
-      recordRetrievalResult(run.cid, run.tid, run.correct, n, run.items.map(function(it){ return it.q.id; }));
-    } else if (run.mode === "final"){
-      state.finals.push({ cid: run.cid, date: todayStr(), score: frac, n: n, correct: run.correct }); saveState();
-    } else if (run.mode === "retest"){
-      var e = run.entry;
-      if (e && frac >= 1){
-        e.clean = (e.clean || 0) + 1;
-        e.served.push(run.items[0].q.id);
-        if (e.clean >= 3) e.status = "closed";
-        else { e.stageIdx = Math.min((e.stageIdx || 0) + 1, RETEST_GAPS.length - 1); e.nextDue = addDays(todayStr(), RETEST_GAPS[e.stageIdx]); }
-        saveState();
-      }
-    }
-    run.recorded = true;
-  }
   if (run.mode === "quiz"){
-    var topic = null;
-    var cc = courseById(run.cid);
-    if (cc && run.tid) { var ff = topicById(cc, run.tid); topic = ff && ff.topic; }
-    var hasWorked = topic && firstWorked(topic);
-    var tsQuiz = tstate(run.cid, run.tid);
-    if (frac < 0.5) html += "<p class=\"err\">Under half. This topic returns tomorrow, smaller" + (hasWorked ? ", with a worked example first" : "") + ".</p>";
-    else if (!passed && frac >= 0.7) html += "<p>That is at least 70%, but this set is short enough that one item swings the score. It does not count as a pass until the result is cleaner.</p>";
-    else if (!passed) html += "<p>Between half and a clean pass: this topic returns tomorrow.</p>";
-    else html += "<p>A retrieval is scheduled for " + esc(tsQuiz.nextRetrieval || "") + ". The topic counts as learned after 3 successful spaced retrievals on separate days, and maintenance reviews continue after that.</p>";
+    var qids = run.items.map(function(it){ return it.q.id; });
+    recordQuizResult(run.cid, run.tid, frac, n, qids);
+    tstate(run.cid, run.tid).completed[5] = true; saveState();
+    if (frac < 0.5) html += "<p class=\"err\">Under half. This topic returns tomorrow, smaller, with a worked example first.</p>";
+    else if (frac < 0.7) html += "<p>Between half and 70%: this topic returns sooner and smaller on the schedule.</p>";
+    else html += "<p>A retrieval is now scheduled; this topic counts as learned after 3 successful spaced retrievals on separate days.</p>";
     html += "<p><a class=\"btn\" href=\"#/topic/" + run.cid + "/" + run.tid + "/5\">Back to the topic</a></p>";
   } else if (run.mode === "retrieval"){
+    recordRetrievalResult(run.cid, run.tid, frac, n, run.items.map(function(it){ return it.q.id; }));
     var ts = tstate(run.cid, run.tid);
-    if (!passed) html += "<p>This one did not clear the bar, so the topic is back on " + esc(ts.nextRetrieval || "tomorrow") + ".</p>";
-    else if (ts.learned) html += "<p class=\"okmsg\">This topic counts as learned. Maintenance reviews continue" + (daysUntilFinal(run.cid) != null ? ", including one about 3 days before the final" : "") + ". Next: " + esc(ts.nextRetrieval || "") + ".</p>";
-    else html += "<p>Next retrieval for this topic: " + esc(ts.nextRetrieval || "") + " (" + ts.retrievals.length + " of 3 clean days).</p>";
+    html += ts.learned ? "<p class=\"okmsg\">That was the third clean spaced retrieval: this topic now counts as learned.</p>" : "<p>Next retrieval for this topic: " + esc(ts.nextRetrieval || "") + ".</p>";
     html += "<p><a class=\"btn\" href=\"#/course/" + run.cid + "\">Back to the course</a></p>";
   } else if (run.mode === "final"){
+    state.finals.push({ cid: run.cid, date: todayStr(), score: frac, n: n }); saveState();
     html += "<p><a class=\"btn\" href=\"#/course/" + run.cid + "\">Back to the course</a></p>";
   } else if (run.mode === "retest"){
-    var ent = run.entry;
-    if (ent && frac >= 1){
-      if (ent.status === "closed") html += "<p class=\"okmsg\">Third clean retrieval: this error entry is closed.</p>";
-      else html += "<p>Clean retrieval " + ent.clean + " of 3. Next retest: " + esc(ent.nextDue) + ".</p>";
+    var e = run.entry;
+    if (frac >= 1){
+      // single question run: correct path handled here (miss path handled in finishAnswer)
+      e.clean = (e.clean || 0) + 1;
+      e.served.push(run.items[0].q.id);
+      if (e.clean >= 3){ e.status = "closed"; html += "<p class=\"okmsg\">Third clean retrieval: this error entry is closed.</p>"; }
+      else { e.stageIdx = Math.min((e.stageIdx || 0) + 1, RETEST_GAPS.length - 1); e.nextDue = addDays(todayStr(), RETEST_GAPS[e.stageIdx]); html += "<p>Clean retrieval " + e.clean + " of 3. Next retest: " + esc(e.nextDue) + ".</p>"; }
+      saveState();
     } else {
       html += "<p class=\"err\">Missed. This entry returns tomorrow, and the miss itself has been drafted as a new entry below.</p>";
     }
@@ -2011,11 +1256,8 @@ function finishRun(){
       html += errorDraftForm(entry, m.topic.title);
     });
   }
-  var savedHtml = html;
   run = null;
-  state.activeRun = null;
-  saveState();
-  app.innerHTML = savedHtml;
+  app.innerHTML = html;
 }
 function errorDraftForm(entry, topicTitle){
   return "<div class=\"card\"><h3>Miss: " + esc(topicTitle || entry.tid) + (entry.confidence != null && entry.confidence >= 80 ? " <span class=\"badge due\">HIGH CONFIDENCE MISS</span>" : "") + "</h3>"
@@ -2344,8 +1586,24 @@ function exportNotebookPng(id){
 }
 
 /* ============================== NOTIFICATIONS ============================== */
-/* Everything here is computed live from your saved state and each course's
-   own deadlines and finals. A deadline you mark done drops out. */
+/* Everything here is computed live from your saved state and the calendar:
+   nothing is stored, and an item disappears when you clear what caused it. */
+var SITE_DEADLINES = [
+  { date:"2026-11-01", label:"MGMT 440 Quiz #1 due (11:59pm PT)", cid:"mgmt-440" },
+  { date:"2026-11-08", label:"MGMT 440 Product Critique due (11:59pm PT)", cid:"mgmt-440" },
+  { date:"2026-11-15", label:"MGMT 440 Metrics Exercise due (11:59pm PT)", cid:"mgmt-440" },
+  { date:"2026-11-18", label:"MGMTMSA 401 Homework 1 due (11:59pm PT)", cid:"mgmtmsa-401" },
+  { date:"2026-11-22", label:"MGMTMSA 400 Assignment 3 due", cid:"mgmtmsa-400" },
+  { date:"2026-11-22", label:"MGMT 440 Quiz #2 due (11:59pm PT)", cid:"mgmt-440" },
+  { date:"2026-12-02", label:"MGMTMSA 401 Homework 2 due (11:59pm PT)", cid:"mgmtmsa-401" },
+  { date:"2026-12-03", label:"MGMT 440 Final Presentation (in class)", cid:"mgmt-440" },
+  { date:"2026-12-04", label:"MGMTMSA 400 Assignment 4 due", cid:"mgmtmsa-400" }
+];
+var SITE_FINALS = [
+  { cid:"mgmtmsa-402", label:"MGMTMSA 402 Final", date:"2026-12-07" },
+  { cid:"mgmtmsa-400", label:"MGMTMSA 400 Final", date:"2026-12-08" },
+  { cid:"mgmtmsa-401", label:"MGMTMSA 401 Final", date:"2026-12-09" }
+];
 function daysUntil(dateStr){
   var a = new Date(todayStr() + "T12:00:00"), b = new Date(dateStr + "T12:00:00");
   return Math.round((b - a) / 86400000);
@@ -2380,45 +1638,34 @@ function computeNotifications(){
     });
   });
   if (dueRet.length) add("now", "Spaced retrievals due: " + dueRet.length + " topic" + (dueRet.length > 1 ? "s" : ""),
-    "First due: " + dueRet[0].t.title + " (" + dueRet[0].c.name.split(":")[0] + "). Three clean spaced retrievals on separate days mark a topic learned, and a short maintenance review keeps going after that.",
+    "First due: " + dueRet[0].t.title + " (" + dueRet[0].c.name.split(":")[0] + "). Three clean spaced retrievals on separate days is what marks a topic learned.",
     "#/retrieval/" + dueRet[0].c.id + "/" + dueRet[0].t.id, "Start the retrieval");
   if (unfinishedNotes.length) add("now", "Notes unfinished: " + unfinishedNotes.length + " topic" + (unfinishedNotes.length > 1 ? "s" : ""),
     unfinishedNotes[0].t.title + " was finished over a day ago and its Organize stage is still not done. Notes only count once they are restructured, never recopied.",
     "#/topic/" + unfinishedNotes[0].c.id + "/" + unfinishedNotes[0].t.id + "/2", "Restructure the notes");
 
-  /* deadlines and exams, from each course file. Done deadlines are silent. */
-  allEvents().forEach(function(ev){
-    if (ev.kind === "prep") return;
-    if (ev.kind === "deadline" && deadlineIsDone(ev.id)) return;
-    var n = daysUntil(ev.date);
-    if (ev.kind === "deadline") {
-      var horizon = ev.weekly ? 1 : 14;
-      if (n === 0) add("now", "Due today: " + ev.label, "Today, " + fmtDate(ev.date) + ".", "#/course/" + ev.cid, "Open the course");
-      else if (n === 1) add("now", "Due tomorrow: " + ev.label, "Tomorrow, " + fmtDate(ev.date) + ".", "#/course/" + ev.cid, "Open the course");
-      else if (n > 1 && n <= horizon) add("soon", "Coming up: " + ev.label, "In " + n + " days, " + fmtDate(ev.date) + ".", "#/course/" + ev.cid, "Open the course");
-    } else if (ev.kind === "final") {
-      var href = "#/final/" + ev.cid;
-      if (n === 0) add("now", ev.label + " is today", "Final practice is closed now. Taper only: light retrieval, notes page, sleep.", "#/course/" + ev.cid, "Open the course");
-      else if (n > 0 && n < 2) add("now", ev.label + " in " + n + " day" + (n > 1 ? "s" : ""), "No new simulations inside the last 48 hours. Light retrieval and your notes page only.", "#/course/" + ev.cid, "Open the course");
-      else if (n >= 2 && n <= 5) add("soon", ev.label + " in " + n + " days: last simulation window", "The third simulation belongs about 4 to 5 days out, with a final review about 3 days before the exam. Sleep beats an all-nighter here.", href, "Run final practice");
-      else if (n > 5 && n <= 10) add("soon", ev.label + " in " + n + " days: second simulation window", "The second full simulation belongs about 10 days out.", href, "Run final practice");
-      else if (n > 10 && n <= 21) add("soon", ev.label + " in " + n + " days: first simulation window", "The exam cycle opens about 3 weeks out with the first full timed simulation.", href, "Run final practice");
-      else if (n > 21 && n <= 35) add("soon", ev.label + " in " + n + " days", "On the calendar. The simulation cycle starts about 3 weeks out.", "#/course/" + ev.cid, "Open the course");
-    }
+  /* deadlines and exams */
+  SITE_DEADLINES.forEach(function(d){
+    var n = daysUntil(d.date);
+    if (n === 0) add("now", "Due today: " + d.label, "Today, " + fmtDate(d.date) + ".", "#/course/" + d.cid, "Open the course");
+    else if (n === 1) add("now", "Due tomorrow: " + d.label, "Tomorrow, " + fmtDate(d.date) + ".", "#/course/" + d.cid, "Open the course");
+    else if (n > 1 && n <= 14) add("soon", "Coming up: " + d.label, "In " + n + " days, " + fmtDate(d.date) + ".", "#/course/" + d.cid, "Open the course");
   });
-
-  var hour = new Date().getHours();
-  if (hour >= 21 || hour < 5) add("soon", "Review a little, then sleep",
-    "A short retrieval before bed consolidates the day. An all-nighter gives that work back: sleep loss impairs tomorrow's recall more than another hour of cramming helps.",
-    "#/", "Back to Today");
-
-  var freshCal = (state.calibration || []).filter(function(r){ return r.src !== "error"; });
-  if (freshCal.length >= 8) {
-    var over = freshCal.reduce(function(s, r){ return s + (Number(r.c) / 100 - (r.ok ? 1 : 0)); }, 0) / freshCal.length;
-    if (over > 0.15) add("soon", "Confidence is ahead of accuracy",
-      "Across recent answers your confidence sits about " + Math.round(over * 100) + " points above your hit rate. Slow down on the items you feel sure about.",
-      "#/", "See calibration");
-  }
+  SITE_FINALS.forEach(function(f){
+    var n = daysUntil(f.date);
+    var href = "#/final/" + f.cid;
+    if (n === 0) add("now", f.label + " is today", "Final practice is closed now. Taper only: light retrieval, notes page, sleep.", "#/course/" + f.cid, "Open the course");
+    else if (n > 0 && n < 2) add("now", f.label + " in " + n + " day" + (n > 1 ? "s" : ""), "No new simulations inside the last 48 hours. Light retrieval and your notes page only.", "#/course/" + f.cid, "Open the course");
+    else if (n >= 2 && n <= 5) add("soon", f.label + " in " + n + " days: last simulation window", "The third simulation belongs about 4 to 5 days out, scored on content, pacing, and execution, with its debrief inside 48 hours.", href, "Run final practice");
+    else if (n > 5 && n <= 10) add("soon", f.label + " in " + n + " days: second simulation window", "The second full simulation belongs about 10 days out.", href, "Run final practice");
+    else if (n > 10 && n <= 21) add("soon", f.label + " in " + n + " days: first simulation window", "The exam cycle opens about 3 weeks out with the first full timed simulation.", href, "Run final practice");
+    else if (n > 21 && n <= 35) add("soon", f.label + " in " + n + " days", "On the calendar. The simulation cycle starts about 3 weeks out.", "#/course/" + f.cid, "Open the course");
+  });
+  /* Python weekly cadence: lab Mondays 12:00pm PT, quizzes Tuesdays 11:59pm PT */
+  var dow = new Date().getDay();
+  var toMon = (8 - dow) % 7, toTue = (9 - dow) % 7;
+  if (toMon <= 1) add(toMon === 0 ? "now" : "soon", "Python Workshop lab due " + (toMon === 0 ? "today" : "tomorrow") + " (Mon 12:00pm PT)", "Weekly lab notebook deadline.", "#/course/python-workshop", "Open the course");
+  if (toTue <= 1) add(toTue === 0 ? "now" : "soon", "Python Workshop chapter quiz due " + (toTue === 0 ? "today" : "tomorrow") + " (Tue 11:59pm PT)", "Weekly chapter quiz deadline.", "#/course/python-workshop", "Open the course");
 
   /* pace warnings: the clock outrunning the content */
   COURSES.forEach(function(c){
@@ -2471,42 +1718,25 @@ loadCourses(function(){
   updateBell();
   var seg = $("navcourses");
   if (seg && seg.addEventListener){
-    var sx = null, sy = null, sl = 0, swiped = false;
-    function courseRoute(){ return /#\/(?:course|topic|examples|final|retrieval)\//.test(location.hash); }
+    var sx = null, swiped = false;
     seg.addEventListener("click", function(e){
       if (swiped){ e.preventDefault(); e.stopPropagation(); swiped = false; }
     }, true);
-    seg.addEventListener("pointerdown", function(e){ sx = e.clientX; sy = e.clientY; sl = seg.scrollLeft; swiped = false; });
+    seg.addEventListener("pointerdown", function(e){ sx = e.clientX; swiped = false; });
     seg.addEventListener("pointercancel", function(){ sx = null; swiped = false; });
     seg.addEventListener("pointermove", function(e){
       if (sx === null || swiped) return;
-      var dx = e.clientX - sx, dy = e.clientY - (sy || e.clientY);
-      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-      if (Math.abs(seg.scrollLeft - sl) > 2) { sx = null; return; }
-      if (seg.scrollWidth > seg.clientWidth + 4) { sx = null; return; }
-      if (!courseRoute()) { sx = null; return; }
-      segStep(dx < 0 ? 1 : -1); swiped = true;
+      var dx = e.clientX - sx;
+      if (Math.abs(dx) >= 40){ segStep(dx < 0 ? 1 : -1); swiped = true; }
     });
     seg.addEventListener("pointerup", function(e){
       if (sx === null) return;
       var dx = e.clientX - sx; sx = null;
-      if (swiped) return;
-      if (Math.abs(dx) < 48) return;
-      if (Math.abs(seg.scrollLeft - sl) > 2) return;
-      if (seg.scrollWidth > seg.clientWidth + 4) return;
-      if (!courseRoute()) return;
-      segStep(dx < 0 ? 1 : -1); swiped = true;
+      if (!swiped && Math.abs(dx) >= 40){ segStep(dx < 0 ? 1 : -1); swiped = true; }
     });
   }
-  if (window.addEventListener) {
-    window.addEventListener("resize", function(){ updateNavActive(); });
-    window.addEventListener("pagehide", function(){ if (run) persistRun(); });
-  }
+  if (window.addEventListener) window.addEventListener("resize", function(){ updateNavActive(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ updateNavActive(); });
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").catch(function(){});
-  }
-  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function(){});
 });
 </script>
 </body>
