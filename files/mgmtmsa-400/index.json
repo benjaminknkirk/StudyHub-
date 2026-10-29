@@ -1,4 +1,212 @@
 {
   "courseId": "mgmtmsa-400",
-  "files": []
+  "files": [
+    {
+      "name": "400-ch2-notes-sheet-simple-2026-10-24.md",
+      "path": "400-ch2-notes-sheet-simple-2026-10-24.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 5979,
+      "date": "2026-10-29T03:11:43.256Z"
+    },
+    {
+      "name": "400-ch3-ch4-notes-sheet-simple-2026-10-24.md",
+      "path": "400-ch3-ch4-notes-sheet-simple-2026-10-24.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 9097,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "400-course-skeleton.md",
+      "path": "400-course-skeleton.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 7227,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "400-full-course-offline-study.md",
+      "path": "400-full-course-offline-study.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 33536,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "400-matrix-regression.md",
+      "path": "400-matrix-regression.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 5563,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "400-matrix-sampling-inference.md",
+      "path": "400-matrix-sampling-inference.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 5894,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "400-midterm-retest-pack-2026-10-27.md",
+      "path": "400-midterm-retest-pack-2026-10-27.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 2714,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "400-template-cards.md",
+      "path": "400-template-cards.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 10058,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 1 Code Snippets.py",
+      "path": "Ch 1 Code Snippets.py",
+      "folder": "",
+      "ext": "py",
+      "mime": "application/octet-stream",
+      "size": 3497,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 1 code snippets.R",
+      "path": "Ch 1 code snippets.R",
+      "folder": "",
+      "ext": "r",
+      "mime": "application/octet-stream",
+      "size": 2526,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 2 code snippets Py.py",
+      "path": "Ch 2 code snippets Py.py",
+      "folder": "",
+      "ext": "py",
+      "mime": "application/octet-stream",
+      "size": 4171,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 2 code snippets R.R",
+      "path": "Ch 2 code snippets R.R",
+      "folder": "",
+      "ext": "r",
+      "mime": "application/octet-stream",
+      "size": 3371,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 3 code snippets Py.py",
+      "path": "Ch 3 code snippets Py.py",
+      "folder": "",
+      "ext": "py",
+      "mime": "application/octet-stream",
+      "size": 3758,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 3 code snippets R.R",
+      "path": "Ch 3 code snippets R.R",
+      "folder": "",
+      "ext": "r",
+      "mime": "application/octet-stream",
+      "size": 2886,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 4 code snippets Py.py",
+      "path": "Ch 4 code snippets Py.py",
+      "folder": "",
+      "ext": "py",
+      "mime": "application/octet-stream",
+      "size": 6499,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Ch 4 code snippets R.R",
+      "path": "Ch 4 code snippets R.R",
+      "folder": "",
+      "ext": "r",
+      "mime": "application/octet-stream",
+      "size": 3890,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Example Python Session 1.py",
+      "path": "Example Python Session 1.py",
+      "folder": "",
+      "ext": "py",
+      "mime": "application/octet-stream",
+      "size": 4751,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "HW1-Q3b-final.md",
+      "path": "HW1-Q3b-final.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 4552,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "HW2-Q3b-final.md",
+      "path": "HW2-Q3b-final.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 1111,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Homework_Template.Rmd",
+      "path": "Homework_Template.Rmd",
+      "folder": "",
+      "ext": "rmd",
+      "mime": "application/octet-stream",
+      "size": 4400,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "Sample_Assignment_Solution.Rmd",
+      "path": "Sample_Assignment_Solution.Rmd",
+      "folder": "",
+      "ext": "rmd",
+      "mime": "application/octet-stream",
+      "size": 3008,
+      "date": "2026-10-29T03:11:43.257Z"
+    },
+    {
+      "name": "baseline-quiz-400-key.md",
+      "path": "baseline-quiz-400-key.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 20453,
+      "date": "2026-10-29T03:11:43.258Z"
+    },
+    {
+      "name": "baseline-quiz-400.md",
+      "path": "baseline-quiz-400.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 13585,
+      "date": "2026-10-29T03:11:43.258Z"
+    }
+  ]
 }

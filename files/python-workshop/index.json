@@ -1,4 +1,95 @@
 {
   "courseId": "python-workshop",
-  "files": []
+  "files": [
+    {
+      "name": "Module 1 Overview.md",
+      "path": "Module 1 Overview.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 886,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "Module 1 Reading Assignments.md",
+      "path": "Module 1 Reading Assignments.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 760,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "Module 2 Overview.md",
+      "path": "Module 2 Overview.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 649,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "Module 2 Reading Assignments.md",
+      "path": "Module 2 Reading Assignments.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 762,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "Module 3 Overview.md",
+      "path": "Module 3 Overview.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 633,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "Module 4 Overview.md",
+      "path": "Module 4 Overview.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 659,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "Module 5 Overview.md",
+      "path": "Module 5 Overview.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 765,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "Module 6 Overview.md",
+      "path": "Module 6 Overview.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 679,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "Module 7 Overview.md",
+      "path": "Module 7 Overview.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 728,
+      "date": "2026-10-29T03:11:43.260Z"
+    },
+    {
+      "name": "week-3-intro.ipynb",
+      "path": "week-3-intro.ipynb",
+      "folder": "",
+      "ext": "ipynb",
+      "mime": "application/octet-stream",
+      "size": 17670,
+      "date": "2026-10-29T03:11:43.260Z"
+    }
+  ]
 }

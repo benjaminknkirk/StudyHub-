@@ -1,4 +1,41 @@
 {
   "courseId": "mgmt-440",
-  "files": []
+  "files": [
+    {
+      "name": "440-class1-prep-brief-2026-10-27.md",
+      "path": "440-class1-prep-brief-2026-10-27.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 4778,
+      "date": "2026-10-29T03:11:43.256Z"
+    },
+    {
+      "name": "440-course-overview-2026-10-20.md",
+      "path": "440-course-overview-2026-10-20.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 15040,
+      "date": "2026-10-29T03:11:43.256Z"
+    },
+    {
+      "name": "440-prior-year-decks-2025-map-2026-10-28.md",
+      "path": "440-prior-year-decks-2025-map-2026-10-28.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 7938,
+      "date": "2026-10-29T03:11:43.256Z"
+    },
+    {
+      "name": "440-quiz1-plan-2026-10-28.md",
+      "path": "440-quiz1-plan-2026-10-28.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 3968,
+      "date": "2026-10-29T03:11:43.256Z"
+    }
+  ]
 }

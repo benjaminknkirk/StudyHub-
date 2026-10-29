@@ -2,6 +2,78 @@
   "courseId": "mgmtmsa-402",
   "files": [
     {
+      "name": "402-course-skeleton.md",
+      "path": "402-course-skeleton.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 15191,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "402-matrix-clauses-aggregates.md",
+      "path": "402-matrix-clauses-aggregates.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 8836,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "402-matrix-joins.md",
+      "path": "402-matrix-joins.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 7440,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "402-office-hours-oct5-prep.md",
+      "path": "402-office-hours-oct5-prep.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 2158,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "402-template-cards.md",
+      "path": "402-template-cards.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 11486,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "MSBA_402_Discussion_Week_4_Practice.ipynb",
+      "path": "MSBA_402_Discussion_Week_4_Practice.ipynb",
+      "folder": "",
+      "ext": "ipynb",
+      "mime": "application/octet-stream",
+      "size": 154356,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "baseline-quiz-402-key.md",
+      "path": "baseline-quiz-402-key.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 22031,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
+      "name": "baseline-quiz-402.md",
+      "path": "baseline-quiz-402.md",
+      "folder": "",
+      "ext": "md",
+      "mime": "text/markdown",
+      "size": 12935,
+      "date": "2026-10-29T03:11:43.259Z"
+    },
+    {
       "name": "blank-notes.pdf",
       "path": "blank-notes.pdf",
       "folder": "",
