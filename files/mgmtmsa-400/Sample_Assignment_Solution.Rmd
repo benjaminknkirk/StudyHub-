@@ -1,0 +1,76 @@
+---
+fontsize: 12pt
+output:
+  pdf_document:
+header-includes:
+---
+
+\begin{center}
+{\LARGE \textbf{MGMTMSA-400-01/02: Homework 1 Solution}}\\[18pt]
+
+
+\textbf{Due Date: October 12, 2025, 11:59 PM}  \\
+
+\end{center}
+
+
+
+\section*{Question 1: Law of Large Numbers}
+
+In this question, we will use the uniform distribution to illustrate the \textbf{Law of Large Numbers (LLN)}.  A uniform distribution on $[a,b]$, written as $\mathcal{U}[a,b]$, means that any number between $a$ and $b$ is equally likely to be drawn. The mean of $\mathcal{U}[a,b]$ is $\frac{a+b}{2},$ 
+and the standard deviation is $\frac{b-a}{\sqrt{12}}.$
+
+\textbf{Note:} At the very beginning of your code for this question (before you generate any random numbers), run `set.seed(123)` in R or `numpy.random.seed(123)` in Python. The number within the parentheses is called random number generator seed. [GPT: can it be any number?] You only need to set the seed once at the start, not before every part of the question. This will make sure that every time you run the code, you will generate the same results.
+
+\textbf{(a)} Fill in Table 1 with the population mean and standard deviation for the three uniform distributions listed. If you are using R Markdown, replace “[Fill in Number]” with your answers.
+
+```{r}
+set.seed(123)
+
+# Generate a function to compute population mean and population SD
+pop_mean_sd <- function(a, b) {
+  mean <- (a+b)/2
+  sd   <- (b-a)/sqrt(12)
+  return(c(mean=mean, sd=sd))
+}
+
+pop_mean_sd(-1, 1)
+pop_mean_sd(-2, 2)
+pop_mean_sd(-5, 5)
+```
+
+\begin{table}[h]
+\centering
+\caption{Population Mean and Standard Deviation under Uniform Distribution}
+\begin{tabular}{ccc}
+\hline
+Population Distribution & Population Mean & Population Standard Deviation \\ 
+\hline
+$\mathcal{U}[-1,1]$ & 0.000 & 0.577 \\
+$\mathcal{U}[-2,2]$ & 0.000 & 1.155 \\
+$\mathcal{U}[-5,5]$ & 0.000 & 2.887 \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{(b)} Draw an i.i.d. sample of size $N=25$ from $\mathcal{U}[-1,1]$. In R, you can use the command \texttt{runif()} to generate this sample. Plot the histogram of the sample, and compute the sample mean and sample standard deviation. Compare the sample mean to the population mean you found in part (a). Are they the same? If not, explain what causes the difference.
+
+```{r}
+sample_25 <- runif(25, min=-1, max=1)
+
+hist(sample_25, breaks=10, col="skyblue", border="white",
+     main="Histogram of Sample (N=25) from U[-1,1]", xlab="Value")
+
+cat("Sample mean (N=25):", round(mean(sample_25), 3), "\n")
+cat("Sample sd   (N=25):", round(sd(sample_25), 3), "\n")
+```
+
+Sample mean (0.191) is not the same as population mean (0.000) due to sampling errors.
+
+\textbf{(c)} Generate two more samples from $\mathcal{U}[-1,1]$, this time with sample sizes $N=250$ and $N=2500$. Compute the sample means for each. 
+
+```{r}
+cat("Sample mean when N=250:", 
+    round(mean(runif(250, min = -1, max = 1)), 3), "hrs\n")
+cat("Sample mean when N=2500:", 
+    round(mean(runif(2500, min = -1, max = 1)), 3), "hrs\n")
+```

@@ -112,7 +112,10 @@
   .filerow .fname { flex:1 1 240px; font-weight:500; overflow-wrap:break-word; }
   .filerow .fmeta { color:var(--muted); font-size:13.5px; white-space:nowrap; }
   .filerow a { font-weight:600; font-size:14.5px; white-space:nowrap; }
-  .filerow a.fdrive { font-weight:500; font-size:13.5px; color:var(--muted); }
+  .filerow a.dlbtn { border:1px solid var(--line-strong); background:var(--surface); color:var(--accent);
+                     padding:7px 14px; border-radius:999px; font-size:14px; text-decoration:none;
+                     box-shadow:var(--shadow-sm); }
+  .filerow a.dlbtn:hover { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
   #nbcanvas { display:block; width:100%; height:auto; touch-action:none; cursor:crosshair; }
 
   .wrap { max-width:840px; margin:0 auto; padding:26px 20px 64px; }
@@ -681,20 +684,19 @@ function filesHtml(c){
   var files = (window.COURSE_FILES || {})[c.id];
   if (!files || !files.length) return "";
   var html = "<h2>File library</h2>"
-    + "<p class=\"small muted\">Every file I hold for this course, " + files.length + " in total. PDFs open right here in the site. Everything else lives in your Google Drive and in my workspace; Find in Drive opens it there, and anything it cannot find, ask me for and I will send it.</p>";
+    + "<p class=\"small muted\">Every file I hold for this course, " + files.length + " in total. Download pulls the file straight from this site. The only exceptions are the class recordings, which are too large for the site host.</p>";
   FILE_GROUPS.forEach(function(g){
     var rows = files.filter(function(f){ return f.g === g; });
     if (!rows.length) return;
     html += "<div class=\"card\"><h3>" + esc(g) + "</h3>";
     rows.forEach(function(f){
       var d = new Date(f.d + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
-      var drive = "https://drive.google.com/drive/search?q=" + encodeURIComponent(f.n);
-      var links = f.u
-        ? "<a target=\"_blank\" rel=\"noopener\" href=\"" + f.u.split("/").map(encodeURIComponent).join("/") + "\">Open here</a> <a class=\"fdrive\" target=\"_blank\" rel=\"noopener\" href=\"" + drive + "\">Drive</a>"
-        : "<a target=\"_blank\" rel=\"noopener\" href=\"" + drive + "\">Find in Drive</a>";
+      var action = f.u
+        ? "<a class=\"dlbtn\" href=\"" + f.u.split("/").map(encodeURIComponent).join("/") + "\" download>Download</a>"
+        : "<span class=\"fmeta\">Too large to host on the site. Ask me and I will send it.</span>";
       html += "<div class=\"filerow\"><span class=\"fname\">" + esc(f.n) + "</span>"
         + "<span class=\"fmeta\">" + esc(f.k) + " · " + fmtSize(f.s) + " · " + d + "</span>"
-        + links + "</div>";
+        + action + "</div>";
     });
     html += "</div>";
   });

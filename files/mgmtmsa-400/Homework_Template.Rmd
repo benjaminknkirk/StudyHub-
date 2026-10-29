@@ -1,0 +1,111 @@
+---
+title: "Problem Set: Template"
+author: "Yihao Yuan"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+  install.packages("remotes", repos = "https://cloud.r-project.org")    # install remotes package
+  library("remotes")                                                    # "load" package
+  install_bitbucket("perossichi/DataAnalytics")                         # install the course package
+                                                                        # note: this will take a few seconds to a minute
+                                                                        # depending on internet connection speed
+  library("DataAnalytics")
+  
+  install.packages("stargazer", repos = "https://cloud.r-project.org")  # stargazer is a helpful package for table generation (see Question 2)
+  library("stargazer")
+```
+
+## Note
+
+\begin{itemize}
+  \item This template was created using my own PhD Econometrics homework. The content itself is not related to MGMTMSA 400.
+  \item This template may be useful as an example because it demonstrates:
+  \begin{itemize}
+    \item Typesetting mathematical equations in Q1(a)–Q1(b)
+    \item Generating plots in Q1(c)
+    \item Generating regression tables in Q2
+  \end{itemize}
+  \item Please note: this template is only \textbf{suggestive}. You are free to use any format that works best for you.
+\end{itemize}
+
+
+## Question 1
+
+
+### (a) Find the value of C so that $\varphi_2$ has the same size as $\varphi_1$.
+
+Because $X_1, X_2 \sim \text{i.i.d} U[\theta, \theta+1]$, and $f(x_1 + x_2 = z) = \int f_{X_1}(x_1) f_{X_2}(z-x_1) dx_1$, then
+$$
+\begin{aligned}
+f(x_1 + x_2) = \begin{cases}
+0, &\text{ if } x_1 + x_2 < 2\theta \text{ or } x_1 + x_2 \geq 2\theta + 2\\
+x_1 + x_2 - 2\theta, &\text{ if } 2\theta \leq x_1 + x_2 < 2\theta + 1 \\
+2\theta + 2 - (x_1 + x_2), &\text{ if } 2\theta + 1 \leq x_1 + x_2 < 2\theta + 2
+\end{cases}.
+\end{aligned}
+$$
+If $C \geq 2\theta + 2$, then $\alpha(\theta) = 0$.
+If $C \leq 2\theta + 1$, then 
+$$
+\alpha(\theta) = \int_{C}^{2\theta + 2} p(z|\theta) dz \geq \int_{2\theta + 1}^{2\theta + 2} p(z|\theta)dz = 0.5.
+$$
+Therefore, we must have $2\theta + 1 < C < 2\theta + 2$, in which case we have 
+$$
+\alpha(\theta) = \int_{C}^{2\theta + 2} p(z|\theta) dz = \frac{1}{2} (2\theta + 2 - C)^2.
+$$
+Because $2\theta + 2 > C$, then $2\theta + 2 - C > 0$, which means $\alpha(\theta)$ is increasing with $\theta$. Therefore, 
+$$
+\underset{\theta \leq 0}\sup \alpha(\theta) = \alpha(0) = \frac{1}{2}(2-C)^2 = 0.05 \implies C = 1.684.
+$$
+
+
+### (c) Use R to plot the power function of both tests.
+
+To compare the power functions, let $\alpha = 0.05$ for convenience. Then, $C = 1.684$, and the plot of power functions are as below. The blue line is for test 1, and the red line is for test 2.
+
+```{r fig.height=3.5, fig.width=5, warning=FALSE, fig.align='center'}
+## This is a block of R code. You can start with ```{r} and must end with ```
+## Set the figure size using `fig.height` and `fig.width`
+## Always make sure the plots are readable!
+
+theta <- seq(0, 1.2, 0.001)
+beta <- matrix(0, nrow = 1200, ncol = 3)
+for (j in 1:1200){
+  beta[j,1] <- theta[j]
+  if (theta[j] < 0.95){
+    beta[j,2] <- theta[j] + 0.05
+  } else if (theta[j] >= 0.95){
+    beta[j,2] <- 1
+  }
+  if (theta[j] <= (1.684-1)/2){
+    beta[j,3] <- 1/2*(2*theta[j] + 2 - 1.684)^2
+  } else if (theta[j] > (1.684-1)/2 & theta[j] <= 1.684/2){
+    beta[j,3] <- 1 - 1/2*(1.684-2*theta[j])^2
+  } else if (theta[j] > 1.684/2){
+    beta[j,3] <- 1
+  }
+}
+plot(beta[,1], beta[,2], col = "blue", type ="l", main = "Power Functions", 
+     xlab = expression(paste("Values of ",theta)), ylab = "Power Values", ylim = c(0,1))
+lines(beta[,1], beta[,3], col = "red", type ="l")
+```
+
+
+## Question 2
+
+Run regressions and print out the regression results
+
+```{r, warning=FALSE, include=FALSE}
+## with "include=FALSE", this code chunk and its output will not be include in your PDF output
+data(mvehicles)
+```
+```{r, warning=FALSE, results='asis'}
+fit1 <- lm(sales ~ roominess, data = mvehicles)
+fit2 <- lm(sales ~ roominess + mpg, data = mvehicles)
+stargazer(fit1, fit2, title = "Regression REsults", digits = 3,
+          keep = c("roominess", "mpg", "tropical_climate"), keep.stat=c("n","rsq"), 
+          header=FALSE)
+```
