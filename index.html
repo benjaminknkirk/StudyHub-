@@ -146,7 +146,15 @@
   .file-ico { flex:none; width:36px; height:36px; color:var(--ink); }
   .file-ico svg { display:block; width:36px; height:36px; }
   .file-main { flex:1; min-width:0; }
-  .file-name { font-weight:600; word-break:break-word; }
+  button.file-name { background:transparent; color:var(--ink); border:none; box-shadow:none; padding:0;
+                     font-weight:600; text-align:left; display:inline; border-radius:0; word-break:break-word; }
+  button.file-name:hover { background:transparent; color:var(--accent-strong); transform:none; box-shadow:none;
+                           text-decoration:underline; }
+  .file-view { max-height:70vh; overflow:auto; background:var(--surface-muted); border:1px solid var(--line);
+               border-radius:12px; padding:14px 16px; white-space:pre-wrap; word-break:break-word;
+               font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:15px; line-height:1.5; }
+  .file-view.md { font-family:inherit; white-space:normal; }
+  .file-preview audio, .file-preview video { display:block; width:100%; max-height:70vh; }
   .file-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
   .file-group { font-weight:600; margin:16px 0 0; }
   .file-preview { position:fixed; inset:0; z-index:40; display:none; padding:18px;
@@ -1149,12 +1157,20 @@ function mountFileLibrary(cid){
 function fileKind(ext){
   ext = String(ext || "").toLowerCase();
   if (ext === "pdf") return "pdf";
+  if (ext === "html" || ext === "htm") return "html";
   if (["png", "jpg", "jpeg", "gif", "webp", "svg"].indexOf(ext) >= 0) return "image";
+  if (["txt", "md", "markdown", "csv", "json", "js", "css", "py", "sql", "xml", "yml", "yaml", "log", "ts"].indexOf(ext) >= 0) return "text";
+  if (["mp3", "wav", "m4a", "ogg"].indexOf(ext) >= 0) return "audio";
+  if (["mp4", "webm", "mov"].indexOf(ext) >= 0) return "video";
   return "file";
 }
 function fileKindLabel(kind){
   if (kind === "pdf") return "PDF";
   if (kind === "image") return "Image";
+  if (kind === "text") return "Text";
+  if (kind === "html") return "Page";
+  if (kind === "audio") return "Audio";
+  if (kind === "video") return "Video";
   return "File";
 }
 function formatBytes(n){
@@ -1186,7 +1202,7 @@ function paintFileList(){
   var q = ($("file-q") && $("file-q").value || "").trim().toLowerCase();
   var kinds = {};
   all.forEach(function(f){ kinds[fileKind(f.ext)] = true; });
-  var kindOrder = ["pdf", "image", "file"].filter(function(k){ return kinds[k]; });
+  var kindOrder = ["pdf", "image", "text", "html", "audio", "video", "file"].filter(function(k){ return kinds[k]; });
   if (chips){
     var chipHtml = "<button type=\"button\" class=\"plain file-chip" + (fileLibType === "all" ? " cur" : "") + "\" onclick=\"setFileType('all')\">All</button>";
     kindOrder.forEach(function(k){
@@ -1218,12 +1234,11 @@ function paintFileList(){
       var encUrl = encodeURIComponent(url);
       var encName = encodeURIComponent(f.name);
       html += "<div class=\"file-row\"><div class=\"file-ico\">" + fileIcon(kind) + "</div><div class=\"file-main\">"
-        + "<div class=\"file-name\">" + esc(f.name) + "</div>"
+        + "<button type=\"button\" class=\"file-name\" onclick=\"openFilePreview('" + encUrl + "','" + encName + "','" + kind + "')\">" + esc(f.name) + "</button>"
         + "<p class=\"small muted\" style=\"margin:2px 0 0\">" + esc(fileKindLabel(kind)) + " · " + esc(formatBytes(f.size)) + (f.date ? " · " + esc(formatFileDate(f.date)) : "") + "</p>"
         + "<div class=\"file-actions\">"
+        + "<button type=\"button\" onclick=\"openFilePreview('" + encUrl + "','" + encName + "','" + kind + "')\">View</button>"
         + "<button type=\"button\" class=\"secondary\" onclick=\"downloadLibraryFile('" + encUrl + "','" + encName + "')\">Download</button>"
-        + (kind === "pdf" || kind === "image" ? "<button type=\"button\" class=\"plain\" onclick=\"openFilePreview('" + encUrl + "','" + encName + "','" + kind + "')\">Preview</button>" : "")
-        + "<a class=\"btn secondary\" href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">Open</a>"
         + "</div></div></div>";
     });
   });
@@ -1272,10 +1287,33 @@ function downloadLibraryFile(encUrl, encName){
     }).catch(function(){ alert("That file could not be downloaded."); });
   });
 }
+var previewToken = 0;
+function previewChrome(name, url){
+  return "<div class=\"file-preview-card\"><p><strong>" + esc(name) + "</strong></p>"
+    + "<p><button type=\"button\" class=\"plain\" onclick=\"closeFilePreview()\">Close</button> "
+    + "<button type=\"button\" class=\"secondary\" onclick=\"downloadLibraryFile('" + encodeURIComponent(url) + "','" + encodeURIComponent(name) + "')\">Download</button></p>"
+    + "<div id=\"file-view-body\"><p class=\"muted\">Loading…</p></div></div>";
+}
+function readLibraryFile(url){
+  return fetch(url).then(function(res){
+    if (!res.ok) throw new Error("missing");
+    cacheLibraryResponse(url, res.clone());
+    return res;
+  }).catch(function(){
+    if (!window.caches) throw new Error("offline");
+    return caches.match(url).then(function(hit){
+      if (!hit) throw new Error("offline");
+      return hit;
+    });
+  });
+}
 function openFilePreview(encUrl, encName, kind){
   var url = decodeURIComponent(encUrl);
   var name = decodeURIComponent(encName);
-  fetch(url).then(function(res){ if (res.ok) cacheLibraryResponse(url, res.clone()); }).catch(function(){});
+  var dot = name.lastIndexOf(".");
+  var ext = dot >= 0 ? name.slice(dot + 1).toLowerCase() : "";
+  if (!kind) kind = fileKind(ext);
+  var token = ++previewToken;
   var box = $("file-preview");
   if (!box){
     box = document.createElement("div");
@@ -1284,17 +1322,42 @@ function openFilePreview(encUrl, encName, kind){
     box.addEventListener("click", function(e){ if (e.target === box) closeFilePreview(); });
     document.body.appendChild(box);
   }
-  var view = kind === "image"
-    ? "<img src=\"" + esc(url) + "\" alt=\"" + esc(name) + "\">"
-    : "<iframe src=\"" + esc(url) + "\" title=\"" + esc(name) + "\"></iframe>";
-  box.innerHTML = "<div class=\"file-preview-card\"><p><strong>" + esc(name) + "</strong></p>"
-    + "<p><button type=\"button\" class=\"plain\" onclick=\"closeFilePreview()\">Close</button> "
-    + "<a class=\"btn secondary\" href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">Open</a> "
-    + "<button type=\"button\" class=\"secondary\" onclick=\"downloadLibraryFile('" + encodeURIComponent(url) + "','" + encodeURIComponent(name) + "')\">Download</button></p>"
-    + view + "</div>";
+  box.innerHTML = previewChrome(name, url);
   box.classList.add("open");
+  var body = $("file-view-body");
+  function show(html){ if (token !== previewToken) return; var b = $("file-view-body"); if (b) b.innerHTML = html; }
+  if (kind === "image"){
+    show("<img src=\"" + esc(url) + "\" alt=\"" + esc(name) + "\">");
+    readLibraryFile(url).catch(function(){});
+    return;
+  }
+  if (kind === "pdf" || kind === "html"){
+    show("<iframe src=\"" + esc(url) + "\" title=\"" + esc(name) + "\"></iframe>");
+    readLibraryFile(url).catch(function(){});
+    return;
+  }
+  if (kind === "audio" || kind === "video"){
+    show("<" + kind + " controls src=\"" + esc(url) + "\"></" + kind + ">");
+    readLibraryFile(url).catch(function(){});
+    return;
+  }
+  if (kind === "text"){
+    readLibraryFile(url).then(function(res){ return res.text(); }).then(function(text){
+      if (ext === "md" || ext === "markdown") show("<div class=\"file-view md\">" + md(text) + "</div>");
+      else show("<pre class=\"file-view\">" + esc(text) + "</pre>");
+    }).catch(function(){ show("<p class=\"err\">This file could not be loaded.</p>"); });
+    return;
+  }
+  var packed = { zip:1, gz:1, tgz:1, rar:1, "7z":1, doc:1, docx:1, xls:1, xlsx:1, ppt:1, pptx:1 };
+  if (packed[ext]){
+    show("<p class=\"muted\">This format can’t be drawn in the page. Download keeps a copy on your device.</p>");
+    return;
+  }
+  show("<iframe src=\"" + esc(url) + "\" title=\"" + esc(name) + "\"></iframe>");
+  readLibraryFile(url).catch(function(){});
 }
 function closeFilePreview(){
+  previewToken++;
   var box = $("file-preview");
   if (!box) return;
   box.classList.remove("open");
