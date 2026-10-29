@@ -308,16 +308,20 @@
   .coursehero { margin:4px 0 18px; }
   .coursehero .chmeta { color:var(--muted); font-size:15px; margin:0 0 10px; }
   .coursehero .chactions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-  .coursehero details.rules { margin-top:14px; border:1px solid var(--line); border-radius:14px;
-                              background:var(--surface); padding:10px 14px; }
-  .coursehero details.rules > summary { cursor:pointer; font-weight:600; font-size:15px; color:var(--accent-strong);
-                                        list-style:none; display:flex; align-items:center; gap:8px; }
-  .coursehero details.rules > summary::-webkit-details-marker { display:none; }
-  .coursehero details.rules > summary::before { content:""; width:7px; height:7px; border-right:2px solid currentColor;
-                                                border-bottom:2px solid currentColor; transform:rotate(-45deg);
-                                                transition:transform .2s ease; }
-  .coursehero details.rules[open] > summary::before { transform:rotate(45deg); }
-  .coursehero details.rules[open] > summary { margin-bottom:8px; }
+  details.fold { margin-top:14px; border:1px solid var(--line); border-radius:14px;
+                 background:var(--surface); padding:10px 14px; }
+  details.fold > summary { cursor:pointer; font-weight:600; font-size:15px; color:var(--accent-strong);
+                           list-style:none; display:flex; align-items:center; gap:8px; }
+  details.fold > summary::-webkit-details-marker { display:none; }
+  details.fold > summary::before { content:""; width:7px; height:7px; border-right:2px solid currentColor;
+                                   border-bottom:2px solid currentColor; transform:rotate(-45deg);
+                                   transition:transform .2s ease; flex:none; }
+  details.fold[open] > summary::before { transform:rotate(45deg); }
+  details.fold[open] > summary { margin-bottom:8px; }
+  details.fold .foldmeta { color:var(--muted); font-weight:500; font-size:13.5px; margin-left:auto; }
+  details.fold.nest { margin-top:10px; padding:8px 12px; border-radius:12px; background:var(--surface-muted); }
+  details.fold.nest > summary { font-size:14.5px; color:var(--ink); }
+  details.fold.nest .filerow:first-of-type { margin-top:4px; }
 
   .journey { position:relative; margin:8px 0 28px; padding:4px 0 20px; }
   .junit { position:sticky; top:64px; z-index:8; display:flex; align-items:center; gap:14px;
@@ -847,12 +851,14 @@ function fmtSize(b){
 function filesHtml(c){
   var files = (window.COURSE_FILES || {})[c.id];
   if (!files || !files.length) return "";
-  var html = "<h2>File library</h2>"
-    + "<p class=\"small muted\">Every file I hold for this course, " + files.length + " in total. Download pulls the file straight from this site. The only exceptions are the class recordings, which are too large for the site host.</p>";
+  var html = "<details class=\"fold\" id=\"files\">"
+    + "<summary>File library <span class=\"foldmeta\">" + files.length + " files</span></summary>"
+    + "<p class=\"small muted\">Closed by default so the path stays clear. Download pulls from this site; class recordings are too large to host.</p>";
   FILE_GROUPS.forEach(function(g){
     var rows = files.filter(function(f){ return f.g === g; });
     if (!rows.length) return;
-    html += "<div class=\"card\"><h3>" + esc(g) + "</h3>";
+    html += "<details class=\"fold nest\"><summary>" + esc(g)
+      + " <span class=\"foldmeta\">" + rows.length + "</span></summary>";
     rows.forEach(function(f){
       var d = new Date(f.d + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
       var action = f.u
@@ -862,14 +868,17 @@ function filesHtml(c){
         + "<span class=\"fmeta\">" + esc(f.k) + " · " + fmtSize(f.s) + " · " + d + "</span>"
         + action + "</div>";
     });
-    html += "</div>";
+    html += "</details>";
   });
+  html += "</details>";
   return html;
 }
 
 function scrollToFiles(){
   var el = $("files");
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!el) return;
+  if (el.tagName === "DETAILS") el.open = true;
+  el.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 function renderCourse(cid){
   var c = courseById(cid), app = $("app");
@@ -890,13 +899,15 @@ function renderCourse(cid){
     + "<a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a>"
     + "<button type=\"button\" class=\"secondary\" onclick=\"scrollToFiles()\">File library</button>"
     + "</div>"
-    + "<details class=\"rules\"><summary>Course rules and exam info</summary>"
+    + "<details class=\"fold\"><summary>Course rules and exam info</summary>"
     + "<p class=\"small\">" + esc(c.examInfo) + "</p>"
     + "<p class=\"small\">" + esc(c.aiPolicy) + "</p>";
   if (c.gradeWeights && c.gradeWeights.length){
     html += "<p class=\"small\">Grade weights: " + c.gradeWeights.map(function(w){ return esc(w.label) + " " + esc(w.weight); }).join(" · ") + "</p>";
   }
-  html += "<ul class=\"tight\">" + c.rules.map(function(r){ return "<li class=\"small\">" + esc(r) + "</li>"; }).join("") + "</ul></details></div>";
+  html += "<ul class=\"tight\">" + c.rules.map(function(r){ return "<li class=\"small\">" + esc(r) + "</li>"; }).join("") + "</ul></details>"
+    + filesHtml(c)
+    + "</div>";
 
   html += "<div class=\"journey\">";
   c.chapters.forEach(function(ch, chi){
@@ -947,7 +958,6 @@ function renderCourse(cid){
     + "<a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a>"
     + "<a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a>"
     + "</div>";
-  html += "<div id=\"files\">" + filesHtml(c) + "</div>";
   app.innerHTML = html;
 }
 
