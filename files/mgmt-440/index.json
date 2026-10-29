@@ -36,6 +36,51 @@
       "mime": "text/markdown",
       "size": 3968,
       "date": "2026-10-29T03:11:43.256Z"
+    },
+    {
+      "name": "MGMT440_Syllabus_Fall2026.pdf",
+      "path": "MGMT440_Syllabus_Fall2026.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 64750,
+      "date": "2026-10-29T03:19:02.874Z"
+    },
+    {
+      "name": "UCLA_L2_Oct_8_2025.pdf",
+      "path": "UCLA_L2_Oct_8_2025.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 4035980,
+      "date": "2026-10-29T03:19:02.889Z"
+    },
+    {
+      "name": "UCLA_L3_Oct_15_2025.pdf",
+      "path": "UCLA_L3_Oct_15_2025.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 3671247,
+      "date": "2026-10-29T03:19:02.904Z"
+    },
+    {
+      "name": "UCLA_L4_Oct_22_2025.pdf",
+      "path": "UCLA_L4_Oct_22_2025.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 4304804,
+      "date": "2026-10-29T03:19:02.921Z"
+    },
+    {
+      "name": "UCLA_L5_Oct_29_2025.pdf",
+      "path": "UCLA_L5_Oct_29_2025.pdf",
+      "folder": "",
+      "ext": "pdf",
+      "mime": "application/pdf",
+      "size": 1306602,
+      "date": "2026-10-29T03:19:02.926Z"
     }
   ]
 }
