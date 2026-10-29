@@ -97,6 +97,16 @@
     .seg a::after { content:attr(data-short); font-size:13.5px; }
   }
 
+  /* notebook */
+  .nbtools { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:12px 0 8px; }
+  .nbswatch { width:34px; height:34px; border-radius:999px; padding:0; border:2px solid var(--line);
+              box-shadow:inset 0 0 0 2px var(--surface); flex:none; }
+  .nbswatch.cur { border-color:var(--ink); transform:scale(1.08); }
+  .nbtoolcur { background:var(--accent) !important; color:var(--accent-ink) !important; border-color:var(--accent) !important; }
+  .nbsheetwrap { margin-top:10px; border-radius:10px; overflow:hidden; border:1px solid var(--line-strong);
+                 box-shadow:var(--shadow-md); background:#fffdf8; }
+  #nbcanvas { display:block; width:100%; height:auto; touch-action:none; cursor:crosshair; }
+
   .wrap { max-width:840px; margin:0 auto; padding:26px 20px 64px; }
 
   /* type */
@@ -285,7 +295,7 @@
 <body>
 <header class="site"><div class="wrap">
   <a class="brand" href="#/">Integrated Learning Plan</a>
-  <nav><a href="#/">Home</a><a href="#/errors">Error Log</a></nav>
+  <nav><a href="#/">Home</a><a href="#/errors">Error Log</a><a href="#/notebook">Notebook</a></nav>
   <div class="seg" id="navcourses" aria-label="Courses"></div>
   <a class="bell" href="#/notifications" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="bellbadge" class="bellbadge hidden">0</span></a>
 </div></header>
@@ -338,7 +348,7 @@ function md(t){
 /* ============================== state ============================== */
 var LS_KEY = "ilp-state-v1";
 var state = null;
-function blankState(){ return { v:1, topics:{}, errors:[], exampleFlags:{}, finals:[] }; }
+function blankState(){ return { v:1, topics:{}, errors:[], exampleFlags:{}, finals:[], notebooks:[] }; }
 function loadState(){
   try { var raw = localStorage.getItem(LS_KEY); state = raw ? JSON.parse(raw) : blankState(); }
   catch(e){ state = blankState(); }
@@ -517,6 +527,8 @@ function route(){
   if (seg[0] === "final" && seg[1]) return renderFinal(seg[1]);
   if (seg[0] === "errors") return renderErrors();
   if (seg[0] === "notifications") return renderNotifications();
+  if (seg[0] === "notebook" && seg[1]) return renderNotebookPage(seg[1]);
+  if (seg[0] === "notebook") return renderNotebookList();
   if (seg[0] === "retrieval" && seg[1] && seg[2]) return renderRetrieval(seg[1], seg[2]);
   renderHome();
 }
@@ -738,6 +750,7 @@ function renderTopic(cid, tid, stage){
   html += "<div class=\"rail\">" + STAGE_NAMES.map(function(name, i){
     return "<button class=\"" + (i === stage ? "cur" : "") + (ts.completed[i] ? " done" : "") + "\" onclick=\"location.hash='#/topic/" + cid + "/" + tid + "/" + i + "'\">" + (ts.completed[i] ? "✓ " : "") + (i + 1) + " · " + name + "</button>";
   }).join("") + "</div>";
+  html += "<p><button class=\"secondary\" onclick=\"openTopicNotebook('" + cid + "','" + tid + "')\">Write in the notebook for this topic</button></p>";
   html += "<div id=\"stagebody\"></div>";
   app.innerHTML = html;
   var body = $("stagebody");
@@ -1278,6 +1291,261 @@ function startErrorRetest(entryId){
   if (!q){ alert("No fresh question is left in this topic's pool yet. The entry stays due."); return; }
   var c = courseById(entry.cid), found = topicById(c, entry.tid);
   startRun({ cid: entry.cid, mode: "retest", tid: entry.tid, entry: entry, title: "Retest: " + found.topic.title, items: [{ topic: found.topic, q: q }] });
+}
+
+/* ============================== NOTEBOOK ============================== */
+/* Handwritten pages, drawn with Apple Pencil (or mouse, or finger).
+   Ink is stored as stroke vectors in your saved state, so pages persist,
+   export with your state, and cost a fraction of image storage.
+   The sheet is always paper colored, in light and dark mode alike. */
+var NB_W = 1200, NB_H = 1560, NB_SS = 2;
+var NB = null;
+var NB_COLORS = [ { id:"ink", hex:"#1b2330", label:"Ink" }, { id:"teal", hex:"#17635a", label:"Teal" }, { id:"red", hex:"#b3372e", label:"Red, for corrections" } ];
+function nbPages(){ if (!state.notebooks) state.notebooks = []; return state.notebooks; }
+function nbPage(id){ return nbPages().filter(function(p){ return p.id === id; })[0] || null; }
+function createNotebookPage(cid, tid){
+  var title = "Scratch page", c = cid ? courseById(cid) : null;
+  if (c && tid){ var f = topicById(c, tid); title = f ? f.topic.title : c.name; }
+  else if (c) title = c.name.split(":")[0] + " page";
+  var p = { id:"nb" + Date.now().toString(36), cid:cid || null, tid:tid || null, title:title,
+            created:new Date().toISOString(), updated:new Date().toISOString(), bg:"ruled", strokes:[] };
+  nbPages().push(p); saveState();
+  return p;
+}
+function openTopicNotebook(cid, tid){
+  var pages = nbPages().filter(function(p){ return p.cid === cid && p.tid === tid; });
+  var p = pages.length ? pages[pages.length - 1] : createNotebookPage(cid, tid);
+  location.hash = "#/notebook/" + p.id;
+}
+function deleteNotebookPage(id){
+  if (!confirm("Delete this notebook page and its ink? This cannot be undone.")) return;
+  state.notebooks = nbPages().filter(function(p){ return p.id !== id; });
+  saveState(); location.hash = "#/notebook";
+}
+function renameNotebookPage(id){
+  var p = nbPage(id); if (!p) return;
+  var t = prompt("Page title", p.title);
+  if (t && t.trim()){ p.title = t.trim(); p.updated = new Date().toISOString(); saveState(); renderNotebookPage(id); }
+}
+function renderNotebookList(){
+  var app = $("app");
+  var pages = nbPages().slice().sort(function(a, b){ return a.updated < b.updated ? 1 : -1; });
+  var kb = Math.round(JSON.stringify(state).length / 1024);
+  var html = "<h1>Notebook</h1>"
+    + "<p class=\"muted\">Handwritten pages for working problems the way your exams demand: by hand. Ink is kept as stroke data inside your saved state (about " + kb + " KB used of the browser's roughly 5 MB), and it travels with your Export state file.</p>"
+    + "<div class=\"card\"><h3>New page</h3><p>"
+    + COURSES.map(function(c){ return "<button class=\"secondary\" onclick=\"location.hash='#/notebook/' + createNotebookPage('" + c.id + "', null).id\">" + esc(c.name.split(":")[0]) + "</button>"; }).join(" ")
+    + " <button class=\"secondary\" onclick=\"location.hash='#/notebook/' + createNotebookPage(null, null).id\">Scratch</button></p>"
+    + "<p class=\"small muted\">Tip: open a topic and use its notebook button, and the page is titled and filed under that topic automatically.</p></div>";
+  if (!pages.length) html += "<p class=\"muted\">No pages yet.</p>";
+  pages.forEach(function(p){
+    var c = p.cid ? courseById(p.cid) : null;
+    html += "<div class=\"card\"><h3>" + esc(p.title) + "</h3>"
+      + "<p class=\"small muted\">" + (c ? esc(c.name.split(":")[0]) + " · " : "") + p.strokes.length + " strokes · updated " + esc(p.updated.slice(0, 10)) + "</p>"
+      + "<p><a class=\"btn\" href=\"#/notebook/" + p.id + "\">Open page</a> "
+      + "<button class=\"secondary\" onclick=\"exportNotebookPng('" + p.id + "')\">Export PNG</button> "
+      + "<button class=\"plain\" onclick=\"deleteNotebookPage('" + p.id + "')\">Delete</button></p></div>";
+  });
+  app.innerHTML = html;
+}
+function renderNotebookPage(id){
+  var app = $("app"), p = nbPage(id);
+  if (!p){ app.innerHTML = "<p>That page is gone.</p><p><a href=\"#/notebook\">&larr; Notebook</a></p>"; return; }
+  NB = { id:id, tool:"pen", color:"#1b2330", width:7, drawing:false, cur:null, undo:[], redo:[], penSeen:false };
+  var back = p.tid && p.cid ? "#/topic/" + p.cid + "/" + p.tid + "/4" : "#/notebook";
+  var html = "<p><a href=\"" + back + "\">&larr; " + (p.tid ? "Back to the topic" : "All pages") + "</a></p>"
+    + "<h1>" + esc(p.title) + "</h1>"
+    + "<p><button class=\"plain\" onclick=\"renameNotebookPage('" + id + "')\">Rename</button> "
+    + "<button class=\"plain\" onclick=\"exportNotebookPng('" + id + "')\">Export PNG</button> "
+    + "<button class=\"plain\" onclick=\"deleteNotebookPage('" + id + "')\">Delete page</button></p>"
+    + "<div class=\"nbtools\">"
+    + NB_COLORS.map(function(col){ return "<button class=\"nbswatch" + (col.hex === NB.color ? " cur" : "") + "\" data-color=\"" + col.hex + "\" title=\"" + col.label + "\" style=\"background:" + col.hex + "\" onclick=\"nbSetColor('" + col.hex + "')\"></button>"; }).join("")
+    + "<button class=\"secondary\" id=\"nbpen\" onclick=\"nbSetTool('pen')\">Pen</button>"
+    + "<button class=\"secondary\" id=\"nberaser\" onclick=\"nbSetTool('eraser')\">Eraser</button>"
+    + "<button class=\"secondary\" onclick=\"nbToggleWidth()\">Line: <span id=\"nbwidth\">medium</span></button>"
+    + "<button class=\"secondary\" onclick=\"nbUndo()\">Undo</button>"
+    + "<button class=\"secondary\" onclick=\"nbRedo()\">Redo</button>"
+    + "<button class=\"secondary\" onclick=\"nbCycleBg()\">Background: <span id=\"nbbg\">" + esc(p.bg) + "</span></button>"
+    + "<button class=\"plain\" onclick=\"nbClear()\">Clear page</button>"
+    + "</div>"
+    + "<label class=\"small\"><input type=\"checkbox\" id=\"nbpencilonly\" checked> Apple Pencil only (palms and fingers will not draw)</label>"
+    + "<div class=\"nbsheetwrap\"><canvas id=\"nbcanvas\" width=\"" + (NB_W * NB_SS) + "\" height=\"" + (NB_H * NB_SS) + "\"></canvas></div>"
+    + "<p class=\"small muted\" id=\"nbstatus\">" + p.strokes.length + " strokes. Ink saves automatically as you write.</p>";
+  app.innerHTML = html;
+  nbSetupCanvas();
+}
+function nbSetColor(hex){
+  if (!NB) return;
+  NB.color = hex; NB.tool = "pen";
+  document.querySelectorAll(".nbswatch").forEach(function(b){ b.classList.toggle("cur", b.getAttribute("data-color") === hex); });
+  nbToolButtons();
+}
+function nbSetTool(t){ if (!NB) return; NB.tool = t; nbToolButtons(); }
+function nbToolButtons(){
+  var pen = $("nbpen"), er = $("nberaser");
+  if (pen) pen.classList.toggle("nbtoolcur", NB.tool === "pen");
+  if (er) er.classList.toggle("nbtoolcur", NB.tool === "eraser");
+}
+function nbToggleWidth(){
+  if (!NB) return;
+  NB.width = NB.width === 7 ? 4 : (NB.width === 4 ? 11 : 7);
+  var w = $("nbwidth"); if (w) w.textContent = NB.width === 4 ? "fine" : (NB.width === 11 ? "bold" : "medium");
+}
+function nbCycleBg(){
+  var p = nbPage(NB.id); if (!p) return;
+  p.bg = p.bg === "ruled" ? "grid" : (p.bg === "grid" ? "blank" : "ruled");
+  p.updated = new Date().toISOString(); saveState();
+  var b = $("nbbg"); if (b) b.textContent = p.bg;
+  nbDraw();
+}
+function nbSetupCanvas(){
+  var canvas = $("nbcanvas"); if (!canvas) return;
+  NB.canvas = canvas;
+  NB.ctx = canvas.getContext ? canvas.getContext("2d") : null;
+  nbDraw();
+  canvas.addEventListener("pointerdown", nbDown);
+  canvas.addEventListener("pointermove", nbMove);
+  canvas.addEventListener("pointerup", nbUp);
+  canvas.addEventListener("pointercancel", nbUp);
+}
+function nbPos(e){
+  var r = NB.canvas.getBoundingClientRect();
+  return [ Math.round((e.clientX - r.left) * (NB_W / r.width) * 10) / 10,
+           Math.round((e.clientY - r.top) * (NB_H / r.height) * 10) / 10,
+           Math.round((e.pressure || 0.5) * 100) / 100 ];
+}
+function nbAccept(e){
+  if (e.pointerType === "pen"){ NB.penSeen = true; return true; }
+  if (e.pointerType === "touch"){ var t = $("nbpencilonly"); return !(t && t.checked); }
+  return true;
+}
+function nbDown(e){
+  if (!NB || !nbAccept(e)) return;
+  e.preventDefault();
+  if (NB.canvas.setPointerCapture && e.pointerId != null){ try { NB.canvas.setPointerCapture(e.pointerId); } catch(err){} }
+  var pt = nbPos(e);
+  if (NB.tool === "eraser"){ nbEraseAt(pt[0], pt[1]); NB.drawing = true; return; }
+  NB.drawing = true;
+  NB.cur = { c: NB.color, w: NB.width, pts: [pt] };
+}
+function nbMove(e){
+  if (!NB || !NB.drawing) return;
+  e.preventDefault();
+  var evts = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  if (NB.tool === "eraser"){ var p0 = nbPos(e); nbEraseAt(p0[0], p0[1]); return; }
+  if (!NB.cur) return;
+  for (var i = 0; i < evts.length; i++) NB.cur.pts.push(nbPos(evts[i]));
+  nbDraw();
+}
+function nbUp(e){
+  if (!NB) return;
+  if (NB.drawing && NB.tool === "pen" && NB.cur && NB.cur.pts.length){
+    var p = nbPage(NB.id); if (!p){ NB.drawing = false; NB.cur = null; return; }
+    p.strokes.push(NB.cur);
+    NB.undo.push({ type:"add", stroke:NB.cur });
+    NB.redo = [];
+    p.updated = new Date().toISOString();
+    saveState(); nbStatus(p);
+  }
+  NB.drawing = false; NB.cur = null;
+  nbDraw();
+}
+function nbEraseAt(x, y){
+  var p = nbPage(NB.id); if (!p) return;
+  for (var i = p.strokes.length - 1; i >= 0; i--){
+    var s = p.strokes[i], hit = false;
+    for (var j = 0; j < s.pts.length && !hit; j++){
+      var dx = s.pts[j][0] - x, dy = s.pts[j][1] - y;
+      if (dx * dx + dy * dy < 400) hit = true;
+    }
+    if (hit){
+      p.strokes.splice(i, 1);
+      NB.undo.push({ type:"erase", stroke:s, idx:i });
+      NB.redo = [];
+      p.updated = new Date().toISOString();
+      saveState(); nbStatus(p); nbDraw();
+      return;
+    }
+  }
+}
+function nbUndo(){
+  var p = nbPage(NB.id); if (!p || !NB.undo.length) return;
+  var a = NB.undo.pop();
+  if (a.type === "add"){ var i = p.strokes.indexOf(a.stroke); if (i >= 0) p.strokes.splice(i, 1); }
+  else if (a.type === "erase"){ p.strokes.splice(Math.min(a.idx, p.strokes.length), 0, a.stroke); }
+  else if (a.type === "clear"){ p.strokes = a.strokes; }
+  NB.redo.push(a); p.updated = new Date().toISOString(); saveState(); nbStatus(p); nbDraw();
+}
+function nbRedo(){
+  var p = nbPage(NB.id); if (!p || !NB.redo.length) return;
+  var a = NB.redo.pop();
+  if (a.type === "add"){ p.strokes.push(a.stroke); }
+  else if (a.type === "erase"){ var i = p.strokes.indexOf(a.stroke); if (i >= 0) p.strokes.splice(i, 1); }
+  else if (a.type === "clear"){ p.strokes = []; }
+  NB.undo.push(a); p.updated = new Date().toISOString(); saveState(); nbStatus(p); nbDraw();
+}
+function nbClear(){
+  var p = nbPage(NB.id); if (!p || !p.strokes.length) return;
+  if (!confirm("Clear all ink on this page? Undo can bring it back in this session.")) return;
+  NB.undo.push({ type:"clear", strokes:p.strokes });
+  NB.redo = [];
+  p.strokes = [];
+  p.updated = new Date().toISOString(); saveState(); nbStatus(p); nbDraw();
+}
+function nbStatus(p){ var s = $("nbstatus"); if (s) s.textContent = p.strokes.length + " strokes. Ink saves automatically as you write."; }
+function nbDrawSheet(ctx, p, scale){
+  ctx.fillStyle = "#fffdf8";
+  ctx.fillRect(0, 0, NB_W, NB_H);
+  ctx.strokeStyle = "#ddd3ba";
+  ctx.lineWidth = 1.5;
+  if (p.bg === "ruled" || p.bg === "grid"){
+    ctx.beginPath();
+    for (var y = 96; y < NB_H; y += 48){ ctx.moveTo(0, y); ctx.lineTo(NB_W, y); }
+    ctx.stroke();
+  }
+  if (p.bg === "grid"){
+    ctx.beginPath();
+    for (var x = 48; x < NB_W; x += 48){ ctx.moveTo(x, 0); ctx.lineTo(x, NB_H); }
+    ctx.stroke();
+  }
+  p.strokes.forEach(function(s){ nbDrawStroke(ctx, s); });
+  if (NB && NB.cur) nbDrawStroke(ctx, NB.cur);
+}
+function nbDrawStroke(ctx, s){
+  if (!s.pts.length) return;
+  ctx.strokeStyle = s.c;
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  if (s.pts.length === 1){
+    ctx.fillStyle = s.c;
+    ctx.beginPath(); ctx.arc(s.pts[0][0], s.pts[0][1], s.w * (s.pts[0][2] || 0.5) / 1.4, 0, 7); ctx.fill();
+    return;
+  }
+  for (var i = 1; i < s.pts.length; i++){
+    var a = s.pts[i - 1], b = s.pts[i];
+    ctx.lineWidth = Math.max(1, s.w * (((a[2] || 0.5) + (b[2] || 0.5)) / 2) * 1.6);
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+  }
+}
+function nbDraw(){
+  if (!NB || !NB.ctx) return;
+  var p = nbPage(NB.id); if (!p) return;
+  var ctx = NB.ctx;
+  ctx.setTransform(NB_SS, 0, 0, NB_SS, 0, 0);
+  nbDrawSheet(ctx, p, NB_SS);
+}
+function exportNotebookPng(id){
+  var p = nbPage(id); if (!p) return;
+  var cv = document.createElement("canvas");
+  cv.width = NB_W * 2; cv.height = NB_H * 2;
+  var ctx = cv.getContext("2d");
+  ctx.setTransform(2, 0, 0, 2, 0, 0);
+  var keep = NB ? NB.cur : null; if (NB) NB.cur = null;
+  nbDrawSheet(ctx, p, 2);
+  if (NB) NB.cur = keep;
+  var a = document.createElement("a");
+  a.href = cv.toDataURL("image/png");
+  a.download = p.title.replace(/[^a-z0-9]+/gi, "-").slice(0, 60) + ".png";
+  a.click();
 }
 
 /* ============================== NOTIFICATIONS ============================== */
