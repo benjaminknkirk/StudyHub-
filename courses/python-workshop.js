@@ -12,6 +12,12 @@ window.COURSE_DATA["python-workshop"] = {
   "professor": "Prof. Paul Deitel",
   "term": "Fall 2026",
   "examInfo": "No final exam and no GPA grade. Deitel awards a certificate grade (Completed, High Pass, or Pass with Distinction) based on the chapter quizzes (Chapters 2 to 10, one 9 or 10 question multiple choice quiz per chapter, open book, work on your own) and the required weekly lab notebooks. Labs are due Mondays at 12:00pm PT; chapter quizzes are due Tuesdays at 11:59pm PT. Lectures are Thursdays 8:00 to 11:00am PT on Zoom.",
+  "inStudyQueue": false,
+  "termDates": { "start": "2026-09-25", "end": "2026-12-04" },
+  "weekly": [
+    { "id": "lab", "label": "lab notebook due (Mon 12:00pm PT)", "weekday": 1, "until": "2026-12-04" },
+    { "id": "quiz", "label": "chapter quiz due (Tue 11:59pm PT)", "weekday": 2, "until": "2026-12-04" }
+  ],
   "aiPolicy": "Strict, from the syllabus: generative AI may be used for research and learning purposes only, and to help with Markdown formatting. You may NOT use AI to solve coding exercises, to explain your solutions, or to determine the answers to the chapter quizzes. Submit your own work, and verify anything an AI returns, because AIs hallucinate and produce code that may not run or may be wrong.",
   "productionMode": "typed",
   "rules": [

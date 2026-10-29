@@ -16,6 +16,14 @@ window.COURSE_DATA["mgmt-440"] = {
   "professor": "Prof. Surbhi Kaul",
   "term": "Fall 2026",
   "examInfo": "No final exam. The quizzes are the exam equivalents: Quiz #1 due Sun Nov 1, 2026 and Quiz #2 due Sun Nov 22, 2026, both 11:59pm PT via the course site. Other graded work: Product Critique due Nov 8, Success Metrics and KPIs Exercise due Nov 15, Final Presentation and Written Response on Thu Dec 3, 2026. Classes meet Thursdays 1:00 to 3:50pm PT in Entrepreneurs Hall C301 (Oct 29, Nov 5, Nov 12, Nov 19, Dec 3).",
+  "termDates": { "start": "2026-10-29", "end": "2026-12-03" },
+  "deadlines": [
+    { "id": "quiz1", "date": "2026-11-01", "label": "Quiz #1 due (11:59pm PT)" },
+    { "id": "critique", "date": "2026-11-08", "label": "Product Critique due (11:59pm PT)" },
+    { "id": "metrics", "date": "2026-11-15", "label": "Metrics Exercise due (11:59pm PT)" },
+    { "id": "quiz2", "date": "2026-11-22", "label": "Quiz #2 due (11:59pm PT)" },
+    { "id": "presentation", "date": "2026-12-03", "label": "Final Presentation (in class)" }
+  ],
   "aiPolicy": "AI tools are allowed for brainstorming, research, and initial drafting. You must disclose and cite the tool, and submitted work must reflect your own thinking and analysis. AI should accelerate thinking, not replace it. On this site: attempt every framework call in your own words first, then check.",
   "productionMode": "typed",
   "gradeWeights": [
