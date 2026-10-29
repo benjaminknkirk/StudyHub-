@@ -109,13 +109,33 @@
   /* file library */
   .filerow { display:flex; gap:12px; align-items:baseline; padding:8px 0; flex-wrap:wrap; }
   .filerow + .filerow { border-top:1px solid var(--line); }
-  .filerow .fname { flex:1 1 240px; font-weight:500; overflow-wrap:break-word; }
+  .filerow .fname, .filerow button.fname { flex:1 1 240px; font-weight:600; overflow-wrap:break-word; text-align:left; }
+  .filerow button.fname { background:none; border:none; box-shadow:none; padding:0; margin:0; color:var(--ink); border-radius:0; }
+  .filerow button.fname:hover { background:none; color:var(--accent-strong); transform:none; box-shadow:none; text-decoration:underline; }
   .filerow .fmeta { color:var(--muted); font-size:13.5px; white-space:nowrap; }
   .filerow a { font-weight:600; font-size:14.5px; white-space:nowrap; }
-  .filerow a.dlbtn { border:1px solid var(--line-strong); background:var(--surface); color:var(--accent);
+  .filerow a.dlbtn, .filerow button.viewbtn { border:1px solid var(--line-strong); background:var(--surface); color:var(--accent);
                      padding:7px 14px; border-radius:999px; font-size:14px; text-decoration:none;
                      box-shadow:var(--shadow-sm); }
-  .filerow a.dlbtn:hover { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .filerow button.viewbtn { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .filerow a.dlbtn:hover, .filerow button.viewbtn:hover { background:var(--accent-strong); border-color:var(--accent-strong); color:var(--accent-ink); transform:none; }
+  .libview { position:fixed; inset:0; z-index:40; display:none; padding:16px; overflow:auto; background:rgba(27,35,48,.5); }
+  .libview.open { display:flex; justify-content:center; align-items:flex-start; }
+  .libview-card { background:var(--surface); color:var(--ink); width:min(960px, 100%); border-radius:16px;
+                  border:1px solid var(--line); box-shadow:var(--shadow-md); padding:16px 16px 20px; }
+  .libview iframe, .libview video { display:block; width:100%; height:72vh; border:0; border-radius:12px; background:#fff; }
+  .libview pre.filebody { max-height:72vh; overflow:auto; white-space:pre-wrap; word-break:break-word;
+                          background:var(--surface-muted); border:1px solid var(--line); border-radius:12px;
+                          padding:14px 16px; font-size:14.5px; line-height:1.5; }
+  .libview .mdview, .libview .ziplist { max-height:72vh; overflow:auto; }
+  .libview img { max-width:100%; height:auto; border-radius:8px; }
+  .libview .nbcode { margin:8px 0; }
+  .libview .nbout { margin:0 0 14px; font-size:13.5px; }
+  body.libopen { overflow:hidden; }
+  @media (max-width:640px) {
+    .libview { padding:8px; }
+    .libview iframe, .libview video, .libview pre.filebody, .libview .mdview, .libview .ziplist { height:62vh; max-height:62vh; }
+  }
   #nbcanvas { display:block; width:100%; height:auto; touch-action:none; cursor:crosshair; }
 
   .wrap { max-width:840px; margin:0 auto; padding:26px 20px 64px; }
@@ -633,6 +653,7 @@ function segStep(dir){
   if (COURSES[j] && (idx < 0 || j !== idx)) location.hash = "#/course/" + COURSES[j].id;
 }
 function route(){
+  if (typeof closeLibraryFile === "function") closeLibraryFile();
   updateNavActive();
   var h = location.hash.replace(/^#\/?/, "");
   var seg = h.split("/").filter(function(x){ return x !== ""; });
@@ -853,7 +874,7 @@ function filesHtml(c){
   if (!files || !files.length) return "";
   var html = "<details class=\"fold\" id=\"files\">"
     + "<summary>File library <span class=\"foldmeta\">" + files.length + " files</span></summary>"
-    + "<p class=\"small muted\">Closed by default so the path stays clear. Download pulls from this site; class recordings are too large to host.</p>";
+    + "<p class=\"small muted\">View opens the file here, including notebooks and the files packed inside a zip. Download is only if you want a copy. Class recordings that are not hosted stay off the site.</p>";
   FILE_GROUPS.forEach(function(g){
     var rows = files.filter(function(f){ return f.g === g; });
     if (!rows.length) return;
@@ -861,12 +882,17 @@ function filesHtml(c){
       + " <span class=\"foldmeta\">" + rows.length + "</span></summary>";
     rows.forEach(function(f){
       var d = new Date(f.d + "T12:00:00").toLocaleDateString(undefined, { month:"short", day:"numeric" });
-      var action = f.u
-        ? "<a class=\"dlbtn\" href=\"" + f.u.split("/").map(encodeURIComponent).join("/") + "\" download>Download</a>"
-        : "<span class=\"fmeta\">Too large to host on the site. Ask me and I will send it.</span>";
-      html += "<div class=\"filerow\"><span class=\"fname\">" + esc(f.n) + "</span>"
+      var kind = libraryViewKind(f.k);
+      var url = f.u ? f.u.split("/").map(encodeURIComponent).join("/") : "";
+      var open = url ? " onclick=\"openLibraryFile('" + encJs(url) + "','" + encJs(f.n) + "','" + kind + "')\"" : "";
+      html += "<div class=\"filerow\">"
+        + (url ? "<button type=\"button\" class=\"fname\"" + open + ">" + esc(f.n) + "</button>" : "<span class=\"fname\">" + esc(f.n) + "</span>")
         + "<span class=\"fmeta\">" + esc(f.k) + " · " + fmtSize(f.s) + " · " + d + "</span>"
-        + action + "</div>";
+        + (url
+          ? "<button type=\"button\" class=\"viewbtn\"" + open + ">View</button>"
+            + "<a class=\"dlbtn\" href=\"" + url + "\" download>Download</a>"
+          : "<span class=\"fmeta\">Too large to host on the site. Ask me and I will send it.</span>")
+        + "</div>";
     });
     html += "</details>";
   });
@@ -880,6 +906,235 @@ function scrollToFiles(){
   if (el.tagName === "DETAILS") el.open = true;
   el.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
+function encJs(s){ return encodeURIComponent(s).replace(/'/g, "%27"); }
+function libraryViewKind(k){
+  k = String(k || "").toUpperCase().replace(/^\./, "");
+  if (k === "PDF") return "pdf";
+  if (k === "MD") return "md";
+  if (k === "MP4") return "video";
+  if (k === "ZIP") return "zip";
+  if (k === "IPYNB") return "notebook";
+  if (["PNG", "JPG", "JPEG", "GIF", "WEBP", "SVG"].indexOf(k) >= 0) return "image";
+  return "text";
+}
+function fileExt(name){
+  var base = String(name || "").split("/").pop();
+  var i = base.lastIndexOf(".");
+  return i < 0 ? "" : base.slice(i + 1);
+}
+var libraryViewToken = 0;
+var libraryZipBuf = null;
+var libraryZipEntries = null;
+var libraryBlobUrl = "";
+function revokeLibraryBlob(){
+  if (libraryBlobUrl){ URL.revokeObjectURL(libraryBlobUrl); libraryBlobUrl = ""; }
+}
+function libraryFileResponse(url){
+  return fetch(url).then(function(res){
+    if (!res.ok) throw new Error("missing");
+    return res;
+  }).catch(function(){
+    if (!window.caches) throw new Error("offline");
+    return caches.match(url).then(function(hit){ if (!hit) throw new Error("offline"); return hit; });
+  });
+}
+function u16(view, off){ return view.getUint16(off, true); }
+function u32(view, off){ return view.getUint32(off, true); }
+function findEocd(buf){
+  var u8 = new Uint8Array(buf);
+  var min = Math.max(0, u8.length - (22 + 65535));
+  for (var i = u8.length - 22; i >= min; i--){
+    if (u8[i] === 0x50 && u8[i+1] === 0x4b && u8[i+2] === 0x05 && u8[i+3] === 0x06) return i;
+  }
+  return -1;
+}
+function zipCatalog(buf){
+  var view = new DataView(buf);
+  var eocd = findEocd(buf);
+  if (eocd < 0) throw new Error("zip");
+  if (u16(view, eocd + 10) === 0xffff || u32(view, eocd + 16) === 0xffffffff) throw new Error("zip64");
+  var count = u16(view, eocd + 8);
+  var p = u32(view, eocd + 16);
+  var entries = [];
+  for (var n = 0; n < count; n++){
+    if (u32(view, p) !== 0x02014b50) break;
+    var method = u16(view, p + 10);
+    var comp = u32(view, p + 20);
+    var uncomp = u32(view, p + 24);
+    var fnLen = u16(view, p + 28);
+    var exLen = u16(view, p + 30);
+    var cmLen = u16(view, p + 32);
+    var localOff = u32(view, p + 42);
+    var name = new TextDecoder("utf-8").decode(new Uint8Array(buf, p + 46, fnLen));
+    entries.push({ name:name, method:method, comp:comp, uncomp:uncomp, localOff:localOff });
+    p += 46 + fnLen + exLen + cmLen;
+  }
+  return entries;
+}
+function zipVisible(name){
+  if (!name || name.charAt(name.length - 1) === "/") return false;
+  if (name.indexOf("__MACOSX/") >= 0 || name.indexOf(".ipynb_checkpoints/") >= 0) return false;
+  var base = name.split("/").pop();
+  if (base === ".DS_Store" || base.indexOf("._") === 0) return false;
+  return true;
+}
+function zipEntryBytes(buf, entry){
+  var view = new DataView(buf);
+  var p = entry.localOff;
+  var start = p + 30 + u16(view, p + 26) + u16(view, p + 28);
+  var comp = new Uint8Array(buf, start, entry.comp);
+  if (entry.method === 0) return Promise.resolve(comp);
+  if (entry.method !== 8 || typeof DecompressionStream === "undefined") return Promise.reject(new Error("method"));
+  var stream = new Blob([comp]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+  return new Response(stream).arrayBuffer().then(function(ab){ return new Uint8Array(ab); });
+}
+function bytesToText(bytes){ return new TextDecoder("utf-8").decode(bytes); }
+function notebookHtml(text){
+  var nb;
+  try { nb = JSON.parse(text); } catch (e) { return "<pre class=\"filebody\">" + esc(text) + "</pre>"; }
+  var cells = nb.cells || [];
+  if (!cells.length) return "<p class=\"muted\">This notebook has no cells.</p>";
+  var html = "";
+  cells.forEach(function(cell){
+    var src = Array.isArray(cell.source) ? cell.source.join("") : String(cell.source || "");
+    if (cell.cell_type === "markdown") html += "<div class=\"nbcell\">" + md(src) + "</div>";
+    else {
+      html += "<pre class=\"filebody nbcode\"><code>" + esc(src) + "</code></pre>";
+      (cell.outputs || []).forEach(function(out){
+        var data = out.data || {};
+        if (data["image/png"]) html += "<p><img alt=\"Notebook output\" src=\"data:image/png;base64," + String(data["image/png"]).replace(/\s/g, "") + "\"></p>";
+        else if (data["image/jpeg"]) html += "<p><img alt=\"Notebook output\" src=\"data:image/jpeg;base64," + String(data["image/jpeg"]).replace(/\s/g, "") + "\"></p>";
+        else {
+          var t = data["text/plain"] || out.text || "";
+          if (Array.isArray(t)) t = t.join("");
+          if (t) html += "<pre class=\"filebody nbout\">" + esc(String(t).slice(0, 4000)) + "</pre>";
+        }
+      });
+    }
+  });
+  return "<div class=\"mdview nbview\">" + html + "</div>";
+}
+function mimeForExt(ext){
+  ext = String(ext || "").toLowerCase();
+  if (ext === "pdf") return "application/pdf";
+  if (ext === "png") return "image/png";
+  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+  if (ext === "gif") return "image/gif";
+  if (ext === "webp") return "image/webp";
+  if (ext === "svg") return "image/svg+xml";
+  if (ext === "mp4") return "video/mp4";
+  return "application/octet-stream";
+}
+function paintHostedFile(url, name, kind, show){
+  if (kind === "image"){ show("<img src=\"" + esc(url) + "\" alt=\"" + esc(name) + "\">"); return; }
+  if (kind === "pdf"){ show("<iframe src=\"" + esc(url) + "\" title=\"" + esc(name) + "\"></iframe>"); return; }
+  if (kind === "video"){ show("<video controls src=\"" + esc(url) + "\"></video>"); return; }
+  libraryFileResponse(url).then(function(res){ return res.text(); }).then(function(text){
+    show(kind === "notebook" ? notebookHtml(text) : (kind === "md" ? "<div class=\"mdview\">" + md(text) + "</div>" : "<pre class=\"filebody\">" + esc(text) + "</pre>"));
+  }).catch(function(){ show("<p class=\"err\">This file could not be loaded.</p>"); });
+}
+function paintBytes(name, bytes, back){
+  var kind = libraryViewKind(fileExt(name));
+  var head = back ? "<p><button type=\"button\" class=\"plain\" onclick=\"showZipList()\">Back to archive</button></p><p><strong>" + esc(name) + "</strong></p>" : "";
+  var body = $("libview-body");
+  function put(inner){ if (body) body.innerHTML = head + inner; }
+  if (kind === "text" || kind === "md" || kind === "notebook"){
+    var text = bytesToText(bytes);
+    put(kind === "notebook" ? notebookHtml(text) : (kind === "md" ? "<div class=\"mdview\">" + md(text) + "</div>" : "<pre class=\"filebody\">" + esc(text) + "</pre>"));
+    return;
+  }
+  if (kind === "image" || kind === "pdf" || kind === "video"){
+    revokeLibraryBlob();
+    libraryBlobUrl = URL.createObjectURL(new Blob([bytes], { type: mimeForExt(fileExt(name)) }));
+    if (kind === "image") put("<img src=\"" + libraryBlobUrl + "\" alt=\"" + esc(name) + "\">");
+    else if (kind === "pdf") put("<iframe src=\"" + libraryBlobUrl + "\" title=\"" + esc(name) + "\"></iframe>");
+    else put("<video controls src=\"" + libraryBlobUrl + "\"></video>");
+    return;
+  }
+  put("<p class=\"muted\">This file can’t be drawn on the page.</p>");
+}
+function showZipList(){
+  revokeLibraryBlob();
+  var body = $("libview-body");
+  if (!body || !libraryZipEntries) return;
+  var html = "<div class=\"ziplist\"><p class=\"small muted\">Pick a file inside the archive.</p>";
+  libraryZipEntries.forEach(function(entry, i){
+    html += "<div class=\"filerow\"><button type=\"button\" class=\"fname\" onclick=\"openZipEntry(" + i + ")\">" + esc(entry.name) + "</button>"
+      + "<span class=\"fmeta\">" + esc(fileExt(entry.name).toUpperCase() || "FILE") + " · " + fmtSize(entry.uncomp) + "</span>"
+      + "<button type=\"button\" class=\"viewbtn\" onclick=\"openZipEntry(" + i + ")\">View</button></div>";
+  });
+  body.innerHTML = html + "</div>";
+}
+function openZipEntry(i){
+  var entry = libraryZipEntries && libraryZipEntries[i];
+  var buf = libraryZipBuf;
+  if (!entry || !buf) return;
+  var token = libraryViewToken;
+  var body = $("libview-body");
+  if (body) body.innerHTML = "<p class=\"muted\">Loading…</p>";
+  zipEntryBytes(buf, entry).then(function(bytes){
+    if (token !== libraryViewToken) return;
+    paintBytes(entry.name, bytes, true);
+  }).catch(function(){
+    if (token !== libraryViewToken) return;
+    if (body) body.innerHTML = "<p class=\"err\">This file could not be opened.</p><p><button type=\"button\" class=\"plain\" onclick=\"showZipList()\">Back to archive</button></p>";
+  });
+}
+function openLibraryFile(encUrl, encName, kind){
+  var url = decodeURIComponent(encUrl);
+  var name = decodeURIComponent(encName);
+  var token = ++libraryViewToken;
+  libraryZipBuf = null;
+  libraryZipEntries = null;
+  revokeLibraryBlob();
+  var box = $("libview");
+  if (!box){
+    box = document.createElement("div");
+    box.id = "libview";
+    box.className = "libview";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-modal", "true");
+    box.addEventListener("click", function(e){ if (e.target === box) closeLibraryFile(); });
+    document.body.appendChild(box);
+  }
+  function show(inner){
+    if (token !== libraryViewToken) return;
+    var body = $("libview-body");
+    if (body) body.innerHTML = inner;
+  }
+  box.innerHTML = "<div class=\"libview-card\"><p><strong id=\"libview-title\">" + esc(name) + "</strong></p>"
+    + "<p><button type=\"button\" class=\"plain\" id=\"libview-close\" onclick=\"closeLibraryFile()\">Close</button></p>"
+    + "<div id=\"libview-body\"><p class=\"muted\">Loading…</p></div></div>";
+  box.classList.add("open");
+  document.body.classList.add("libopen");
+  var closer = $("libview-close");
+  if (closer && closer.focus) closer.focus();
+  if (kind === "zip"){
+    libraryFileResponse(url).then(function(res){ return res.arrayBuffer(); }).then(function(buf){
+      if (token !== libraryViewToken) return;
+      libraryZipBuf = buf;
+      libraryZipEntries = zipCatalog(buf).filter(function(entry){ return zipVisible(entry.name); });
+      if (!libraryZipEntries.length){ show("<p class=\"muted\">This archive has no files to show.</p>"); return; }
+      showZipList();
+    }).catch(function(){ show("<p class=\"err\">This archive could not be opened.</p>"); });
+    return;
+  }
+  paintHostedFile(url, name, kind, show);
+}
+function closeLibraryFile(){
+  libraryViewToken++;
+  libraryZipBuf = null;
+  libraryZipEntries = null;
+  revokeLibraryBlob();
+  document.body.classList.remove("libopen");
+  var box = $("libview");
+  if (!box) return;
+  box.classList.remove("open");
+  box.innerHTML = "";
+}
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape") closeLibraryFile();
+});
 function renderCourse(cid){
   var c = courseById(cid), app = $("app");
   if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
