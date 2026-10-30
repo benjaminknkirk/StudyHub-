@@ -4,11 +4,13 @@
 // (~/workspace/school/440-class1-prep-brief-2026-10-27.md), and Prof. Kaul's
 // prior-year 2025 decks L2 to L5 as mapped in
 // ~/workspace/school/440-prior-year-decks-2025-map-2026-10-28.md.
-// The conflicting 09/01/2026 syllabus was NOT used. No L1 deck and no 2026
-// Class 1 slides or readings are held, so Class 1 topics are provisional, and
-// every topic built from a 2025 deck is provisional framework prep.
-// Option order was balanced programmatically so correct answers do not
-// cluster on one letter; question content is otherwise as authored.
+// Class 1 was rebuilt Oct 30, 2026 at full depth from the real Class 1 deck
+// (UCLA_L1_Oct_29_2026.pdf, 55 pages, held in ~/workspace/school/slides/440/;
+// notes at ~/workspace/school/440-class1-deck-notes-2026-10-29.md) and the
+// Granola note "440 L1" (Oct 29, 2026). The lecture wins over the prep brief
+// wherever they differ. The conflicting 09/01/2026 syllabus was NOT used.
+// Every topic built from a 2025 deck is still provisional framework prep.
+// Option order was balanced so correct answers do not cluster on one letter.
 window.COURSE_DATA = window.COURSE_DATA || {};
 window.COURSE_DATA["mgmt-440"] = {
   "id": "mgmt-440",
@@ -18,13 +20,36 @@ window.COURSE_DATA["mgmt-440"] = {
   "professor": "Prof. Surbhi Kaul",
   "term": "Fall 2026",
   "examInfo": "No final exam. The quizzes are the exam equivalents: Quiz #1 due Sun Nov 1, 2026 and Quiz #2 due Sun Nov 22, 2026, both 11:59pm PT via the course site. Other graded work: Product Critique due Nov 8, Success Metrics and KPIs Exercise due Nov 15, Final Presentation and Written Response on Thu Dec 3, 2026. Classes meet Thursdays 1:00 to 3:50pm PT in Entrepreneurs Hall C301 (Oct 29, Nov 5, Nov 12, Nov 19, Dec 3).",
-  "termDates": { "start": "2026-10-29", "end": "2026-12-03" },
+  "termDates": {
+    "start": "2026-10-29",
+    "end": "2026-12-03"
+  },
   "deadlines": [
-    { "id": "quiz1", "date": "2026-11-01", "label": "Quiz #1 due (11:59pm PT)" },
-    { "id": "critique", "date": "2026-11-08", "label": "Product Critique due (11:59pm PT)" },
-    { "id": "metrics", "date": "2026-11-15", "label": "Metrics Exercise due (11:59pm PT)" },
-    { "id": "quiz2", "date": "2026-11-22", "label": "Quiz #2 due (11:59pm PT)" },
-    { "id": "presentation", "date": "2026-12-03", "label": "Final Presentation (in class)" }
+    {
+      "id": "quiz1",
+      "date": "2026-11-01",
+      "label": "Quiz #1 due (11:59pm PT)"
+    },
+    {
+      "id": "critique",
+      "date": "2026-11-08",
+      "label": "Product Critique due (11:59pm PT)"
+    },
+    {
+      "id": "metrics",
+      "date": "2026-11-15",
+      "label": "Metrics Exercise due (11:59pm PT)"
+    },
+    {
+      "id": "quiz2",
+      "date": "2026-11-22",
+      "label": "Quiz #2 due (11:59pm PT)"
+    },
+    {
+      "id": "presentation",
+      "date": "2026-12-03",
+      "label": "Final Presentation (in class)"
+    }
   ],
   "aiPolicy": "AI tools are allowed for brainstorming, research, and initial drafting. You must disclose and cite the tool, and submitted work must reflect your own thinking and analysis. AI should accelerate thinking, not replace it. On this site: attempt every framework call in your own words first, then check.",
   "productionMode": "typed",
@@ -65,49 +90,72 @@ window.COURSE_DATA["mgmt-440"] = {
         {
           "id": "class1-pm-role",
           "title": "The PM Role: CEO of the Product",
-          "provisional": "No 2026 Class 1 slides or readings are held; the assigned readings (Christensen on Jobs to Be Done, Horowitz on good and bad PMs, the Jobs iPhone launch, the HBR JTBD video) live on the course site. Built from the syllabus reading list and the Oct 27 Class 1 prep brief only.",
           "pieces": [
             {
               "id": "responsibility-without-authority",
               "name": "Responsibility without authority",
-              "fn": "The PM owns the product's success without line authority over the people who build it. Horowitz's phrase: the PM is the CEO of the product.",
-              "predict": "A launch slips because engineering reprioritized. Under Horowitz's framing, whose problem is the slip, and which excuse is not available to the PM?"
+              "fn": "The PM owns the product's success without line authority over the people who build it. Kaul's deck: the PM manages ideation to launch to sunset, acts like CEO of the product, sets vision and strategy, sets success metrics and tracks feedback, sets pricing and manages P&L, and sits at the hub of finance, marketing, legal, support, sales, development, and customers.",
+              "predict": "A launch slips because engineering reprioritized. Under the CEO of the product framing, whose problem is the slip, and which excuse is not available to the PM?"
             },
             {
               "id": "good-bad-contrasts",
               "name": "Good PM / bad PM contrasts",
               "fn": "Good PMs know the market, product, and competition cold, take written positions on hard calls, and decompose problems. Bad PMs wait to be told, opine verbally, fight fires all day, and chase competitor features.",
-              "predict": "A PM spends the week relaying requests between sales and engineering and matching a rival's new feature. Which bad PM patterns from the essay is that, in one line each?"
+              "predict": "A PM spends the week relaying requests between sales and engineering and matching a rival's new feature. Which bad PM patterns is that, in one line each?"
             },
             {
-              "id": "product-journey",
-              "name": "The product journey",
-              "fn": "Products move from discovery to launch: find the customer's job, define the what, build, launch, and keep learning after launch.",
-              "predict": "Put these in journey order and say what each stage produces: launch, discovery, define the what, build."
+              "id": "pm-skills-challenges",
+              "name": "PM skills and challenges",
+              "fn": "Fundamental skills in the deck: customer empathy, influential communication, curiosity, prioritization, analytical skills, ideation and problem solving, market trends and analysis, making a call with the data available, and high agency; IQ and EQ both critical. Challenges: jack of all trades, influence with no direct reports, the role looks different at different companies and within one company, context switching, ambiguity and cross-functional work, managing up, down, and sideways, and being a lifelong learner.",
+              "predict": "Name two deck challenges that follow directly from having responsibility without authority, and say why each one follows."
             },
             {
               "id": "ai-strategic-lever",
-              "name": "AI as a strategic lever",
-              "fn": "Class 1 treats AI as a strategic lever: an AI feature is judged by the job it does for the customer, separate from the job the product already does.",
-              "predict": "A team adds a chatbot because rivals have one. Using the strategic lever idea, what question should they have answered first?"
+              "name": "AI literacy, the new core skill",
+              "fn": "The deck adds AI literacy as a new fundamental skill: evaluate models like vendors (capabilities, costs, failure modes before betting the roadmap), prototype before you staff, show data judgment about training data, and know the limits (hallucinations, bias, when only a human may decide). Kaul's line: the PMs who thrive will not be the most technical; they will have the best judgment about the tech.",
+              "predict": "A team adds a chatbot because rivals have one. Using AI literacy, what should they have evaluated before betting the roadmap on it?"
+            },
+            {
+              "id": "product-journey",
+              "name": "The product journey, AI era",
+              "fn": "Deck journey: problem, design, decide, development, launch, with the PM staying from ideation to sunset. New for 2026: AI works both sides of the arrow, mining reviews, tickets, and calls for ideation and writing code, copy, and mocks in build. The AI-era loop is ideate, prototype, validate BEFORE build: kill ten ideas in a week so engineering only builds the one that survived; validation moves before the build, not after.",
+              "predict": "Put these in the AI-era order and say what changes versus the traditional journey: development, launch, ideation, validation."
+            },
+            {
+              "id": "discovery-innovation",
+              "name": "Product discovery and innovation",
+              "fn": "Most innovation is incremental in a crowded field; a few products create a whole category (iPhone, Netflix, Keurig, Docusign, Tesla, Chobani, YouTube, ChatGPT, Gemini) and take outsized returns. Category creation needs a breakthrough product AND a breakthrough business model. Sustaining innovation is better on the dimensions mainstream customers already value; disruptive innovation starts worse on those measures, but cheaper, simpler, or more convenient, for the low end or a new market incumbents ignore.",
+              "predict": "A well-managed company listens to its best customers, invests where margins are highest, and still fails. In the deck's terms, how does that happen?"
             }
           ],
           "lesson": [
             {
               "title": "Responsibility without authority",
-              "body": "Horowitz's essay defines the product manager as the **CEO of the product**. That means **responsibility without authority**: the PM is measured by the product's success and makes no excuses about funding, headcount, or direction, while having no direct authority over engineering, design, or sales.\n\nThe force of the framing is the excuse ban. If the product fails, the PM failed to find a way: to persuade, to re-scope, to escalate in writing, or to change the plan. Class 1 pairs this with the **AI era** version of the role: the toolkit changes, the ownership does not."
+              "body": "Horowitz's essay defines the product manager as the **CEO of the product**. That means **responsibility without authority**: the PM is measured by the product's success and makes no excuses about funding, headcount, or direction, while having no direct authority over engineering, design, or sales.\n\nKaul's deck states the role directly: the PM **manages the product from ideation to development to launch to sunset**, **sets vision and strategy**, **sets success metrics and tracks feedback**, **sets pricing and manages P&L**, and **plays to the team's strengths and fills gaps**. The PM sits at the **hub**: finance, marketing, legal, support, sales, development, and customers all connect through the PM.\n\nThe force of the framing is the excuse ban. If the product fails, the PM failed to find a way: to persuade, to re-scope, to escalate in writing, or to change the plan."
             },
             {
               "title": "Good PM / bad PM contrasts",
               "body": "Contrasts worth being able to say out loud:\n\n- Good PMs **know the market, the product, and the competition cold** and define the target and the what. Bad PMs wait to be told what to do.\n- Good PMs **take written positions** on hard calls. Bad PMs voice opinions verbally and blame the powers that be afterward.\n- Good PMs **anticipate serious flaws** and build real solutions. Bad PMs put out fires all day and become gofers for other teams.\n- Good PMs **decompose problems** into parts they can solve. Bad PMs merge every problem into one big one and obsess over matching competitor features instead of customers and revenue."
             },
             {
-              "title": "The product journey",
-              "body": "The syllabus frames Class 1 around the **product journey, discovery to launch**. In plain order:\n\n- **Discovery**: find the customer's job and the problem worth solving (the JTBD topic in this chapter).\n- **Define**: decide the target and the what, in writing.\n- **Build**: the team builds against that definition.\n- **Launch**: the product meets its market, and learning continues after launch.\n\nLater classes hang on this spine: Class 2 tests whether the product fits its market, Class 3 measures it, Class 4 launches it properly, Class 5 evolves or retires it."
+              "title": "PM skills and challenges",
+              "body": "The deck's **fundamental skills**: **customer empathy, influential communication, curiosity, prioritization, analytical skills, ideation and problem solving, market trends and analysis, the ability to make a call with the data available, and high agency**. **IQ and EQ are both critical.**\n\nThe deck's **challenges** follow from the role's shape:\n\n- **Jack of all trades**: the job touches every function at the hub\n- **A role of influence**: no one reports to a PM\n- **The role looks different** at different companies, and even within one company\n- **Context switching** and **ambiguity and cross-functional work** are constant\n- The PM must **manage up, down, and sideways**, and stay a **lifelong learner**\n\nTest trick from the Friday restructure sheet: a question may call the PM a boss. The trap is authority. The PM leads by influence, not by orders."
             },
             {
-              "title": "AI as a strategic lever",
-              "body": "The Class 1 topic list adds **AI as a strategic lever** and an **AI-era PM toolkit**. The prep brief's working lens: ask **what job an AI feature does for the customer**, separate from the job the product already does. A feature added because competitors have it has no job answer, which makes it a feature match, exactly the bad PM pattern from the Horowitz essay.\n\nThis piece is deliberately thin: the 2026 Class 1 material on AI is not held, so treat this as the discussion angle from the prep brief, not as lecture content."
+              "title": "AI literacy, the new core skill",
+              "body": "Class 1 adds **AI literacy** as a new fundamental skill. In the deck it has four parts:\n\n- **Evaluate models like vendors**: capabilities, costs, and failure modes, before betting the roadmap on a model\n- **Prototype before you staff**: mock the experience with AI first, before asking a team to build it\n- **Data judgment**: know your training data\n- **Know the limits**: hallucinations, bias, and the calls where only a human may decide\n\nKaul's line, verbatim in spirit: **the PMs who thrive will not be the most technical; they will have the best judgment about the tech.**\n\nThe guest session reinforced the same point from practice: in the AI era the fundamentals resurface (what are we building, why, will someone pay), and **evals are now a core PM skill**: identify pass and fail cases in writing before building, because that is how you train and test a model. Evals can start manually, even on paper."
+            },
+            {
+              "title": "The product journey, AI era",
+              "body": "The deck's journey runs **problem, design, decide, development, launch**, and the PM stays with the product through **sunset** as well.\n\nNew for 2026: **AI now works both sides of the arrow**. AI mines reviews, tickets, and calls for ideation, and writes code, copy, and mocks in build.\n\nThe AI-era loop, from the deck slide Ben verified in class: **IDEATE, AI PROTOTYPE, VALIDATE, DEV CYCLE, LAUNCH**. Validate means real users doing real tasks; what passes advances, what fails dies fast. Only the survivors get engineering. The caption's point: **the traditional journey validates AFTER the build; AI moves validation BEFORE it.** Kaul's working rule: **kill ten ideas in a week, so engineering only builds the one that survived.**",
+              "workedExample": {
+                "title": "Worked example: place validation",
+                "body": "Question: in the AI-era journey, what comes right after the AI prototype?\n\nStep 1: recall the loop in order: ideate, prototype, validate, dev cycle, launch.\nStep 2: the prototype is step two, so the next box is validate.\nStep 3: say why it sits there: validation moved before the build, so a failing idea dies before engineering spends on it."
+              }
+            },
+            {
+              "title": "Product discovery and innovation",
+              "body": "The deck separates **incremental** innovation (small steps in a crowded field) from **category creators**: iPhone, Netflix, Keurig, Docusign, Tesla, Chobani, YouTube, ChatGPT, Gemini. Category creators are a small share of the fastest-growing large companies but account for outsized returns. Creation needs **both** a breakthrough product **and** a breakthrough business model. Startups are better at breakthroughs; big companies are blocked by an inability to see beyond what they sell today.\n\n**Why good companies fail (the Innovator's Dilemma)**: they fail because they are **well managed**. They listen to their best customers, invest where margins are highest, and improve what the mainstream already values.\n\n- **Sustaining innovation**: better on the dimensions mainstream customers already value, sold to the best customers at the best margins\n- **Disruptive innovation**: worse on mainstream measures at first, but cheaper, simpler, or more convenient, sold to the low end or a new market the incumbent ignores. The disk drives case is the deck's example.\n\nThe deck's line: **the decisions that maximize today's business are the ones that forfeit tomorrow's.** On the **S-curve**, the dilemma zone is where the old curve flattens and the new one still looks small: the moment incumbents must choose. The Granola class note adds the guest and lecture color: growth, maturity, then the flattening where disruption hits, and product focus versus job focus (adding more horses to the carriage versus building the automobile)."
             }
           ],
           "examples": [
@@ -131,6 +179,27 @@ window.COURSE_DATA["mgmt-440"] = {
               "answer": "The strategic lever question is unanswered: what job does the AI feature do for the customer, separate from the job the app already does? Without that answer this is feature matching, not strategy.",
               "piece": "ai-strategic-lever",
               "principle": "ai-job-first"
+            },
+            {
+              "title": "Better and ignored",
+              "scenario": "A new offering launches worse than the incumbent's flagship on the measures mainstream buyers rank first, but it is much cheaper and simpler, and customers the incumbent never served adopt it fast.",
+              "answer": "Disruptive innovation in the deck's terms: worse on mainstream measures at first, cheaper and simpler, aimed at the low end or a new market the incumbent ignores. It is not a sustaining improvement, which would be better on the dimensions mainstream customers already value.",
+              "piece": "discovery-innovation",
+              "principle": "sustaining-vs-disruptive"
+            },
+            {
+              "title": "The well-managed failure",
+              "scenario": "A market leader polls its best customers, funds only the highest-margin improvements they ask for, posts record satisfaction, and three years later loses the market to a simpler entrant it had dismissed as too small.",
+              "answer": "The Innovator's Dilemma: the leader failed because it was well managed. Listening to best customers and investing at the highest margins are exactly the decisions that maximize today's business and forfeit tomorrow's, while the new S-curve still looks small in the dilemma zone.",
+              "piece": "discovery-innovation",
+              "principle": "innovators-dilemma"
+            },
+            {
+              "title": "Prototype before staffing",
+              "scenario": "Before requesting two engineers for a quarter, a PM mocks the full AI experience herself, puts it in front of real users doing real tasks, and kills the idea in a week when users fail the core task.",
+              "answer": "Two deck behaviours at once: AI literacy (prototype before you staff) and the AI-era journey (ideate, prototype, validate before build). The idea died in validation, so engineering only builds survivors.",
+              "piece": "product-journey",
+              "principle": "validate-before-build"
             }
           ],
           "practice": [
@@ -146,6 +215,12 @@ window.COURSE_DATA["mgmt-440"] = {
               "title": "Rewrite the bad week",
               "prompt": "Rewrite this PM's week as the good PM version, in three short lines: 'Merged the churn problem, the pricing problem, and the onboarding problem into one initiative. Spent Thursday firefighting a server outage's customer fallout. Copied the rival's new dashboard.'",
               "solution": "Decompose: split the merged initiative into separate problems (churn, pricing, onboarding) that can each be solved and measured. Anticipate: have a real solution and comms plan ready for predictable flaws instead of a day of firefighting. Customers over features: evaluate the rival's dashboard against what your customers hire your product to do and what it does to revenue, not as a copying instruction."
+            },
+            {
+              "rung": "full",
+              "title": "Dilemma verdict",
+              "prompt": "A profitable incumbent sees a cheap, simpler entrant serving customers it does not want, with margins it would never accept. Its board votes to keep funding only improvements its best customers request. Write the deck's verdict in two lines: what kind of innovation the entrant is, and why the board's sensible vote is the risk.",
+              "solution": "The entrant is disruptive innovation: worse on mainstream measures at first, cheaper and simpler, for a market the incumbent ignores. The board's vote is the Innovator's Dilemma in action: well-managed decisions (best customers, highest margins) maximize today's business and forfeit tomorrow's, especially while the new S-curve still looks small."
             }
           ],
           "questions": [
@@ -313,18 +388,163 @@ window.COURSE_DATA["mgmt-440"] = {
                 "why": "All three good PM behaviours appear: a written position on a hard call, knowledge of your own market and product, and decomposition instead of one merged fix. Copying the leader skips all three.",
                 "cue": "Pressure from a senior leader plus a rival's feature is the classic setup for feature matching. Reach for the written position."
               }
+            },
+            {
+              "id": "role-q10",
+              "type": "mc",
+              "prompt": "Which list matches the deck's fundamental PM skills?",
+              "options": [
+                "Customer empathy, influential communication, curiosity, prioritization, analytical skills, and high agency",
+                "Budget ownership, hiring authority, and sprint management",
+                "Only technical skills: SQL, prototyping tools, and model tuning",
+                "Sales quota, pricing authority, and board reporting"
+              ],
+              "answer": 0,
+              "principle": "pm-skills",
+              "difficulty": 1,
+              "feedback": {
+                "step": "Recall the deck's skills slide, not a generic PM job ad.",
+                "why": "The deck lists customer empathy, influential communication, curiosity, prioritization, analytical skills, ideation and problem solving, market analysis, making a call with the data available, and high agency, with IQ and EQ both critical.",
+                "cue": "If an option gives the PM direct authority or a quota, it contradicts responsibility without authority."
+              }
+            },
+            {
+              "id": "role-q11",
+              "type": "mc",
+              "prompt": "In the AI-era journey slide, what comes right after the AI prototype?",
+              "options": [
+                "Launch, so real users can judge the finished product",
+                "Development, so engineering builds the prototype properly",
+                "Validate: real users doing real tasks, and only survivors advance",
+                "A pricing review with finance"
+              ],
+              "answer": 2,
+              "principle": "validate-before-build",
+              "difficulty": 1,
+              "feedback": {
+                "step": "Run the loop in order: ideate, prototype, validate, dev cycle, launch.",
+                "why": "Validation moved before the build in the AI-era journey. The prototype is tested by real users on real tasks, and only what passes gets engineering.",
+                "cue": "The loop's own name gives it away: ideate, prototype, then validate."
+              }
+            },
+            {
+              "id": "role-q12",
+              "type": "mc",
+              "prompt": "Which best illustrates category creation, not incremental innovation, in the deck's terms?",
+              "options": [
+                "A phone that is slightly faster than last year's model",
+                "Netflix streaming versus Blockbuster rentals: a new category with a new business model",
+                "A cheaper plan for the same product",
+                "A laptop with a larger screen"
+              ],
+              "answer": 1,
+              "principle": "category-creation",
+              "difficulty": 1,
+              "feedback": {
+                "step": "Ask whether a new category and business model appeared, or only a better version of the same thing.",
+                "why": "The deck's category creators (iPhone, Netflix, Keurig, Tesla, ChatGPT and others) create a category and take outsized returns; a faster or cheaper version of the same product is incremental.",
+                "cue": "Better version of the same thing is incremental. New category plus new model is creation."
+              }
+            },
+            {
+              "id": "role-q13",
+              "type": "mc",
+              "prompt": "What does the S-curve describe, and where is the dilemma zone?",
+              "options": [
+                "A pricing model; the zone is the discount window",
+                "A hiring funnel; the zone is the interview stage",
+                "A sales forecast; the zone is the fourth quarter",
+                "How products and companies grow, mature, and flatten; the dilemma zone is where the old curve flattens while the new curve still looks small"
+              ],
+              "answer": 3,
+              "principle": "s-curve",
+              "difficulty": 2,
+              "feedback": {
+                "step": "Place the curve first (growth, maturity, flattening), then locate the choice point.",
+                "why": "In the deck, the S-curve is growth, maturity, then flattening where disruption hits. The dilemma zone is that flattening point, when the new curve still looks too small to chase.",
+                "cue": "Flattening old curve plus small new curve is the incumbent's hard moment."
+              }
+            },
+            {
+              "id": "role-q14",
+              "type": "mc",
+              "prompt": "According to the deck, why do good companies fail under the Innovator's Dilemma?",
+              "options": [
+                "Because they are well managed: they listen to their best customers and invest where margins are highest, so they miss the disruptive curve",
+                "Because their engineers stop innovating",
+                "Because they spend too little on marketing",
+                "Because startups always have more capital"
+              ],
+              "answer": 0,
+              "principle": "innovators-dilemma",
+              "difficulty": 2,
+              "feedback": {
+                "step": "State the paradox plainly: good management is the cause.",
+                "why": "Listening to best customers and funding the highest margins maximize today's business and forfeit tomorrow's. Disruption starts worse, cheaper, and ignored, so the well-run process filters it out.",
+                "cue": "If the explanation blames bad management, it is the opposite of the deck's claim."
+              }
+            },
+            {
+              "id": "role-q15",
+              "type": "mc",
+              "prompt": "A new entrant is worse than incumbents on the measures mainstream buyers value most, but cheaper and simpler, and ignored low-end buyers adopt it. This is:",
+              "options": [
+                "Sustaining innovation",
+                "A pricing error",
+                "Disruptive innovation",
+                "Category maintenance"
+              ],
+              "answer": 2,
+              "principle": "sustaining-vs-disruptive",
+              "difficulty": 2,
+              "feedback": {
+                "step": "Check the three disruptive markers: worse at first, cheaper or simpler, ignored segment.",
+                "why": "That pattern is the deck's definition of disruptive innovation. Sustaining innovation is better on the dimensions mainstream customers already value.",
+                "cue": "Disruption does not start better. It starts worse, cheaper, and ignored."
+              }
+            },
+            {
+              "id": "role-q16",
+              "type": "mc",
+              "prompt": "Which behaviour is AI literacy as the deck defines it?",
+              "options": [
+                "Being the most technical person on the team",
+                "Evaluating models like vendors, prototyping before staffing, knowing your training data, and knowing when only a human may decide",
+                "Outsourcing every judgment call to the model",
+                "Shipping the model with the highest benchmark score"
+              ],
+              "answer": 1,
+              "principle": "ai-literacy",
+              "difficulty": 1,
+              "feedback": {
+                "step": "Recall the four parts of the deck's AI literacy skill.",
+                "why": "AI literacy is judgment about the tech: vendor-style evaluation, prototype first, data judgment, and known limits including hallucinations and bias. The deck says the winners will not be the most technical.",
+                "cue": "Most technical PM wins is the trap the deck names directly."
+              }
+            },
+            {
+              "id": "role-q17",
+              "type": "production",
+              "prompt": "In two or three sentences, explain Kaul's line that AI moves validation before the build, using the kill-ten-ideas rule.",
+              "solution": "Model answer: In the traditional journey the product is built first and validated after, when fixing is expensive. In the AI-era loop the PM prototypes with AI and validates with real users on real tasks before engineering starts, so weak ideas die cheaply. Kill ten ideas in a week, so engineering only builds the one that survived.",
+              "principle": "validate-before-build",
+              "difficulty": 3,
+              "feedback": {
+                "step": "Contrast the two journeys, then state the resource consequence.",
+                "why": "The move is sequencing, not tooling: validation before development changes what engineering time is spent on, which is why the kill rate is a feature, not a failure.",
+                "cue": "After the build versus before the build is the whole axis."
+              }
             }
           ]
         },
         {
           "id": "class1-jtbd",
           "title": "Jobs to Be Done",
-          "provisional": "No 2026 Class 1 slides or readings are held; the Christensen article and the HBR JTBD video live on the course site. Built from the syllabus reading list and the Oct 27 Class 1 prep brief (which summarises public sources on the article), not from the article text itself.",
           "pieces": [
             {
               "id": "hire-and-fire",
               "name": "Hire and fire",
-              "fn": "Customers do not buy products; they hire them to make progress on a job in a specific circumstance, and they fire them when something does the job better.",
+              "fn": "Customers do not buy products; they hire them to make progress on a job in a specific circumstance, and they fire them when something does the job better. The deck's wording: do not ask what customers want; ask what progress they are trying to make. Find the struggling moment: that is where innovation starts.",
               "predict": "A commuter stops buying a breakfast sandwich and starts buying a thick milkshake for the drive. In JTBD language, what just happened?"
             },
             {
@@ -336,7 +556,7 @@ window.COURSE_DATA["mgmt-440"] = {
             {
               "id": "milkshake-study",
               "name": "The milkshake study",
-              "fn": "Researchers stopped asking how to improve the shake and asked what job buyers hired it for. Morning commuters hired it to survive a long boring drive; afternoon parents hired it as a treat that lets them say yes to their kids.",
+              "fn": "Researchers stopped asking how to improve the shake and asked what job buyers hired it for. Morning commuters hired it to survive a long boring drive; afternoon parents hired it as a treat that lets them say yes to their kids. The deck's other hires: a banana (gone quickly, hungry after an hour), donuts and bagels (messy and challenging), and a Snickers (too much guilt).",
               "predict": "Why did asking customers 'how can we make the shake better?' fail, while watching when shakes were bought worked?"
             },
             {
@@ -344,6 +564,18 @@ window.COURSE_DATA["mgmt-440"] = {
               "name": "The job defines the competition",
               "fn": "Competition is whatever the customer could hire instead for the same job. For the morning shake that was bananas, bagels, and coffee, not other shakes.",
               "predict": "A video app says its competition is other video apps. What does the job lens say to check before believing that?"
+            },
+            {
+              "id": "four-forces",
+              "name": "The four forces of a hire",
+              "fn": "Four forces decide whether a hire happens: Push (frustration with today), Pull (appeal of the new), Anxiety (what if it fails), and Habit (comfort with the present). A hire happens only when Push plus Pull outweigh Anxiety plus Habit.",
+              "predict": "A customer says the new product is clearly better and still does not switch. Which forces are probably winning, and what evidence would tell you?"
+            },
+            {
+              "id": "customer-data-not-enough",
+              "name": "Customer data is not enough",
+              "fn": "The deck's summary point: customer data alone is not enough, and correlation is not causation. Start with the end in mind: name the experience the customer should have, then work backwards to select the technology and the solution (the working-backwards idea behind a PRD). Observe and shadow customers instead of only asking them what to build.",
+              "predict": "Two measures rise together in a clean dashboard chart. What does the deck say that chart does and does not prove?"
             }
           ],
           "lesson": [
@@ -357,7 +589,7 @@ window.COURSE_DATA["mgmt-440"] = {
             },
             {
               "title": "The milkshake study",
-              "body": "A fast food chain asked customers how to improve its milkshakes and got nowhere. Researchers instead watched **when** shakes were bought and asked what job the buyer was hiring the shake to do.\n\n- **Morning commuters** hired it to survive a long, boring drive: thick, slow to drink, one handed, no crumbs, filling until lunch.\n- **Afternoon parents** hired the same product for a different job: a treat that lets them say yes to their kids and feel like good parents.\n\nFixes followed the job, not the recipe: thicker shakes and faster pickup for commuters. Asking about the product produced product answers; asking about the job produced design answers.",
+              "body": "A fast food chain asked customers how to improve its milkshakes and got nowhere. Researchers instead watched **when** shakes were bought and asked what job the buyer was hiring the shake to do.\n\n- **Morning commuters** hired it to survive a long, boring drive: thick, slow to drink, one handed, no crumbs, filling until lunch.\n- **Afternoon parents** hired the same product for a different job: a treat that lets them say yes to their kids and feel like good parents.\n\nFixes followed the job, not the recipe: thicker consistency to last longer, a smaller straw to slow consumption, and fruit added to address the guilt dimension for parents (class note). Asking about the product produced product answers; asking about the job produced design answers.",
               "workedExample": {
                 "title": "Worked example: name the real competition",
                 "body": "Question: what competes with the morning milkshake?\n\nStep 1: name the job. Survive a long, boring, one handed drive and stay full until lunch.\nStep 2: list everything a commuter could hire for that job: a banana (too fast, still hungry), a bagel (crumbs, two hands), coffee (not filling), a breakfast sandwich (messy).\nStep 3: conclude. The shake's competition is bananas, bagels, and coffee. Other chains' shakes do not appear, because they are not what the commuter is choosing between at 7am."
@@ -366,6 +598,14 @@ window.COURSE_DATA["mgmt-440"] = {
             {
               "title": "The job defines the competition",
               "body": "The brief's one line version: **the job, not the product category or the customer's demographics, defines the competition and the design brief.**\n\nApplied as a test: before accepting any claim about who the competition is, ask what job the customer is hiring for, in what circumstance. Anything hirable for that job is competition, including doing nothing. Anything in your category that serves a different job is not."
+            },
+            {
+              "title": "The four forces of a hire",
+              "body": "The deck gives JTBD a switching model. **Four forces** decide every hire:\n\n- **Push**: frustration and pain with the current solution\n- **Pull**: the appeal of the new solution\n- **Anxiety**: what if the new one fails, costs too much, or embarrasses me\n- **Habit**: the comfort of the present, even when it is mediocre\n\n**A hire happens only when Push plus Pull outweigh Anxiety plus Habit.** That explains the common puzzle of a clearly better product that nobody switches to: the left side won on merit and still lost to anxiety and habit.\n\nThe deck's **Job Question**, in three parts: (1) what job is the customer hiring us for, naming the progress, not the product; (2) what do they hire instead today; (3) where does the current solution fail them, because the gap is the opportunity. And its instruction: **find the struggling moment; that is where innovation starts.** Organize around the job, not the product: Netflix did the Friday-night job better instead of building a better video store."
+            },
+            {
+              "title": "Customer data is not enough",
+              "body": "Kaul's summary slide lists this as its own Class 1 point: **customer data is not enough**, with the deck's shorthand that **correlation is not causation**.\n\nTwo measures rising together is a clue, not proof. You still need a reason and a test before the data picks the product. A clean chart is the trap.\n\nThe positive version is **customer centricity**: **start with the end in mind** (the PRD idea), name the experience the customer should have first, then **work backwards** to select the technology and the solution. The class note adds the field method: do not ask customers what to build; **shadow and observe them** instead. The PM is the bridge between the customer experience and engineering execution."
             }
           ],
           "examples": [
@@ -382,6 +622,20 @@ window.COURSE_DATA["mgmt-440"] = {
               "answer": "The app was fired: the spreadsheet does the actual job better. The job was probably not 'track spending' in the abstract but something like 'agree on money with my partner without a fight', a social and emotional job the app never addressed.",
               "piece": "hire-and-fire",
               "principle": "hire-and-fire"
+            },
+            {
+              "title": "Better, and still no switch",
+              "scenario": "Users agree a new tool is faster and cheaper than their current one, praise it in interviews, and almost none of them move over after three months.",
+              "answer": "The four forces explain it: Push plus Pull were real but did not outweigh Anxiety (what if migration breaks my work) plus Habit (comfort with the present). The fix is not more features; it is lowering anxiety and habit costs at the struggling moment of switching.",
+              "piece": "four-forces",
+              "principle": "four-forces"
+            },
+            {
+              "title": "The clean chart",
+              "scenario": "A dashboard shows that users who enable a new feature retain far better than users who do not, so the team proposes forcing the feature on for everyone.",
+              "answer": "Correlation is not causation: the feature may mark already-engaged users rather than create retention. The deck's point is that customer data alone is not enough; name the customer experience first, work backwards, and test the causal claim before building on it.",
+              "piece": "customer-data-not-enough",
+              "principle": "correlation-not-causation"
             }
           ],
           "practice": [
@@ -397,6 +651,12 @@ window.COURSE_DATA["mgmt-440"] = {
               "title": "Write the job",
               "prompt": "A student hires a flashcard app every evening before a quiz. Write the job statement: the progress being made, the circumstance, and the dimensions. Then name two non-obvious competitors for that job.",
               "solution": "Model answer: Job: 'When I have 20 tired minutes the night before a quiz, help me find out what I do not know so I walk in calm.' Functional: expose gaps. Emotional: calm, confidence. Social: not looking unprepared in class. Non-obvious competitors: a study partner quizzing her (different category), re-reading notes (the do-nothing hire), and sleep itself, hired for the calm."
+            },
+            {
+              "rung": "full",
+              "title": "Force balance",
+              "prompt": "A team has strong Push (users hate the manual workaround) and strong Pull (the demo delights), but signups stall at the payment step. Name the two forces most likely blocking the hire, and one design move aimed at each.",
+              "solution": "Anxiety and Habit. Anxiety: fear the paid tool will fail or be hard to leave, answered with a trial, a guarantee, or visible pass and fail evals before commitment. Habit: comfort with the manual workaround, answered by importing the user's existing work so switching does not mean starting over. Push plus Pull only produce a hire when they outweigh Anxiety plus Habit."
             }
           ],
           "questions": [
@@ -563,6 +823,133 @@ window.COURSE_DATA["mgmt-440"] = {
                 "step": "The correction step: job first, competition second.",
                 "why": "Once the job is stated with its circumstance (before the first homework) and dimensions, the competition set expands beyond the named category rival, which is exactly the milkshake lesson.",
                 "cue": "If your competition list could have been written without mentioning the customer, you skipped the job."
+              }
+            },
+            {
+              "id": "jtbd-q10",
+              "type": "mc",
+              "prompt": "A hire happens, in the deck's four forces model, when:",
+              "options": [
+                "Push plus Pull outweigh Anxiety plus Habit",
+                "The product has the most features in its category",
+                "Anxiety is zero",
+                "Habit has been banned by policy"
+              ],
+              "answer": 0,
+              "principle": "four-forces",
+              "difficulty": 1,
+              "feedback": {
+                "step": "Write the inequality before choosing.",
+                "why": "Push (pain with today) and Pull (appeal of the new) must beat Anxiety (what if it fails) and Habit (comfort with the present). Feature counts are not in the model.",
+                "cue": "If Push and Pull are strong but there is no hire, look for Anxiety or Habit winning."
+              }
+            },
+            {
+              "id": "jtbd-q11",
+              "type": "mc",
+              "prompt": "Which set is the deck's four forces?",
+              "options": [
+                "Price, place, promotion, product",
+                "Push, Pull, Anxiety, Habit",
+                "Awareness, interest, desire, action",
+                "Speed, cost, quality, scope"
+              ],
+              "answer": 1,
+              "principle": "four-forces",
+              "difficulty": 1,
+              "feedback": {
+                "step": "Recall the switching model, not a marketing mix.",
+                "why": "The four forces are Push, Pull, Anxiety, and Habit. They describe the customer's internal contest at the moment of switching.",
+                "cue": "Two forces move toward the new, two hold the customer in the present."
+              }
+            },
+            {
+              "id": "jtbd-q12",
+              "type": "mc",
+              "prompt": "Two measures rise together in the product data, week after week. The deck's verdict on that evidence alone:",
+              "options": [
+                "It proves the first measure causes the second",
+                "It is enough to pick the roadmap",
+                "Correlation is not causation: it is a clue that still needs a reason and a test",
+                "It should be ignored entirely"
+              ],
+              "answer": 2,
+              "principle": "correlation-not-causation",
+              "difficulty": 1,
+              "feedback": {
+                "step": "Separate co-movement from proof.",
+                "why": "Customer data is not enough on its own. A clean chart can mark a third cause or an already-engaged segment; the deck asks for the experience first, worked backwards, and a test.",
+                "cue": "A clean chart is the trap. Data alone does not pick the product."
+              }
+            },
+            {
+              "id": "jtbd-q13",
+              "type": "mc",
+              "prompt": "What is the deck's three-part Job Question?",
+              "options": [
+                "Who is the user, what is their budget, when do they buy",
+                "What job are they hiring for (the progress, not the product), what do they hire instead today, and where does the current solution fail them",
+                "What features do they want, in what order, at what price",
+                "Which segment are they in, and how big is it"
+              ],
+              "answer": 1,
+              "principle": "job-question",
+              "difficulty": 2,
+              "feedback": {
+                "step": "Recite the question in job language: progress, current hire, failure gap.",
+                "why": "The opportunity lives in the third part: where the current solution fails them. Feature and segment questions skip the job entirely.",
+                "cue": "Progress first, current hire second, gap third."
+              }
+            },
+            {
+              "id": "jtbd-q14",
+              "type": "mc",
+              "prompt": "In the deck's milkshake detail, why did commuters not hire a banana or a bagel for the drive instead?",
+              "options": [
+                "They cost more than the shake",
+                "They were not sold in the morning",
+                "The banana was gone quickly and left them hungry, and donuts and bagels were messy and hard to manage on the drive",
+                "Shakes were discounted for commuters"
+              ],
+              "answer": 2,
+              "principle": "milkshake-job",
+              "difficulty": 2,
+              "feedback": {
+                "step": "Judge each rival hire against the drive circumstance.",
+                "why": "The job was a long, boring, one-handed drive with fullness until lunch. The banana failed on duration, the bagel and donuts on mess and handling, and the Snickers on guilt in the deck's telling.",
+                "cue": "Every rival fails on a job dimension, not on shake quality."
+              }
+            },
+            {
+              "id": "jtbd-q15",
+              "type": "mc",
+              "prompt": "'Start with the end in mind and work backwards' means, in the deck's customer centricity point:",
+              "options": [
+                "Write the launch press release last",
+                "Name the experience the customer should have first, then select the technology and solution that produce it",
+                "Copy the market leader's roadmap in reverse",
+                "Set the ship date, then cut scope to fit it"
+              ],
+              "answer": 0,
+              "principle": "work-backwards",
+              "difficulty": 2,
+              "feedback": {
+                "step": "Identify what is fixed first: the customer's experience.",
+                "why": "Working backwards starts from the desired customer experience (the PRD idea) and steps back to tech and build choices. Schedules and rival roadmaps are not the starting point.",
+                "cue": "Experience first, technology second."
+              }
+            },
+            {
+              "id": "jtbd-q16",
+              "type": "production",
+              "prompt": "A customer tells you your product is better in every way and still renews the old one. Write a two sentence four-forces diagnosis and the next question you would ask.",
+              "solution": "Model answer: Push and Pull are present, the product wins on merit, but Anxiety plus Habit are outweighing them, so no hire happens. The next question targets the blocking forces at the struggling moment: what specifically worries you about switching, and what would the old way have to cost you before you moved?",
+              "principle": "four-forces",
+              "difficulty": 3,
+              "feedback": {
+                "step": "Balance the inequality first, then aim the question at the winning side.",
+                "why": "A better product losing is the signature of Anxiety and Habit winning. Asking about features adds Pull the customer already grants; asking about fear and comfort finds the actual block.",
+                "cue": "Praise without switching always points at the right side of the inequality."
               }
             }
           ]
