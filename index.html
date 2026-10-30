@@ -261,6 +261,21 @@
   .queue-item + .queue-item { border-top:1px solid var(--line); }
   .queue-item a { font-weight:600; font-size:15px; white-space:nowrap; }
 
+  /* timed Match game */
+  .matchbar { display:flex; flex-wrap:wrap; gap:12px 18px; align-items:baseline; margin:8px 0 14px; }
+  .matchbar .mtime { font-variant-numeric:tabular-nums; font-weight:700; font-size:22px; }
+  .matchgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:10px; }
+  .matchtile { min-height:88px; text-align:left; white-space:normal; font-weight:500; font-size:14.5px;
+               line-height:1.35; padding:12px 14px; border-radius:14px; background:var(--surface);
+               color:var(--ink); border:1px solid var(--line-strong); box-shadow:var(--shadow-sm); }
+  .matchtile:hover { transform:none; }
+  .matchtile.sel { border-color:var(--accent); background:var(--accent-soft); box-shadow:var(--ring); }
+  .matchtile.ok { border-color:var(--good); background:var(--good-soft); color:var(--good); opacity:.55; }
+  .matchtile.bad { border-color:var(--bad); background:var(--bad-soft); }
+  .matchtile.prompt { border-style:dashed; }
+  .misswhy { margin-top:12px; }
+  .misswhy textarea { min-height:72px; }
+
   /* finals countdown calendar on the home page */
   .fcal { margin:18px 0 8px; }
   .fcal h2 { margin-bottom:6px; }
@@ -516,11 +531,12 @@ function md(t){
 /* ============================== state ============================== */
 var LS_KEY = "ilp-state-v1";
 var state = null;
-function blankState(){ return { v:1, topics:{}, errors:[], exampleFlags:{}, finals:[], notebooks:[] }; }
+function blankState(){ return { v:1, topics:{}, errors:[], exampleFlags:{}, finals:[], notebooks:[], matchBests:{} }; }
 function loadState(){
   try { var raw = localStorage.getItem(LS_KEY); state = raw ? JSON.parse(raw) : blankState(); }
   catch(e){ state = blankState(); }
   if (!state.topics) state = blankState();
+  if (!state.matchBests) state.matchBests = {};
 }
 function saveState(){ try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){} updateBell(); }
 function tkey(cid, tid){ return cid + "/" + tid; }
@@ -699,6 +715,9 @@ function route(){
   if (seg[0] === "notebook" && seg[1]) return renderNotebookPage(seg[1]);
   if (seg[0] === "notebook") return renderNotebookList();
   if (seg[0] === "retrieval" && seg[1] && seg[2]) return renderRetrieval(seg[1], seg[2]);
+  if (seg[0] === "match" && seg[1] && seg[2]) return renderMatch(seg[1], seg[2]);
+  if (seg[0] === "match" && seg[1]) return renderMatch(seg[1], null);
+  if (seg[0] === "sprint") return renderSprint();
   renderHome();
 }
 window.addEventListener("hashchange", route);
@@ -853,6 +872,9 @@ function renderHome(){
   if (today.topicsTouched >= 6) html += "<p class=\"small muted\">Dense day. Close it with quiet rest, no phone and no new input, after the last block.</p>";
   html += "</div>";
   if (drafts.length) html += "<div class=\"card\"><strong>" + drafts.length + " error log draft" + (drafts.length > 1 ? "s" : "") + "</strong> waiting for the wrong step and correct principle. <a href=\"#/errors\">Complete them</a> so their retests get scheduled.</div>";
+  html += "<div class=\"card\"><h3>Interleave sprint</h3>"
+    + "<p class=\"muted\" style=\"margin-top:0\">A mixed 6-question set from the courses closest to their finals. Closed book, confidence before feedback, misses draft into the error log.</p>"
+    + "<p><a class=\"btn\" href=\"#/sprint\">Start a 2-minute-style sprint</a></p></div>";
   html += finalsCalendarHtml();
   html += "<h2>Courses</h2>";
   COURSES.forEach(function(c){
@@ -1256,6 +1278,7 @@ function renderCourse(cid){
     + "<div class=\"chactions\">"
     + "<a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a>"
     + "<a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a>"
+    + "<a class=\"btn secondary\" href=\"#/match/" + c.id + "\">Match</a>"
     + "<button type=\"button\" class=\"secondary\" onclick=\"scrollToFiles()\">File library</button>"
     + "</div>"
     + "<details class=\"fold\"><summary>Course rules and exam info</summary>"
@@ -1316,6 +1339,7 @@ function renderCourse(cid){
   html += "<div class=\"journey-foot\">"
     + "<a class=\"btn secondary\" href=\"#/examples/" + c.id + "\">Examples</a>"
     + "<a class=\"btn secondary\" href=\"#/final/" + c.id + "\">Final practice</a>"
+    + "<a class=\"btn secondary\" href=\"#/match/" + c.id + "\">Match</a>"
     + "</div>";
   app.innerHTML = html;
 }
@@ -1374,7 +1398,8 @@ function renderTopic(cid, tid, stage){
   html += "<div class=\"rail\">" + STAGE_NAMES.map(function(name, i){
     return "<button class=\"" + (i === stage ? "cur" : "") + (ts.completed[i] ? " done" : "") + "\" onclick=\"location.hash='#/topic/" + cid + "/" + tid + "/" + i + "'\">" + (ts.completed[i] ? "✓ " : "") + (i + 1) + " · " + name + "</button>";
   }).join("") + "</div>";
-  html += "<p><button class=\"secondary\" onclick=\"openTopicNotebook('" + cid + "','" + tid + "')\">Write in the notebook for this topic</button></p>";
+  html += "<p><button class=\"secondary\" onclick=\"openTopicNotebook('" + cid + "','" + tid + "')\">Write in the notebook for this topic</button> "
+    + "<a class=\"btn secondary\" href=\"#/match/" + cid + "/" + tid + "\">Match game</a></p>";
   html += "<div id=\"stagebody\"></div>";
   app.innerHTML = html;
   var body = $("stagebody");
@@ -1674,20 +1699,36 @@ function renderQuizStart(el, c, t){
 function startTopicQuiz(cid, tid){
   var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
   var qs = pickServing(t, ts, 6);
-  startRun({ cid: cid, mode: "quiz", tid: tid, title: "Quiz: " + t.title, items: qs.map(function(q){ return { topic: t, q: q }; }) });
+  startRun({ cid: cid, mode: "quiz", tid: tid, title: "Quiz: " + t.title, items: qs.map(function(q){ return { topic: t, q: q, cid: cid }; }) });
 }
 function renderRetrieval(cid, tid){
   var c = courseById(cid), found = c ? topicById(c, tid) : null, app = $("app");
   if (!found){ app.innerHTML = "<p>Topic not found.</p>"; return; }
   var ts = tstate(cid, tid);
+  var pieces = (found.topic.pieces || []).map(function(p){ return p.name; }).join(" · ");
   app.innerHTML = "<p><a href=\"#/course/" + cid + "\">&larr; " + esc(c.name) + "</a></p><h1>Retrieval: " + esc(found.topic.title) + "</h1>"
-    + "<p class=\"muted\">A short closed book set of fresh questions, different from the ones you have already been served. Clean spaced retrievals so far: " + ts.retrievals.length + " of 3 needed, on separate days, for this topic to count as learned.</p>"
-    + "<p><button onclick=\"startRetrieval('" + cid + "','" + tid + "')\">Start the retrieval set</button></p>";
+    + "<p class=\"muted\">First, free-recall on a blank page with notes closed. Then a short closed-book set of fresh questions. Clean spaced retrievals so far: " + ts.retrievals.length + " of 3 needed, on separate days, for this topic to count as learned.</p>"
+    + "<div class=\"card\"><h3>Free recall</h3>"
+    + "<p class=\"small muted\">Write everything you can remember about this topic" + (pieces ? " (" + esc(pieces) + ")" : "") + ". Do not open notes.</p>"
+    + "<textarea id=\"freerecall\" placeholder=\"From memory: definitions, steps, cues, traps…\"></textarea>"
+    + "<p><button onclick=\"startRetrievalAfterRecall('" + cid + "','" + tid + "')\">Continue to the retrieval set</button> <span id=\"recallmsg\" class=\"small\"></span></p></div>";
+}
+function startRetrievalAfterRecall(cid, tid){
+  var box = $("freerecall"), msg = $("recallmsg");
+  var text = box ? box.value.trim() : "";
+  if (!text || text.length < 20){
+    if (msg){ msg.className = "small err"; msg.textContent = "Write at least a short free-recall paragraph before the cued set."; }
+    return;
+  }
+  var ts = tstate(cid, tid);
+  ts.lastFreeRecall = { date: todayStr(), n: text.length };
+  saveState();
+  startRetrieval(cid, tid);
 }
 function startRetrieval(cid, tid){
   var c = courseById(cid), t = topicById(c, tid).topic, ts = tstate(cid, tid);
   var qs = pickServing(t, ts, 4);
-  startRun({ cid: cid, mode: "retrieval", tid: tid, title: "Retrieval: " + t.title, items: qs.map(function(q){ return { topic: t, q: q }; }) });
+  startRun({ cid: cid, mode: "retrieval", tid: tid, title: "Retrieval: " + t.title, items: qs.map(function(q){ return { topic: t, q: q, cid: cid }; }) });
 }
 function renderFinal(cid){
   var c = courseById(cid), app = $("app");
@@ -1703,11 +1744,69 @@ function renderFinal(cid){
 }
 function startFinal(cid){
   var c = courseById(cid), all = [];
-  allTopics(c).forEach(function(x){ x.topic.questions.forEach(function(q){ all.push({ topic: x.topic, q: q }); }); });
+  allTopics(c).forEach(function(x){ x.topic.questions.forEach(function(q){ all.push({ topic: x.topic, q: q, cid: cid }); }); });
   startRun({ cid: cid, mode: "final", title: "Final practice: " + c.name, items: shuffle(all).slice(0, Math.min(10, all.length)) });
 }
+function courseFinalDate(c){
+  if (c.finals && c.finals.length){
+    var dates = c.finals.map(function(f){ return f.date; }).filter(Boolean).sort();
+    if (dates.length) return dates[0];
+  }
+  return (COURSE_TIME[c.id] && COURSE_TIME[c.id].final) || (c.termDates && c.termDates.end) || null;
+}
+function renderSprint(){
+  var app = $("app");
+  var ranked = COURSES.map(function(c){
+    var d = courseFinalDate(c);
+    return { c: c, date: d, days: d ? daysBetween(todayStr(), d) : null };
+  }).filter(function(x){ return x.days != null && x.days >= 0; })
+    .sort(function(a, b){ return a.days - b.days; });
+  var top = ranked.slice(0, 3);
+  var html = "<p><a href=\"#/\">&larr; Today</a></p><h1>Interleave sprint</h1>"
+    + "<p class=\"muted\">Six mixed questions from the courses closest to their finals. Same rules as a quiz: confidence before feedback, and every miss needs a one-sentence Why? before you continue.</p>";
+  if (!top.length){
+    html += "<p class=\"muted\">No upcoming finals are on the calendar.</p>";
+    app.innerHTML = html;
+    return;
+  }
+  html += "<ul class=\"tight\">" + top.map(function(x){
+    return "<li>" + esc(x.c.name.split(":")[0]) + " · final in " + x.days + " day" + (x.days === 1 ? "" : "s") + " (" + esc(x.date) + ")</li>";
+  }).join("") + "</ul>"
+    + "<p><button onclick=\"startInterleaveSprint()\">Start the sprint</button></p>";
+  app.innerHTML = html;
+}
+function startInterleaveSprint(){
+  var ranked = COURSES.map(function(c){
+    var d = courseFinalDate(c);
+    return { c: c, days: d ? daysBetween(todayStr(), d) : 9999 };
+  }).filter(function(x){ return x.days >= 0 && x.days < 9000; })
+    .sort(function(a, b){ return a.days - b.days; }).slice(0, 3);
+  var byCourse = ranked.map(function(r){
+    var items = [];
+    allTopics(r.c).forEach(function(x){
+      (x.topic.questions || []).forEach(function(q){
+        items.push({ topic: x.topic, q: q, cid: r.c.id });
+      });
+    });
+    return shuffle(items);
+  });
+  var picked = [], i = 0;
+  while (picked.length < 6){
+    var progressed = false;
+    byCourse.forEach(function(list){
+      if (picked.length >= 6 || !list.length) return;
+      picked.push(list.shift());
+      progressed = true;
+    });
+    if (!progressed) break;
+    i++;
+    if (i > 40) break;
+  }
+  if (!picked.length){ alert("No questions are available for a sprint yet."); return; }
+  startRun({ cid: picked[0].cid, mode: "sprint", title: "Interleave sprint", items: shuffle(picked) });
+}
 function startRun(cfg){
-  run = { cid: cfg.cid, mode: cfg.mode, tid: cfg.tid || null, entry: cfg.entry || null, title: cfg.title, items: cfg.items, idx: 0, correct: 0, misses: [], sel: null, produced: false, conf: null, checked: false, selfMark: null };
+  run = { cid: cfg.cid, mode: cfg.mode, tid: cfg.tid || null, entry: cfg.entry || null, title: cfg.title, items: cfg.items, idx: 0, correct: 0, misses: [], sel: null, produced: false, conf: null, checked: false, selfMark: null, lastRight: true, missWhy: "" };
   renderRunQuestion();
 }
 function renderRunQuestion(){
@@ -1773,32 +1872,61 @@ function runSelfMark(right){
   fb.innerHTML = feedbackHtml(q, right) + nextBtnHtml();
 }
 function feedbackHtml(q, right){
-  return "<div class=\"feedback " + (right ? "ok" : "no") + "\"><strong>" + (right ? "Correct." : "Missed.") + "</strong>"
+  var html = "<div class=\"feedback " + (right ? "ok" : "no") + "\"><strong>" + (right ? "Correct." : "Missed.") + "</strong>"
     + "<p><strong>Step:</strong> " + esc(q.feedback.step) + "</p>"
     + "<p><strong>Why:</strong> " + esc(q.feedback.why) + "</p>"
     + "<p><strong>Cue:</strong> " + esc(q.feedback.cue) + "</p></div>";
+  if (!right && run.mode !== "retest"){
+    html += "<div class=\"misswhy\"><label class=\"flabel\">Why was that wrong? One sentence in your own words</label>"
+      + "<textarea id=\"misswhy\" placeholder=\"The wrong step or the principle I confused…\" oninput=\"runMissWhy()\"></textarea>"
+      + "<p class=\"small muted\" id=\"misswhymsg\">Required before you continue. This becomes the wrong-step draft in the error log.</p></div>";
+  }
+  return html;
 }
 function nextBtnHtml(){
   var last = run.idx >= run.items.length - 1;
-  return "<p><button onclick=\"runNext()\">" + (last ? "Finish" : "Next question →") + "</button></p>";
+  var needWhy = !run.lastRight && run.mode !== "retest";
+  return "<p><button id=\"nextbtn\" onclick=\"runNext()\"" + (needWhy ? " disabled" : "") + ">"
+    + (last ? "Finish" : "Next question →") + "</button></p>";
+}
+function runMissWhy(){
+  var box = $("misswhy");
+  run.missWhy = box ? box.value.trim() : "";
+  var b = $("nextbtn");
+  if (b) b.disabled = !run.missWhy;
+  var msg = $("misswhymsg");
+  if (msg && run.missWhy){ msg.className = "small okmsg"; msg.textContent = "Ready to continue."; }
 }
 function finishAnswer(right){
   var item = run.items[run.idx];
+  run.lastRight = !!right;
+  run.missWhy = "";
   if (right){ run.correct++; return; }
   if (run.mode === "retest"){
     var e = run.entry;
     e.clean = 0; e.stageIdx = 0; e.nextDue = addDays(todayStr(), 1);
     e.served.push(item.q.id);
-    var d = fileErrorDraft(run.cid, e.tid, item.q, run.conf);
+    var d = fileErrorDraft(item.cid || run.cid, e.tid, item.q, run.conf);
     run.retestDraft = d.id;
     saveState();
   } else {
-    run.misses.push({ topic: item.topic, q: item.q, confidence: run.conf });
+    run.misses.push({ topic: item.topic, q: item.q, confidence: run.conf, cid: item.cid || run.cid, why: "" });
   }
 }
 function runNext(){
+  if (!run.lastRight && run.mode !== "retest"){
+    var box = $("misswhy");
+    var why = (box && box.value.trim()) || run.missWhy || "";
+    if (!why){
+      var msg = $("misswhymsg");
+      if (msg){ msg.className = "small err"; msg.textContent = "Write why that was wrong before continuing."; }
+      return;
+    }
+    var lastMiss = run.misses[run.misses.length - 1];
+    if (lastMiss) lastMiss.why = why;
+  }
   if (run.idx < run.items.length - 1){
-    run.idx++; run.sel = null; run.produced = false; run.conf = null; run.checked = false;
+    run.idx++; run.sel = null; run.produced = false; run.conf = null; run.checked = false; run.lastRight = true; run.missWhy = "";
     renderRunQuestion();
   } else finishRun();
 }
@@ -1822,6 +1950,9 @@ function finishRun(){
   } else if (run.mode === "final"){
     state.finals.push({ cid: run.cid, date: todayStr(), score: frac, n: n }); saveState();
     html += "<p><a class=\"btn\" href=\"#/course/" + run.cid + "\">Back to the course</a></p>";
+  } else if (run.mode === "sprint"){
+    html += "<p class=\"muted\">Interleaved across the courses nearest their finals. Misses below still need a scheduled retest once you confirm the wrong step and correct principle.</p>";
+    html += "<p><a class=\"btn\" href=\"#/\">Back to Today</a> <a class=\"btn secondary\" href=\"#/sprint\">Sprint again</a></p>";
   } else if (run.mode === "retest"){
     var e = run.entry;
     if (frac >= 1){
@@ -1837,9 +1968,11 @@ function finishRun(){
     html += "<p><a class=\"btn\" href=\"#/errors\">Back to the Error Log</a></p>";
   }
   if (run.misses.length){
-    html += "<h2>File the misses</h2><p class=\"muted\">Each miss is already drafted. It only becomes a scheduled retest once you write the wrong step and the correct principle.</p>";
+    html += "<h2>File the misses</h2><p class=\"muted\">Each miss is already drafted. Your Why? note is filled in as the wrong step — add or edit the correct principle, then schedule the retests.</p>";
     run.misses.forEach(function(m){
-      var entry = fileErrorDraft(run.cid, m.topic.id, m.q, m.confidence);
+      var entry = fileErrorDraft(m.cid || run.cid, m.topic.id, m.q, m.confidence);
+      if (m.why) entry.wrongStep = m.why;
+      saveState();
       html += errorDraftForm(entry, m.topic.title);
     });
   }
@@ -1849,8 +1982,8 @@ function finishRun(){
 function errorDraftForm(entry, topicTitle){
   return "<div class=\"card\"><h3>Miss: " + esc(topicTitle || entry.tid) + (entry.confidence != null && entry.confidence >= 80 ? " <span class=\"badge due\">HIGH CONFIDENCE MISS</span>" : "") + "</h3>"
     + md(entry.problem)
-    + "<label class=\"flabel\">Your wrong step, and the reasoning you used</label><textarea id=\"derr-ws-" + entry.id + "\"></textarea>"
-    + "<label class=\"flabel\">The correct principle</label><textarea id=\"derr-cp-" + entry.id + "\"></textarea>"
+    + "<label class=\"flabel\">Your wrong step, and the reasoning you used</label><textarea id=\"derr-ws-" + entry.id + "\">" + esc(entry.wrongStep || "") + "</textarea>"
+    + "<label class=\"flabel\">The correct principle</label><textarea id=\"derr-cp-" + entry.id + "\">" + esc(entry.correctPrinciple || "") + "</textarea>"
     + "<p><button onclick=\"saveDraftEntry('" + entry.id + "')\">Save entry and schedule its retests</button> <span id=\"derr-msg-" + entry.id + "\" class=\"small\"></span></p></div>";
 }
 function saveDraftEntry(entryId){
@@ -1914,7 +2047,151 @@ function startErrorRetest(entryId){
   var q = pickRetestQuestion(entry);
   if (!q){ alert("No fresh question is left in this topic's pool yet. The entry stays due."); return; }
   var c = courseById(entry.cid), found = topicById(c, entry.tid);
-  startRun({ cid: entry.cid, mode: "retest", tid: entry.tid, entry: entry, title: "Retest: " + found.topic.title, items: [{ topic: found.topic, q: q }] });
+  startRun({ cid: entry.cid, mode: "retest", tid: entry.tid, entry: entry, title: "Retest: " + found.topic.title, items: [{ topic: found.topic, q: q, cid: entry.cid }] });
+}
+
+/* ============================== TIMED MATCH ============================== */
+var matchGame = null;
+var matchTick = null;
+function plainText(s){
+  return String(s || "").replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/[_#>*]/g, " ")
+    .replace(/\s+/g, " ").trim();
+}
+function matchClip(s, n){
+  s = plainText(s);
+  if (s.length <= n) return s;
+  return s.slice(0, n - 1).replace(/\s+\S*$/, "") + "…";
+}
+function collectMatchPairs(cid, tid){
+  var c = courseById(cid); if (!c) return [];
+  var topics = tid ? [topicById(c, tid) && topicById(c, tid).topic] : allTopics(c).map(function(x){ return x.topic; });
+  topics = topics.filter(Boolean);
+  var pairs = [];
+  topics.forEach(function(t){
+    (t.questions || []).forEach(function(q){
+      if (q.type !== "mc" || !q.options || q.answer == null) return;
+      pairs.push({
+        id: q.id,
+        tid: t.id,
+        prompt: matchClip(q.prompt, 110),
+        answer: matchClip(q.options[q.answer], 90),
+        fullPrompt: plainText(q.prompt)
+      });
+    });
+  });
+  return pairs;
+}
+function renderMatch(cid, tid){
+  var c = courseById(cid), app = $("app");
+  if (!c){ app.innerHTML = "<p>Course not found.</p>"; return; }
+  var found = tid ? topicById(c, tid) : null;
+  if (tid && !found){ app.innerHTML = "<p>Topic not found.</p>"; return; }
+  var pairs = collectMatchPairs(cid, tid);
+  var key = tid ? tkey(cid, tid) : cid;
+  var best = state.matchBests[key];
+  var title = found ? found.topic.title : c.name;
+  var back = found ? "#/topic/" + cid + "/" + tid + "/0" : "#/course/" + cid;
+  var html = "<p><a href=\"" + back + "\">&larr; " + esc(found ? found.topic.title : c.name) + "</a></p>"
+    + "<h1>Match: " + esc(title) + "</h1>"
+    + "<p class=\"muted\">Race the clock. Tap a prompt, then its answer. Six pairs from this " + (found ? "topic" : "course") + ".</p>"
+    + (best != null ? "<p class=\"small\">Best time: <strong>" + formatMatchTime(best) + "</strong></p>" : "")
+    + (pairs.length < 4
+      ? "<p class=\"err\">Need at least 4 multiple-choice questions to play Match.</p>"
+      : "<p><button onclick=\"startMatchGame('" + cid + "'," + (tid ? "'" + tid + "'" : "null") + ")\">Start Match</button></p>")
+    + "<div id=\"matchroot\"></div>";
+  app.innerHTML = html;
+}
+function formatMatchTime(ms){
+  var s = Math.max(0, Math.round(ms / 100) / 10);
+  return s.toFixed(1) + "s";
+}
+function startMatchGame(cid, tid){
+  var pairs = shuffle(collectMatchPairs(cid, tid)).slice(0, 6);
+  if (pairs.length < 2) return;
+  var tiles = [];
+  pairs.forEach(function(p){
+    tiles.push({ pair: p.id, kind: "prompt", text: p.prompt, title: p.fullPrompt });
+    tiles.push({ pair: p.id, kind: "answer", text: p.answer, title: p.answer });
+  });
+  matchGame = {
+    cid: cid, tid: tid, key: tid ? tkey(cid, tid) : cid,
+    tiles: shuffle(tiles), selected: -1, matched: {},
+    startedAt: 0, finished: false, wrongFlash: null
+  };
+  if (matchTick){ clearInterval(matchTick); matchTick = null; }
+  paintMatch();
+}
+function paintMatch(){
+  var root = $("matchroot"); if (!root || !matchGame) return;
+  var g = matchGame;
+  var elapsed = g.startedAt ? (Date.now() - g.startedAt) : 0;
+  var left = g.tiles.filter(function(t){ return !g.matched[t.pair]; }).length / 2;
+  var html = "<div class=\"card\"><div class=\"matchbar\">"
+    + "<span class=\"mtime\" id=\"matchclock\">" + (g.startedAt ? formatMatchTime(elapsed) : "0.0s") + "</span>"
+    + "<span class=\"small muted\">" + (g.finished ? "Done" : left + " pair" + (left === 1 ? "" : "s") + " left") + "</span>"
+    + "</div><div class=\"matchgrid\">";
+  g.tiles.forEach(function(tile, i){
+    if (g.matched[tile.pair]){
+      html += "<button type=\"button\" class=\"matchtile ok\" disabled>" + esc(tile.text) + "</button>";
+      return;
+    }
+    var cls = "matchtile" + (tile.kind === "prompt" ? " prompt" : "")
+      + (g.selected === i ? " sel" : "")
+      + (g.wrongFlash && (g.wrongFlash[0] === i || g.wrongFlash[1] === i) ? " bad" : "");
+    html += "<button type=\"button\" class=\"" + cls + "\" title=\"" + esc(tile.title || tile.text) + "\" onclick=\"matchTap(" + i + ")\">"
+      + esc(tile.text) + "</button>";
+  });
+  html += "</div>";
+  if (g.finished){
+    var best = state.matchBests[g.key];
+    html += "<p class=\"okmsg\">Cleared in " + formatMatchTime(elapsed)
+      + (best != null && best < elapsed ? ". Best remains " + formatMatchTime(best) + "." : ".")
+      + "</p><p><button onclick=\"startMatchGame('" + g.cid + "'," + (g.tid ? "'" + g.tid + "'" : "null") + ")\">Play again</button> "
+      + "<a class=\"btn secondary\" href=\"#/course/" + g.cid + "\">Back to course</a></p>";
+  }
+  html += "</div>";
+  root.innerHTML = html;
+}
+function matchTap(i){
+  var g = matchGame; if (!g || g.finished) return;
+  if (!g.startedAt){
+    g.startedAt = Date.now();
+    matchTick = setInterval(function(){
+      var clock = $("matchclock");
+      if (!matchGame || matchGame.finished){ clearInterval(matchTick); matchTick = null; return; }
+      if (clock) clock.textContent = formatMatchTime(Date.now() - matchGame.startedAt);
+    }, 100);
+  }
+  if (g.matched[g.tiles[i].pair]) return;
+  if (g.selected < 0){ g.selected = i; paintMatch(); return; }
+  if (g.selected === i){ g.selected = -1; paintMatch(); return; }
+  var a = g.tiles[g.selected], b = g.tiles[i];
+  if (a.pair === b.pair && a.kind !== b.kind){
+    g.matched[a.pair] = true;
+    g.selected = -1;
+    g.wrongFlash = null;
+    var remaining = g.tiles.some(function(t){ return !g.matched[t.pair]; });
+    if (!remaining){
+      g.finished = true;
+      var elapsed = Date.now() - g.startedAt;
+      if (matchTick){ clearInterval(matchTick); matchTick = null; }
+      var prev = state.matchBests[g.key];
+      if (prev == null || elapsed < prev){ state.matchBests[g.key] = elapsed; saveState(); }
+    }
+    paintMatch();
+    return;
+  }
+  g.wrongFlash = [g.selected, i];
+  g.selected = -1;
+  paintMatch();
+  setTimeout(function(){
+    if (!matchGame) return;
+    matchGame.wrongFlash = null;
+    paintMatch();
+  }, 450);
 }
 
 /* ============================== NOTEBOOK ============================== */
