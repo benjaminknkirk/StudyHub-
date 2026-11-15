@@ -1,19 +1,41 @@
-# StudyHub
+# SlideQuest
 
-Personal study site. Plain HTML and JavaScript, no build step for the pages, served by GitHub Pages from `main`.
+Science-based AI learning platform that turns uploaded lecture slides into interactive, retrieval-driven lessons.
 
-## File library
+## Mission
 
-Each course has a library on its page and at `#/course/<course-id>/files`. Files live in the repo under `files/<course-id>/`. Subfolders are listed as groups.
+Maximize durable, independently usable knowledge per minute of study — not XP theater.
 
-**This repository is public.** Anything in `files/` can be downloaded by anyone who can open the site. Do not add private notes, graded work you cannot share, or material you do not have the rights to publish.
+## Stack
 
-To add a file:
+- Next.js (App Router) + TypeScript + Tailwind
+- Postgres via `DATABASE_URL` (PGlite locally)
+- Optional OpenAI for richer curriculum + tutor (`OPENAI_API_KEY`)
+- Cursor app identity for private/team viewers
 
-1. Drop it in `files/<course-id>/`, or in a subfolder such as `files/<course-id>/lectures/`.
-2. Run `node scripts/build-file-manifests.js`.
-3. Commit the file and the updated `files/<course-id>/index.json`.
+## Core loop
 
-A GitHub Action runs that script on pushes that touch `files/`, and commits the manifest if it changed. The site does not preload library files. A file is saved for offline use after you download or preview it.
+Orient → Explain → Demonstrate → Guided practice → Independent retrieval → Application → Reflect
 
-See `COURSES-FORMAT.md` for the manifest fields.
+Mastery distinguishes assisted solves from independent successes and schedules spaced review (1 / 3 / 7 / 14 / 30 day heuristic, performance-adjusted).
+
+## Develop
+
+```bash
+npm install
+env -u DATABASE_URL npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000), then **Try demo lecture** for the curated ML classification pathway (works without an API key).
+
+## Scripts
+
+- `npm run dev` — local server (uses in-memory PGlite when `DATABASE_URL` is unset)
+- `npm run build` — production build + migrations when `DATABASE_URL` is set
+- `npm run lint` — ESLint
+
+## Product phases
+
+1. **Core learning engine** (this MVP): upload → pathway → adaptive lesson → progress
+2. **Adaptive learning**: richer knowledge tracing, interleaving, misconception graphs
+3. **Engagement & exam prep**: deeper analytics, timed unaided exams, achievements
