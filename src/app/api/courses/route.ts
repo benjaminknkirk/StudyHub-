@@ -62,33 +62,45 @@ export async function POST(request: Request) {
     );
   }
 
-  const { curriculum, usedAI, notes } = await generateCurriculum(extraction, {
-    forceSample: useSample || !file,
-  });
+  try {
+    const { curriculum, usedAI, notes } = await generateCurriculum(extraction, {
+      forceSample: useSample || !file,
+    });
 
-  const courseId = await persistCurriculum({
-    ownerId: user.id,
-    curriculum,
-    studyMode,
-    examDate,
-    sourceFilename: extraction.filename,
-    document: {
-      filename: extraction.filename,
-      mimeType: extraction.mimeType,
-      pageCount: extraction.pageCount,
-      extractedText: extraction.fullText,
-      pages: extraction.pages,
-    },
-  });
+    const courseId = await persistCurriculum({
+      ownerId: user.id,
+      curriculum,
+      studyMode,
+      examDate,
+      sourceFilename: extraction.filename,
+      document: {
+        filename: extraction.filename,
+        mimeType: extraction.mimeType,
+        pageCount: extraction.pageCount,
+        extractedText: extraction.fullText,
+        pages: extraction.pages,
+      },
+    });
 
-  return Response.json(
-    {
-      courseId,
-      title: curriculum.title,
-      conceptCount: curriculum.concepts.length,
-      usedAI,
-      notes,
-    },
-    { status: 201, headers: { "cache-control": "private, no-store" } },
-  );
+    return Response.json(
+      {
+        courseId,
+        title: curriculum.title,
+        conceptCount: curriculum.concepts.length,
+        usedAI,
+        notes,
+      },
+      { status: 201, headers: { "cache-control": "private, no-store" } },
+    );
+  } catch (error) {
+    console.error("course create failed", error);
+    return Response.json(
+      {
+        error: "course_create_failed",
+        message:
+          error instanceof Error ? error.message : "Could not create course",
+      },
+      { status: 500 },
+    );
+  }
 }

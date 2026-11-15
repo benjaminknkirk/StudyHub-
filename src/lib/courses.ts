@@ -17,6 +17,12 @@ export async function persistCurriculum(args: {
   };
 }) {
   const courseId = randomUUID();
+  // Namespace concept ids per course so demo/sample curricula can be created repeatedly.
+  const idMap = new Map(
+    args.curriculum.concepts.map((c) => [c.id, `${courseId}:${c.id}`]),
+  );
+  const mapId = (id: string) => idMap.get(id) || `${courseId}:${id}`;
+
   await sql(
     `insert into courses (id, owner_id, title, subject, study_mode, exam_date, status, source_filename, concept_graph)
      values ($1,$2,$3,$4,$5,$6,'ready',$7,$8)`,
@@ -29,7 +35,10 @@ export async function persistCurriculum(args: {
       args.examDate || null,
       args.sourceFilename || null,
       JSON.stringify({
-        units: args.curriculum.units,
+        units: args.curriculum.units.map((u) => ({
+          ...u,
+          conceptIds: u.conceptIds.map(mapId),
+        })),
         conceptCount: args.curriculum.concepts.length,
       }),
     ],
@@ -62,20 +71,21 @@ export async function persistCurriculum(args: {
   }
 
   for (const concept of args.curriculum.concepts) {
+    const conceptId = mapId(concept.id);
     await sql(
       `insert into concepts (
         id, course_id, unit_id, title, summary, learning_objective, why_it_matters,
         prerequisites, misconceptions, formulas, source_refs, difficulty, sort_order
       ) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
       [
-        concept.id,
+        conceptId,
         courseId,
         unitIds.get(concept.unitTitle) || null,
         concept.title,
         concept.summary,
         concept.learningObjective,
         concept.whyItMatters,
-        JSON.stringify(concept.prerequisites),
+        JSON.stringify(concept.prerequisites.map(mapId)),
         JSON.stringify(concept.misconceptions),
         JSON.stringify(concept.formulas),
         JSON.stringify(concept.sourceRefs),
@@ -88,7 +98,7 @@ export async function persistCurriculum(args: {
       `insert into concept_mastery (
         id, user_id, course_id, concept_id, knowledge_state, next_review_at
       ) values ($1,$2,$3,$4,'unlearned', null)`,
-      [randomUUID(), args.ownerId, courseId, concept.id],
+      [randomUUID(), args.ownerId, courseId, conceptId],
     );
   }
 
@@ -100,7 +110,7 @@ export async function persistCurriculum(args: {
       [
         id,
         courseId,
-        lesson.conceptId,
+        mapId(lesson.conceptId),
         lesson.title,
         i,
         JSON.stringify(lesson.content),

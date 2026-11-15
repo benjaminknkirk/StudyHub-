@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type {
@@ -38,8 +37,7 @@ type AttemptResult = {
 };
 
 export function LessonPlayer(props: Props) {
-  const reduce = useReducedMotion();
-  const steps = props.content.steps;
+  const steps = props.content?.steps || [];
   const [index, setIndex] = useState(0);
   const [demoReveal, setDemoReveal] = useState(0);
   const [answer, setAnswer] = useState("");
@@ -57,7 +55,15 @@ export function LessonPlayer(props: Props) {
   const [hearts, setHearts] = useState(props.hearts ?? 5);
 
   const step = steps[index];
-  const progress = ((index + 1) / steps.length) * 100;
+  const progress = steps.length ? ((index + 1) / steps.length) * 100 : 0;
+
+  if (!step) {
+    return (
+      <div className="rounded-2xl border border-[var(--line)] p-6 text-ink-soft">
+        This lesson has no steps yet.
+      </div>
+    );
+  }
 
   const question = useMemo(() => {
     if (!step) return null;
@@ -163,22 +169,16 @@ export function LessonPlayer(props: Props) {
         aria-valuemin={0}
         aria-valuemax={100}
       >
-        <motion.div
-          className="h-full rounded-full bg-brand"
-          animate={{ width: `${progress}%` }}
-          transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 120, damping: 20 }}
+        <div
+          className="h-full rounded-full bg-brand transition-[width] duration-300 ease-out"
+          style={{ width: `${progress}%` }}
         />
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step.id}
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? undefined : { opacity: 0, y: -10 }}
-          transition={{ duration: 0.28 }}
-          className="flex flex-1 flex-col rounded-[1.75rem] border border-[var(--line)] bg-[var(--surface)] p-6 shadow-soft backdrop-blur sm:p-8"
-        >
+      <div
+        key={step.id}
+        className="animate-rise flex flex-1 flex-col rounded-[1.75rem] border border-[var(--line)] bg-[var(--surface)] p-6 shadow-soft backdrop-blur sm:p-8"
+      >
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-brand">
             {labelForStage(step.stage)}
           </p>
@@ -319,8 +319,7 @@ export function LessonPlayer(props: Props) {
               )}
             </div>
           )}
-        </motion.div>
-      </AnimatePresence>
+      </div>
     </div>
   );
 }

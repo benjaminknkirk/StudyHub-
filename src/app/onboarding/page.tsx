@@ -58,14 +58,17 @@ function OnboardingForm() {
       if (file && !useSample) form.set("file", file);
       const res = await fetch("/api/courses", { method: "POST", body: form });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to create course");
+      if (!res.ok) {
+        throw new Error(data.message || data.error || "Failed to create course");
+      }
       setNotes(data.notes || []);
       router.push(`/courses/${data.courseId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
       setBusy(false);
+      return;
     }
+    setBusy(false);
   }
 
   return (
